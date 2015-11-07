@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Play！計算</string>
+    <string name="practice">Play！計算</string>
+    <string name="addition">足し算</string>
+    <string name="subtraction">引き算</string>
+    <string name="multiplication">かけ算(九九)</string>
+    <string name="division">割り算</string>
+    <string name="correct_answer">正解数　</string>
+    <string-array name="question_numbers">
+        <item>10問</item>
+        <item>15問</item>
+        <item>20問</item>
+        <item>100問</item>
+    </string-array>
+    <string-array name="question_numbers_val">
+        <item>10qs</item>
+        <item>15qs</item>
+        <item>20qs</item>
+        <item>100qs</item>
+    </string-array>
+    <string-array name="eraser_color">
+        <item>青</item>
+        <item>緑</item>
+        <item>水色</item>
+        <item>黄緑</item>
+        <item>オレンジ</item>
+        <item>ピンク</item>
+        <item>赤</item>
+        <item>黄色</item>
+    </string-array>
+    <string-array name="eraser_color_val">
+        <item>blue</item>
+        <item>green</item>
+        <item>light_blue</item>
+        <item>light_green</item>
+        <item>orange</item>
+        <item>pink</item>
+        <item>red</item>
+        <item>yellow</item>
+    </string-array>
+    <string-array name="minus">
+        <item>マイナスの計算なし</item>
+        <item>マイナスの計算あり</item>
+    </string-array>
+</resources>

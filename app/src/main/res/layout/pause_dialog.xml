@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pause">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:id="@+id/imageView3"
+                android:src="@drawable/restart"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="restart" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Restart"
+                android:textSize="15dp"
+                android:id="@+id/textView12"
+                android:gravity="center_horizontal"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:id="@+id/imageView4"
+                android:src="@drawable/resume"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="resume" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Resume"
+                android:textSize="15dp"
+                android:id="@+id/textView13"
+                android:gravity="center_horizontal"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:id="@+id/imageView5"
+                android:src="@drawable/home"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:onClick="home" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Go to home"
+                android:textSize="15dp"
+                android:id="@+id/textView14"
+                android:gravity="center_horizontal"
+                android:maxLines="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
