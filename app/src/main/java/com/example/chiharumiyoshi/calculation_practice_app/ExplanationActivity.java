@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 public class ExplanationActivity extends AppCompatActivity {
 
+    // Git test
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
