@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="正解数　"
-            android:textSize="40dp"
+            android:textSize="30dp"
             android:id="@+id/textView" />
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="0/0回"
-            android:textSize="40dp"
+            android:textSize="30dp"
             android:id="@+id/correct_t" />
     </LinearLayout>
 
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="時間　00:00.00"
-        android:textSize="40dp"
+        android:textSize="30dp"
         android:id="@+id/textView2"
         android:gravity="center_horizontal"
         android:layout_below="@+id/linearLayout2"

@@ -67,11 +67,11 @@ public class DivisionActivity extends AppCompatActivity {
         ca = 0;
         answer.setText("");
         n2 = (int) (Math.random() * 9) + 1;
-        number2.setText(String.valueOf(n1));
+        number2.setText(String.valueOf(n2));
         n1 = (int) (Math.random() * 9) + 1;
-        n1 = n1 * n2;
-        number1.setText(String.valueOf(n2));
         ca = n1;
+        n1 = n1 * n2;
+        number1.setText(String.valueOf(n1));
     }
 
     public void finish() {

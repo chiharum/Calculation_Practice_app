@@ -1,10 +1,9 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
+import android.app.ActionBar;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -95,6 +94,11 @@ public class StartActivity extends AppCompatActivity {
 
     public void multiplication(View v){
         Intent intent = new Intent(StartActivity.this,MaltiplicationActivity.class);
+        startActivity(intent);
+    }
+
+    public void division(View v){
+        Intent intent = new Intent(StartActivity.this,DivisionActivity.class);
         startActivity(intent);
     }
 

@@ -1,5 +1,6 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
+import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -29,7 +30,7 @@ public class FinishActivity extends AppCompatActivity {
         time = getIntent().getLongExtra("time", 0);
 
         seconds = time / 1000;
-        subSeconds = time / 10 - seconds * 100;
+        subSeconds = time - seconds * 1000;
         minutes = seconds / 60;
         seconds = seconds - minutes * 60;
         timeText = (TextView)findViewById(R.id.textView2);
@@ -42,13 +43,13 @@ public class FinishActivity extends AppCompatActivity {
         }else{
             time_times = seconds / correct;
         }
-        subSeconds = time_times % 1000;
-        timeTimesText.setText("1問　" + time_times + "." + subSeconds + "秒");
+        subSeconds = time % 1000;
+        timeTimesText.setText("1問　" + time_times + "秒" + subSeconds);
 
         if(last_activity == 1){
             highestTimeAddition = prefs.getLong("highestTimeAddition", 0);
-            if(highestTimeAddition > time && highestTimeAddition != 0){
-                highestTimeAddition = time;
+            if(highestTimeAddition > time / question_numbers || highestTimeAddition == 0){
+                highestTimeAddition = time / question_numbers;
                 prefs.edit()
                         .putLong("highestTimeAddition", highestTimeAddition)
                         .apply();
@@ -56,8 +57,8 @@ public class FinishActivity extends AppCompatActivity {
             highestTime = highestTimeAddition;
         }else if(last_activity == 2){
             highestTimeSubtraction = prefs.getLong("highestTimeSubtraction", 0);
-            if(highestTimeSubtraction > time && highestTimeAddition != 0){
-                highestTimeSubtraction = time;
+            if(highestTimeSubtraction > time / question_numbers || highestTimeAddition == 0){
+                highestTimeSubtraction = time / question_numbers;
                 prefs.edit()
                         .putLong("highestTimeSubtraction", highestTimeSubtraction)
                         .apply();
@@ -65,8 +66,8 @@ public class FinishActivity extends AppCompatActivity {
             highestTime = highestTimeSubtraction;
         }else if(last_activity == 3){
             highestTimeMultiplication = prefs.getLong("highestTimeMultiplication", 0);
-            if(highestTimeMultiplication > time && highestTimeAddition != 0){
-                highestTimeMultiplication = time;
+            if(highestTimeMultiplication > time / question_numbers || highestTimeAddition == 0){
+                highestTimeMultiplication = time / question_numbers;
                 prefs.edit()
                         .putLong("highestTimeMultiplication", highestTimeMultiplication)
                         .apply();
@@ -74,8 +75,8 @@ public class FinishActivity extends AppCompatActivity {
             highestTime = highestTimeMultiplication;
         }else if(last_activity == 4){
             highestTimeDivision = prefs.getLong("highestTimeMultiplication", 0);
-            if(highestTimeDivision > time && highestTimeDivision != 0){
-                highestTimeDivision = time;
+            if(highestTimeDivision > time / question_numbers || highestTimeDivision == 0){
+                highestTimeDivision = time / question_numbers;
                 prefs.edit()
                         .putLong("highestTimeMultiplication", highestTimeDivision)
                         .apply();
@@ -85,10 +86,10 @@ public class FinishActivity extends AppCompatActivity {
 
         highestTimeText = (TextView)findViewById(R.id.textView18);
         highestTimeSeconds = highestTime / 1000;
-        highestTimeSubSeconds = highestTime / 10 - highestTimeSeconds * 100;
+        highestTimeSubSeconds = highestTime - highestTimeSeconds * 1000;
         highestTimeMinutes = highestTimeSeconds / 60;
         highestTimeSeconds = highestTimeSeconds - highestTimeMinutes * 60;
-        highestTimeText.setText("最高記録　" + highestTimeMinutes + "分" + highestTimeSeconds + "秒" + highestTimeSubSeconds);
+        highestTimeText.setText("最高記録　1問　" + highestTimeSeconds + "秒" + highestTimeSubSeconds);
 
         continuousDay = prefs.getInt("continuousDay",0);
         continuousDay = continuousDay + 1;
@@ -103,6 +104,8 @@ public class FinishActivity extends AppCompatActivity {
             intent.setClass(FinishActivity.this, SubtractionActivity.class);
         }else if(last_activity == 3){
             intent.setClass(FinishActivity.this, MaltiplicationActivity.class);
+        }else if(last_activity == 4){
+            intent.setClass(FinishActivity.this, DivisionActivity.class);
         }
         startActivity(intent);
     }

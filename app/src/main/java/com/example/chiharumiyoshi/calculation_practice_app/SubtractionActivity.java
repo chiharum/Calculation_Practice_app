@@ -9,12 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
@@ -307,7 +302,7 @@ public class SubtractionActivity extends AppCompatActivity {
                 int id = v.getId();
                 if(id == R.id.imageView3){
                     Intent intent = new Intent();
-                    intent.setClass(SubtractionActivity.this, FinishActivity.class);
+                    intent.setClass(SubtractionActivity.this, SubtractionActivity.class);
                     startActivity(intent);
                 }else if(id == R.id.imageView4){
                     dialog.hide();
