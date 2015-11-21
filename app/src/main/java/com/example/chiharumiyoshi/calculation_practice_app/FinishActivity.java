@@ -24,7 +24,7 @@ public class FinishActivity extends AppCompatActivity {
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         question_numbers = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
-        correct = getIntent().getIntExtra("correct", 0);
+        correct = getIntent().getIntExtra("correctTimes", 0);
         correctText = (TextView)findViewById(R.id.correct_t);
         correctText.setText(correct + "/" + question_numbers + "回");
         time = getIntent().getLongExtra("time", 0);

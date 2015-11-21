@@ -88,7 +88,7 @@ public class SubtractionActivity extends AppCompatActivity {
         time.stop();
         total_time = end_time - start_time;
         Intent intent = new Intent();
-        intent.putExtra("correct",correct);
+        intent.putExtra("correctTimes",correct);
         intent.putExtra("time", total_time);
         intent.putExtra("last_activity", 2);
         intent.setAction(Intent.ACTION_MAIN);

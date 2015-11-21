@@ -12,11 +12,12 @@
         <item>20問</item>
         <item>100問</item>
     </string-array>
-    <string-array name="question_numbers_val">
-        <item>10qs</item>
-        <item>15qs</item>
-        <item>20qs</item>
-        <item>100qs</item>
+    <string-array name="question_time">
+        <item>30秒</item>
+        <item>1分</item>
+        <item>1分30秒</item>
+        <item>2分</item>
+        <item>本気の5分</item>
     </string-array>
     <string-array name="eraser_color">
         <item>青</item>

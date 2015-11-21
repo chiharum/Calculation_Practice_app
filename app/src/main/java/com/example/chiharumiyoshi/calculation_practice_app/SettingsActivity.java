@@ -1,12 +1,10 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
-import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -17,11 +15,12 @@ import android.widget.TextView;
 public class SettingsActivity extends AppCompatActivity {
 
     public static final String KEY_QUESTION_NUMBER = "question_number";
+    public static final String KEY_QUESTION_TIME = "question_time";
     public static final String KEY_MINUS = "minus";
     public static final String KEY_ERASER_COLOR = "eraser_color";
 
     boolean minus;
-    TextView questionNumbersTextView;
+    TextView questionNumbersText, questionTimeText;
     ImageView eraserImageView;
 
     @Override
@@ -47,12 +46,16 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        questionNumbersTextView = (TextView)findViewById(R.id.question_numbers_t);
+        questionNumbersText = (TextView)findViewById(R.id.question_numbers_t);
 
         // Load from prefs
         int number = prefs.getInt(KEY_QUESTION_NUMBER, 10);
-        questionNumbersTextView.setText("問題数：" + number + "問");
+        questionNumbersText.setText("問題数：" + number + "問");
         eraserImageView = (ImageView)findViewById(R.id.imageView10);
+
+        int defaultTime = prefs.getInt(KEY_QUESTION_TIME, 0);
+        questionTimeText = (TextView)findViewById(R.id.textView19);
+        questionTimeText.setText(defaultTime);
 
         int default_eraser_color = prefs.getInt(KEY_ERASER_COLOR, 0) + 1;
         int image_res = getResources().getIdentifier("delete_button_" + default_eraser_color, "drawable", getPackageName());
@@ -64,8 +67,10 @@ public class SettingsActivity extends AppCompatActivity {
         adb1.setTitle("問題数");
         final String[] question_numbers_t = getResources().getStringArray(R.array.question_numbers);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         int number = prefs.getInt(KEY_QUESTION_NUMBER, 10);
         int selected_index = 0;
+
         if (number == 10){
             selected_index = 0;
         }else if(number == 15){
@@ -75,6 +80,7 @@ public class SettingsActivity extends AppCompatActivity {
         }else if(number == 100){
             selected_index = 3;
         }
+
         adb1.setSingleChoiceItems(question_numbers_t, selected_index, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -91,7 +97,53 @@ public class SettingsActivity extends AppCompatActivity {
                 prefs.edit()
                         .putInt(KEY_QUESTION_NUMBER, question_numbers)
                         .apply();
-                questionNumbersTextView.setText("問題数：" + question_numbers + "問");
+                questionNumbersText.setText("問題数：" + question_numbers + "問");
+                dialog.dismiss();
+            }
+        });
+        adb1.show();
+    }
+
+    public void question_time(View view){
+        AlertDialog.Builder adb1 = new AlertDialog.Builder(this);
+        adb1.setTitle("時間");
+        final String[] question_numbers_t = getResources().getStringArray(R.array.question_time);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        int defaultTime = prefs.getInt(KEY_QUESTION_TIME, 10);
+        int selected_index = 0;
+
+        if (defaultTime == 30){
+            selected_index = 0;
+        }else if(defaultTime == 60){
+            selected_index = 1;
+        }else if(defaultTime == 90){
+            selected_index = 2;
+        }else if(defaultTime == 120){
+            selected_index = 3;
+        }else if(defaultTime == 300){
+            selected_index = 4;
+        }
+
+        adb1.setSingleChoiceItems(question_numbers_t, selected_index, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int question_time = 10;
+                if (which == 0) {
+                    question_time = 30;
+                } else if (which == 1) {
+                    question_time = 60;
+                } else if (which == 2) {
+                    question_time = 90;
+                } else if (which == 3) {
+                    question_time = 120;
+                } else if (which == 4) {
+                    question_time = 300;
+                }
+                prefs.edit()
+                        .putInt(KEY_QUESTION_TIME, question_time)
+                        .apply();
+                questionNumbersText.setText("時間：" + question_time + "問");
                 dialog.dismiss();
             }
         });
@@ -118,12 +170,5 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         adb2.show();
-    }
-
-    public void home(View v){
-        Intent intent = new Intent();
-        intent.putExtra("last_activity",0);
-        intent.setClass(SettingsActivity.this, StartActivity.class);
-        startActivity(intent);
     }
 }

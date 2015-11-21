@@ -80,7 +80,7 @@ public class MaltiplicationActivity extends AppCompatActivity {
         time.stop();
         total_time = end_time - start_time;
         Intent intent = new Intent();
-        intent.putExtra("correct", correct);
+        intent.putExtra("correctTimes", correct);
         intent.putExtra("time", total_time);
         intent.putExtra("last_activity", 3);
         intent.setAction(Intent.ACTION_MAIN);
@@ -193,6 +193,7 @@ public class MaltiplicationActivity extends AppCompatActivity {
         stop_realtime = time.getBase() - SystemClock.elapsedRealtime();
         time.stop();
         total_time = end_time - start_time + total_time;
+
         LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.pause_dialog,(ViewGroup)findViewById(R.id.pause));
 
@@ -214,7 +215,7 @@ public class MaltiplicationActivity extends AppCompatActivity {
                     end_time = 0;
                 }else if(id == R.id.imageView5){
                     Intent intent = new Intent();
-                    intent.putExtra("correct",correct);
+                    intent.putExtra("correctTimes",correct);
                     intent.setClass(MaltiplicationActivity.this, StartActivity.class);
                     startActivity(intent);
                 }
@@ -240,7 +241,7 @@ public class MaltiplicationActivity extends AppCompatActivity {
             time.stop();
             total_time = end_time - start_time;
             Intent intent = new Intent();
-            intent.putExtra("correct",correct);
+            intent.putExtra("correctTimes",correct);
             intent.putExtra("time", total_time);
             intent.putExtra("last_activity",3);
             intent.setAction(Intent.ACTION_MAIN);

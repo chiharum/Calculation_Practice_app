@@ -79,7 +79,7 @@ public class DivisionActivity extends AppCompatActivity {
         time.stop();
         total_time = end_time - start_time;
         Intent intent = new Intent();
-        intent.putExtra("correct", correct);
+        intent.putExtra("correctTimes", correct);
         intent.putExtra("time", total_time);
         intent.putExtra("last_activity", 4);
         intent.setAction(Intent.ACTION_MAIN);
@@ -213,7 +213,7 @@ public class DivisionActivity extends AppCompatActivity {
                     end_time = 0;
                 } else if (id == R.id.imageView5) {
                     Intent intent = new Intent();
-                    intent.putExtra("correct", correct);
+                    intent.putExtra("correctTimes", correct);
                     intent.setClass(DivisionActivity.this, StartActivity.class);
                     startActivity(intent);
                 }

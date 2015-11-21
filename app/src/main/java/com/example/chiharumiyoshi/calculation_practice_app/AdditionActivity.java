@@ -1,6 +1,6 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
-import android.app.ActionBar;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.AlertDialog;
@@ -19,10 +19,10 @@ import android.widget.TextView;
 
 public class AdditionActivity extends AppCompatActivity {
 
-    TextView number1, number2, answer, correct_t, remain_t;
-    ImageView eraser_image, correct_img, incorrect_img;
-    int n1, n2, a, ca, correct, times, question_number, eraser_color, remain;
-    long start_time, end_time, total_time, stop_realtime;
+    TextView number1Text, number2Text, answerText, correctTimesText, remainTimesText;
+    ImageView eraserImage, correctImage, incorrectImage;
+    int number1, number2, answer, correctAnswerNumber, correctTimes, timesNumber, question_number, question_time, eraser_color, remain, calculationKind;
+    long start_time, end_time, total_time, stop_realtime, remain_time;
     ProgressBar progressBar;
     Chronometer time;
     AlertDialog dialog;
@@ -32,30 +32,64 @@ public class AdditionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addition);
 
-        eraser_image = (ImageView) findViewById(R.id.imageView);
+        eraserImage = (ImageView) findViewById(R.id.imageView);
+
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        question_number = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
+
+        calculationKind = prefs.getInt("calculationKind", 0);
+
+        remainTimesText = (TextView) findViewById(R.id.remain);
+
+        if(calculationKind == 1){
+            question_number = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
+            remain = question_number;
+
+            remainTimesText.setText(question_number + "問");
+
+            progressBar = (ProgressBar) findViewById(R.id.progressBar);
+            progressBar.setMax(question_number);
+            progressBar.setProgress(0);
+
+        }else if(calculationKind == 2){
+            question_time = prefs.getInt(SettingsActivity.KEY_QUESTION_TIME, 30);
+
+            remainTimesText.setText(remain_time + "秒");
+            remain_time = question_time * 1000;
+
+            CountDownTimer countDownTimer = new CountDownTimer(remain_time, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            };
+
+            countDownTimer.start();
+        }
+
         eraser_color = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR, 1);
         int image = getResources().getIdentifier("delete_button_" + eraser_color, "drawable", getPackageName());
-        eraser_image.setImageResource(image);
-        number1 = (TextView) findViewById(R.id.number1);
-        number2 = (TextView) findViewById(R.id.number2);
-        answer = (TextView) findViewById(R.id.answer);
-        correct_t = (TextView) findViewById(R.id.correct);
-        correct_t.setText("0" + "問");
-        remain_t = (TextView) findViewById(R.id.remain);
-        remain_t.setText("のこり　" + question_number + "問");
-        remain = question_number;
+        eraserImage.setImageResource(image);
+
+        number1Text = (TextView) findViewById(R.id.number1);
+        number2Text = (TextView) findViewById(R.id.number2);
+        answerText = (TextView) findViewById(R.id.answer);
+        correctTimesText = (TextView) findViewById(R.id.correct);
+        correctTimesText.setText("0" + "問");
+
         new_question();
-        correct = 0;
-        times = 0;
-        correct_img = (ImageView) findViewById(R.id.correct_img);
-        correct_img.setVisibility(View.GONE);
-        incorrect_img = (ImageView) findViewById(R.id.incorrect_img);
-        incorrect_img.setVisibility(View.GONE);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        progressBar.setMax(question_number);
-        progressBar.setProgress(0);
+        correctTimes = 0;
+        timesNumber = 0;
+
+        correctImage = (ImageView) findViewById(R.id.correct_img);
+        correctImage.setVisibility(View.GONE);
+        incorrectImage = (ImageView) findViewById(R.id.incorrect_img);
+        incorrectImage.setVisibility(View.GONE);
+
         total_time = 0;
         time = (Chronometer) findViewById(R.id.chronometer);
         time.setBase(android.os.SystemClock.elapsedRealtime());
@@ -64,14 +98,14 @@ public class AdditionActivity extends AppCompatActivity {
     }
 
     public void new_question() {
-        a = 0;
-        ca = 0;
-        answer.setText("");
-        n1 = (int) (Math.random() * 98) + 1;
-        number1.setText(String.valueOf(n1));
-        n2 = (int) (Math.random() * 98) + 1;
-        number2.setText(String.valueOf(n2));
-        ca = n1 + n2;
+        answer = 0;
+        correctAnswerNumber = 0;
+        answerText.setText("");
+        number1 = (int) (Math.random() * 98) + 1;
+        number1Text.setText(String.valueOf(number1));
+        number2 = (int) (Math.random() * 98) + 1;
+        number2Text.setText(String.valueOf(number2));
+        correctAnswerNumber = number1 + number2;
     }
 
     public void finish() {
@@ -79,111 +113,115 @@ public class AdditionActivity extends AppCompatActivity {
         time.stop();
         total_time = end_time - start_time;
         Intent intent = new Intent();
-        intent.putExtra("correct", correct);
-        intent.putExtra("time", total_time);
+        intent.putExtra("correct", correctTimes);
         intent.putExtra("last_activity", 1);
+
+        if(calculationKind == 1){
+            intent.putExtra("time", total_time);
+        }
+
         intent.setAction(Intent.ACTION_MAIN);
         intent.setClass(AdditionActivity.this, FinishActivity.class);
         startActivity(intent);
     }
 
     public void click1(View v) {
-        if (a == 0) {
-            a = 1;
+        if (answer == 0) {
+            answer = 1;
         } else {
-            a = 1 + a * 10;
+            answer = 1 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click2(View v) {
-        if (a == 0) {
-            a = 2;
+        if (answer == 0) {
+            answer = 2;
         } else {
-            a = 2 + a * 10;
+            answer = 2 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click3(View v) {
-        if (a == 0) {
-            a = 3;
+        if (answer == 0) {
+            answer = 3;
         } else {
-            a = 3 + a * 10;
+            answer = 3 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click4(View v) {
-        if (a == 0) {
-            a = 4;
+        if (answer == 0) {
+            answer = 4;
         } else {
-            a = 4 + a * 10;
+            answer = 4 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click5(View v) {
-        if (a == 0) {
-            a = 5;
+        if (answer == 0) {
+            answer = 5;
         } else {
-            a = 5 + a * 10;
+            answer = 5 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click6(View v) {
-        if (a == 0) {
-            a = 6;
+        if (answer == 0) {
+            answer = 6;
         } else {
-            a = 6 + a * 10;
+            answer = 6 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click7(View v) {
-        if (a == 0) {
-            a = 7;
+        if (answer == 0) {
+            answer = 7;
         } else {
-            a = 7 + a * 10;
+            answer = 7 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click8(View v) {
-        if (a == 0) {
-            a = 8;
+        if (answer == 0) {
+            answer = 8;
         } else {
-            a = 8 + a * 10;
+            answer = 8 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click9(View v) {
-        if (a == 0) {
-            a = 9;
+        if (answer == 0) {
+            answer = 9;
         } else {
-            a = 9 + a * 10;
+            answer = 9 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click0(View v) {
-        if (a == 0) {
-            a = 0;
+        if (answer == 0) {
+            answer = 0;
         } else {
-            a = a * 10;
+            answer = answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void erase(View v) {
-        if (a < 10) {
-            a = 0;
-            answer.setText("");
+        if (answer < 10) {
+            answer = 0;
+            answerText.setText("");
         } else {
-            a = a / 10;
-            answer.setText(String.valueOf(a));
+            answer = answer / 10;
+            answerText.setText(String.valueOf(answer));
         }
     }
 
@@ -202,18 +240,21 @@ public class AdditionActivity extends AppCompatActivity {
                 // idを取得して動作を宣言。
                 int id = v.getId();
                 if (id == R.id.imageView3) {
+                    // restart
                     Intent intent = new Intent();
                     intent.setClass(AdditionActivity.this, AdditionActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.imageView4) {
+                    // resume
                     dialog.hide();
                     time.setBase(android.os.SystemClock.elapsedRealtime() + stop_realtime);
                     time.start();
                     start_time = System.currentTimeMillis();
                     end_time = 0;
                 } else if (id == R.id.imageView5) {
+                    // go to home
                     Intent intent = new Intent();
-                    intent.putExtra("correct", correct);
+                    intent.putExtra("correctTimes", correctTimes);
                     intent.setClass(AdditionActivity.this, StartActivity.class);
                     startActivity(intent);
                 }
@@ -232,44 +273,53 @@ public class AdditionActivity extends AppCompatActivity {
     }
 
     public void next(View v) {
-        times = times + 1;
+        timesNumber = timesNumber + 1;
 
-        if (a == ca) {
-            correct = correct + 1;
+        if (answer == correctAnswerNumber) {
+            correctTimes = correctTimes + 1;
 
-            if (times == question_number) {
-                finish();
+            if (calculationKind == 1){
+                if (timesNumber == question_number) {
+                    finish();
+                }
             }
 
-            correct_img.setVisibility(View.VISIBLE);
+            correctImage.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    correct_img.setVisibility(View.GONE);
+                    correctImage.setVisibility(View.GONE);
                     new_question();
                 }
             }, 1000);
         } else {
-            if (times == question_number) {
-                finish();
+
+            if (calculationKind == 1){
+                if (timesNumber == question_number) {
+                    finish();
+                }
             }
-            incorrect_img.setVisibility(View.VISIBLE);
+
+            incorrectImage.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    incorrect_img.setVisibility(View.GONE);
+                    incorrectImage.setVisibility(View.GONE);
                     new_question();
                 }
             }, 1000);
         }
 
-        correct_t.setText(correct + "問");
-        remain = remain - 1;
-        if (remain == question_number - times) {
-            remain_t.setText("のこり　" + remain + "問");
-        } else {
-            remain_t.setText("残り問題数の計算に失敗しました。");
+        correctTimesText.setText(correctTimes + "問");
+
+        if(calculationKind == 1){
+            remain = remain - 1;
+            if (remain == question_number - timesNumber) {
+                remainTimesText.setText(remain + "問");
+            } else {
+                remainTimesText.setText("エラー");
+            }
+            progressBar.setProgress(timesNumber);
         }
-        progressBar.setProgress(times);
     }
 }
