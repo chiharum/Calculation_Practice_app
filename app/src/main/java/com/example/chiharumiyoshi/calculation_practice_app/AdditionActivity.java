@@ -54,17 +54,26 @@ public class AdditionActivity extends AppCompatActivity {
             question_time = prefs.getInt(SettingsActivity.KEY_QUESTION_TIME, 30);
 
             remainTimesText.setText(remain_time + "秒");
-            remain_time = question_time * 1000;
 
-            CountDownTimer countDownTimer = new CountDownTimer(remain_time, 1000) {
+            CountDownTimer countDownTimer = new CountDownTimer(remain_time * 1000, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-
+                    remain_time = remain_time - 1;
+                    remainTimesText.setText(remain_time + "秒");
                 }
 
                 @Override
                 public void onFinish() {
-
+                    end_time = System.currentTimeMillis();
+                    time.stop();
+                    Intent intent = new Intent();
+                    intent.putExtra("correct", correctTimes);
+                    intent.putExtra("question_numbers", timesNumber);
+                    intent.putExtra("time", remain_time);
+                    intent.putExtra("last_activity", 1);
+                    intent.setAction(Intent.ACTION_MAIN);
+                    intent.setClass(AdditionActivity.this, FinishActivity.class);
+                    startActivity(intent);
                 }
             };
 

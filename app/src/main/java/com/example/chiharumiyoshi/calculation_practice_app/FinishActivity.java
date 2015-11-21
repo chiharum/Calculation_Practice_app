@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class FinishActivity extends AppCompatActivity {
 
-    int correct;
+    int correct, calculationKind;
     long time, seconds, minutes, subSeconds, highestTime, highestTimeAddition, highestTimeSubtraction, highestTimeMultiplication, time_times, highestTimeMinutes, highestTimeSeconds, highestTimeSubSeconds, highestTimeDivision;
     TextView correctText, timeText, timeTimesText, highestTimeText;
     int question_numbers,last_activity, continuousDay;
@@ -26,9 +26,14 @@ public class FinishActivity extends AppCompatActivity {
         question_numbers = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
         correct = getIntent().getIntExtra("correctTimes", 0);
         correctText = (TextView)findViewById(R.id.correct_t);
-        correctText.setText(correct + "/" + question_numbers + "回");
-        time = getIntent().getLongExtra("time", 0);
+        calculationKind = prefs.getInt("calculationKind", 0);
+        if(calculationKind == 1){
+            correctText.setText(correct + "/" + question_numbers + "回");
+        }else if(calculationKind == 2){
+            correctText.setText(correct + "回");
+        }
 
+        time = getIntent().getLongExtra("time", 0);
         seconds = time / 1000;
         subSeconds = time - seconds * 1000;
         minutes = seconds / 60;

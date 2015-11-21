@@ -55,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         int defaultTime = prefs.getInt(KEY_QUESTION_TIME, 0);
         questionTimeText = (TextView)findViewById(R.id.textView19);
-        questionTimeText.setText(defaultTime);
+        questionTimeText.setText(String.valueOf(defaultTime));
 
         int default_eraser_color = prefs.getInt(KEY_ERASER_COLOR, 0) + 1;
         int image_res = getResources().getIdentifier("delete_button_" + default_eraser_color, "drawable", getPackageName());
