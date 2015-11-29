@@ -1,5 +1,9 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +31,10 @@ public class AdditionActivity extends AppCompatActivity {
     Chronometer time;
     AlertDialog dialog;
 
+    private SQLiteDatabase database;
+    private static String DATABASE_NAME = "questions.db";
+    private static String DATABASE_TABLE = "questions";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +54,9 @@ public class AdditionActivity extends AppCompatActivity {
         incorrectImage = (ImageView) findViewById(R.id.incorrect_img);
 
 
-        // Viewの初期設定
-        time.setBase(android.os.SystemClock.elapsedRealtime());
-        time.start();
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        database = databaseHelper.getWritableDatabase();
+
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR, 1);
@@ -79,6 +87,34 @@ public class AdditionActivity extends AppCompatActivity {
         totalTime = 0;
 
         startTime = System.currentTimeMillis();
+
+        time.setBase(android.os.SystemClock.elapsedRealtime());
+        time.start();
+    }
+
+    private void writeDatabase(String info) throws Exception {
+        ContentValues values = new ContentValues();
+        values.put("id", "0");
+        values.put("info", info);
+        int columnNumber = database.update(DATABASE_TABLE, values, null, null);
+        if (columnNumber == 0) database.insert(DATABASE_TABLE,"", values);
+    }
+
+    private static class DatabaseHelper extends SQLiteOpenHelper {
+        public DatabaseHelper(Context context){
+            super(context, DATABASE_NAME, null, 1);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase database){
+            database.execSQL("create table if not exists " + DATABASE_NAME + "(id tet primary key, info text)");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+            database.execSQL("drop table if exists " + DATABASE_TABLE);
+            onCreate(database);
+        }
     }
 
     public void new_question() {
