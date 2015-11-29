@@ -18,10 +18,10 @@ import android.widget.TextView;
 
 public class DivisionActivity extends AppCompatActivity {
 
-    TextView number1, number2, answer, correct_t, remain_t;
-    ImageView eraser_image, correct_img, incorrect_img;
-    int n1, n2, a, ca, correct, times, question_number, eraser_color, remain;
-    long start_time, end_time, total_time, stop_realtime;
+    TextView number1Text, number2Text, answerText, correctText, remainText;
+    ImageView eraserImage, correctImage, incorrectImage;
+    int number1, number2, answer, cerrectAnswer, correctTimes, times, question_number, eraser_color, remain;
+    long startTimeL, endTimeL, totalTimeL, stopRealtimeL;
     ProgressBar progressBar;
     Chronometer time;
     AlertDialog dialog;
@@ -31,167 +31,184 @@ public class DivisionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_division);
 
-        eraser_image = (ImageView) findViewById(R.id.imageView);
+        //View
+        eraserImage = (ImageView) findViewById(R.id.imageView);
+
+        number1Text = (TextView) findViewById(R.id.number1);
+        number2Text = (TextView) findViewById(R.id.number2);
+        answerText = (TextView) findViewById(R.id.answer);
+        correctText = (TextView) findViewById(R.id.correct);
+
+        remainText = (TextView) findViewById(R.id.remain);
+
+        correctImage = (ImageView) findViewById(R.id.correct_img);
+        incorrectImage = (ImageView) findViewById(R.id.incorrect_img);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        time = (Chronometer) findViewById(R.id.chronometer);
+
+
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         question_number = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
         eraser_color = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR, 1);
+
         int image = getResources().getIdentifier("delete_button_" + eraser_color, "drawable", getPackageName());
-        eraser_image.setImageResource(image);
-        number1 = (TextView) findViewById(R.id.number1);
-        number2 = (TextView) findViewById(R.id.number2);
-        answer = (TextView) findViewById(R.id.answer);
-        correct_t = (TextView) findViewById(R.id.correct);
-        correct_t.setText("0" + "問");
-        remain_t = (TextView) findViewById(R.id.remain);
-        remain_t.setText("のこり　" + question_number + "問");
+        eraserImage.setImageResource(image);
+
+        correctText.setText("0" + "問");
+
+        remainText.setText("のこり　" + question_number + "問");
         remain = question_number;
+
         new_question();
-        correct = 0;
+
+        correctTimes = 0;
         times = 0;
-        correct_img = (ImageView) findViewById(R.id.correct_img);
-        correct_img.setVisibility(View.GONE);
-        incorrect_img = (ImageView) findViewById(R.id.incorrect_img);
-        incorrect_img.setVisibility(View.GONE);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        correctImage.setVisibility(View.GONE);
+        incorrectImage.setVisibility(View.GONE);
+
         progressBar.setMax(question_number);
         progressBar.setProgress(0);
-        total_time = 0;
-        time = (Chronometer) findViewById(R.id.chronometer);
+        totalTimeL = 0;
+
         time.setBase(android.os.SystemClock.elapsedRealtime());
         time.start();
-        start_time = System.currentTimeMillis();
+        startTimeL = System.currentTimeMillis();
     }
 
     public void new_question() {
-        a = 0;
-        ca = 0;
-        answer.setText("");
-        n2 = (int) (Math.random() * 9) + 1;
-        number2.setText(String.valueOf(n2));
-        n1 = (int) (Math.random() * 9) + 1;
-        ca = n1;
-        n1 = n1 * n2;
-        number1.setText(String.valueOf(n1));
+        answer = 0;
+        cerrectAnswer = 0;
+        answerText.setText("");
+        number2 = (int) (Math.random() * 9) + 1;
+        number2Text.setText(String.valueOf(number2));
+        number1 = (int) (Math.random() * 9) + 1;
+        cerrectAnswer = number1;
+        number1 = number1 * number2;
+        number1Text.setText(String.valueOf(number1));
     }
 
     public void finish() {
-        end_time = System.currentTimeMillis();
+        endTimeL = System.currentTimeMillis();
         time.stop();
-        total_time = end_time - start_time;
+        totalTimeL = endTimeL - startTimeL;
         Intent intent = new Intent();
-        intent.putExtra("correctTimes", correct);
-        intent.putExtra("time", total_time);
+        intent.putExtra("correctTimes", correctTimes);
+        intent.putExtra("time", totalTimeL);
         intent.putExtra("last_activity", 4);
+        intent.putExtra("calculationKind", 1);
+
         intent.setAction(Intent.ACTION_MAIN);
         intent.setClass(DivisionActivity.this, FinishActivity.class);
         startActivity(intent);
     }
 
     public void click1(View v) {
-        if (a == 0) {
-            a = 1;
+        if (answer == 0) {
+            answer = 1;
         } else {
-            a = 1 + a * 10;
+            answer = 1 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click2(View v) {
-        if (a == 0) {
-            a = 2;
+        if (answer == 0) {
+            answer = 2;
         } else {
-            a = 2 + a * 10;
+            answer = 2 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click3(View v) {
-        if (a == 0) {
-            a = 3;
+        if (answer == 0) {
+            answer = 3;
         } else {
-            a = 3 + a * 10;
+            answer = 3 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click4(View v) {
-        if (a == 0) {
-            a = 4;
+        if (answer == 0) {
+            answer = 4;
         } else {
-            a = 4 + a * 10;
+            answer = 4 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click5(View v) {
-        if (a == 0) {
-            a = 5;
+        if (answer == 0) {
+            answer = 5;
         } else {
-            a = 5 + a * 10;
+            answer = 5 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click6(View v) {
-        if (a == 0) {
-            a = 6;
+        if (answer == 0) {
+            answer = 6;
         } else {
-            a = 6 + a * 10;
+            answer = 6 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click7(View v) {
-        if (a == 0) {
-            a = 7;
+        if (answer == 0) {
+            answer = 7;
         } else {
-            a = 7 + a * 10;
+            answer = 7 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click8(View v) {
-        if (a == 0) {
-            a = 8;
+        if (answer == 0) {
+            answer = 8;
         } else {
-            a = 8 + a * 10;
+            answer = 8 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click9(View v) {
-        if (a == 0) {
-            a = 9;
+        if (answer == 0) {
+            answer = 9;
         } else {
-            a = 9 + a * 10;
+            answer = 9 + answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void click0(View v) {
-        if (a == 0) {
-            a = 0;
+        if (answer == 0) {
+            answer = 0;
         } else {
-            a = a * 10;
+            answer = answer * 10;
         }
-        answer.setText(String.valueOf(a));
+        answerText.setText(String.valueOf(answer));
     }
 
     public void erase(View v) {
-        if (a < 10) {
-            a = 0;
-            answer.setText("");
+        if (answer < 10) {
+            answer = 0;
+            answerText.setText("");
         } else {
-            a = a / 10;
-            answer.setText(String.valueOf(a));
+            answer = answer / 10;
+            answerText.setText(String.valueOf(answer));
         }
     }
 
     public void pause(View view) {
-        end_time = System.currentTimeMillis();
-        stop_realtime = time.getBase() - SystemClock.elapsedRealtime();
+        endTimeL = System.currentTimeMillis();
+        stopRealtimeL = time.getBase() - SystemClock.elapsedRealtime();
         time.stop();
-        total_time = end_time - start_time + total_time;
+        totalTimeL = endTimeL - startTimeL + totalTimeL;
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.pause_dialog, (ViewGroup) findViewById(R.id.pause));
 
@@ -207,13 +224,13 @@ public class DivisionActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else if (id == R.id.imageView4) {
                     dialog.hide();
-                    time.setBase(android.os.SystemClock.elapsedRealtime() + stop_realtime);
+                    time.setBase(android.os.SystemClock.elapsedRealtime() + stopRealtimeL);
                     time.start();
-                    start_time = System.currentTimeMillis();
-                    end_time = 0;
+                    startTimeL = System.currentTimeMillis();
+                    endTimeL = 0;
                 } else if (id == R.id.imageView5) {
                     Intent intent = new Intent();
-                    intent.putExtra("correctTimes", correct);
+                    intent.putExtra("correctTimes", correctTimes);
                     intent.setClass(DivisionActivity.this, StartActivity.class);
                     startActivity(intent);
                 }
@@ -234,18 +251,18 @@ public class DivisionActivity extends AppCompatActivity {
     public void next(View v) {
         times = times + 1;
 
-        if (a == ca) {
-            correct = correct + 1;
+        if (answer == cerrectAnswer) {
+            correctTimes = correctTimes + 1;
 
             if (times == question_number) {
                 finish();
             }
 
-            correct_img.setVisibility(View.VISIBLE);
+            correctImage.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    correct_img.setVisibility(View.GONE);
+                    correctImage.setVisibility(View.GONE);
                     new_question();
                 }
             }, 1000);
@@ -253,22 +270,22 @@ public class DivisionActivity extends AppCompatActivity {
             if (times == question_number) {
                 finish();
             }
-            incorrect_img.setVisibility(View.VISIBLE);
+            incorrectImage.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    incorrect_img.setVisibility(View.GONE);
+                    incorrectImage.setVisibility(View.GONE);
                     new_question();
                 }
             }, 1000);
         }
 
-        correct_t.setText(correct + "問");
+        correctText.setText(correctTimes + "問");
         remain = remain - 1;
         if (remain == question_number - times) {
-            remain_t.setText("のこり　" + remain + "問");
+            remainText.setText("のこり　" + remain + "問");
         } else {
-            remain_t.setText("残り問題数の計算に失敗しました。");
+            remainText.setText("残り問題数の計算に失敗しました。");
         }
         progressBar.setProgress(times);
     }

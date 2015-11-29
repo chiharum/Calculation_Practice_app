@@ -15,8 +15,8 @@ import java.util.Calendar;
 
 public class StartActivity extends AppCompatActivity {
 
-    int last_year,last_month,last_day,last_date,year,month,day,date,times_in_day, continuousDay, calculationKind;
-    TextView times_in_day_t,continuous_day_times_t, title_text;
+    int lastYear, lastMonth, lastDay, lastDate,year,month,day,date, timesInADay, continuousDays, calculationKind;
+    TextView timesInADayText, continuousDayTimesText, titleText;
     AlertDialog dialog;
 
     @Override
@@ -24,60 +24,64 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        title_text = (TextView)findViewById(R.id.textView4);
-        title_text.setTypeface(Typeface.SERIF,Typeface.BOLD);
-        times_in_day_t = (TextView)findViewById(R.id.textView9);
-        continuous_day_times_t = (TextView)findViewById(R.id.textView10);
+        titleText = (TextView)findViewById(R.id.textView4);
+
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        times_in_day = prefs.getInt("times_day",0);
-        continuousDay = prefs.getInt("continuousDay",0);
-        last_year = prefs.getInt("last_year", 0);
-        last_month = prefs.getInt("last_month", 0);
-        last_day = prefs.getInt("last_day", 0);
-        last_date = prefs.getInt("last_date",0);
+        timesInADay = prefs.getInt("timesInADay",0);
+        continuousDays = prefs.getInt("continuousDays",0);
+        lastYear = prefs.getInt("lastYear", 0);
+        lastMonth = prefs.getInt("lastMonth", 0);
+        lastDay = prefs.getInt("lastDay", 0);
+        lastDate = prefs.getInt("lastDate",0);
+
+
+        titleText.setTypeface(Typeface.SERIF, Typeface.BOLD);
+        timesInADayText = (TextView)findViewById(R.id.textView9);
+        continuousDayTimesText = (TextView)findViewById(R.id.textView10);
+
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH) + 1;
         day = calendar.get(Calendar.DAY_OF_MONTH);
         date = day + month * 100 + year * 10000;
-        if(last_date == date){
-            times_in_day = times_in_day + 1;
+        if(lastDate == date){
+            timesInADay = timesInADay + 1;
         }else{
-            times_in_day = 1;
+            timesInADay = 1;
         }
-        if(date != last_date + 1){
-            continuousDay = 0;
+        if(date != lastDate + 1){
+            continuousDays = 0;
         }
-        times_in_day_t.setText("今日(" + year + "年" + month + "月" + day + "日)、" + times_in_day + "回目のプレイです。");
-        if(continuousDay > 0){
-            continuous_day_times_t.setText(continuousDay + "日連続プレイです。");
-        }else if(continuousDay == 0){
-            if (last_date != 0){
-                continuous_day_times_t.setText("前回のプレイは" + last_year + "年" + last_month + "月" + last_day + "日です。");
-            }else if (last_date == 0){
-                continuous_day_times_t.setText("");
+        timesInADayText.setText("今日(" + year + "年" + month + "月" + day + "日)、" + timesInADay + "回目のプレイです。");
+        if(continuousDays > 0){
+            continuousDayTimesText.setText(continuousDays + "日連続プレイです。");
+        }else if(continuousDays == 0){
+            if (lastDate != 0){
+                continuousDayTimesText.setText("前回のプレイは" + lastYear + "年" + lastMonth + "月" + lastDay + "日です。");
+            }else if (lastDate == 0){
+                continuousDayTimesText.setText("");
             }
         }
 
         prefs.edit()
-                .putInt("last_year",year)
+                .putInt("lastYear",year)
                 .apply();
         prefs.edit()
-                .putInt("last_month",month)
+                .putInt("lastMonth",month)
                 .apply();
         prefs.edit()
-                .putInt("last_day",day)
+                .putInt("lastDay",day)
                 .apply();
         prefs.edit()
-                .putInt("times_day",times_in_day)
+                .putInt("timesInADay", timesInADay)
                 .apply();
         prefs.edit()
-                .putInt("continuousDay", continuousDay)
+                .putInt("continuousDays", continuousDays)
                 .apply();
         prefs.edit()
-                .putInt("last_date",date)
+                .putInt("lastDate",date)
                 .apply();
     }
 
@@ -113,7 +117,7 @@ public class StartActivity extends AppCompatActivity {
                     startActivity(intent);
                 }else if(id == R.id.calculate_maltiplication){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, MaltiplicationActivity.class);
+                    intent.setClass(StartActivity.this, MultiplicationActivity.class);
                     startActivity(intent);
                 }else if(id == R.id.calculate_division){
                     Intent intent = new Intent();
@@ -135,13 +139,6 @@ public class StartActivity extends AppCompatActivity {
 
     public void calculate_much(View view){
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        calculationKind = prefs.getInt("calculationKind", 0);
-        calculationKind = 2;
-        prefs.edit()
-                .putInt("calculationKind", calculationKind)
-                .apply();
-
         LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View adbLayout = inflater.inflate(R.layout.calculate_dialog, null);
 
@@ -151,7 +148,7 @@ public class StartActivity extends AppCompatActivity {
                 int id = v.getId();
                 if(id == R.id.calculate_addition){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, AdditionActivity.class);
+                    intent.setClass(StartActivity.this, AdditionSecondActivity.class);
                     startActivity(intent);
                 }else if(id == R.id.calculate_subtraction){
                     Intent intent = new Intent();
@@ -159,7 +156,7 @@ public class StartActivity extends AppCompatActivity {
                     startActivity(intent);
                 }else if(id == R.id.calculate_maltiplication){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, MaltiplicationActivity.class);
+                    intent.setClass(StartActivity.this, MultiplicationActivity.class);
                     startActivity(intent);
                 }else if(id == R.id.calculate_division){
                     Intent intent = new Intent();

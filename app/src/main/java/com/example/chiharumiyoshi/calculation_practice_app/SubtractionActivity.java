@@ -91,6 +91,8 @@ public class SubtractionActivity extends AppCompatActivity {
         intent.putExtra("correctTimes",correct);
         intent.putExtra("time", total_time);
         intent.putExtra("last_activity", 2);
+        intent.putExtra("calculationKind", 1);
+
         intent.setAction(Intent.ACTION_MAIN);
         intent.setClass(SubtractionActivity.this, FinishActivity.class);
         startActivity(intent);

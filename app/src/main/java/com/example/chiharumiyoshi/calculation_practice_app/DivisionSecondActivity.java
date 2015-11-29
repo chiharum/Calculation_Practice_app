@@ -1,36 +1,34 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
-import android.os.CountDownTimer;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class AdditionActivity extends AppCompatActivity {
+public class DivisionSecondActivity extends AppCompatActivity {
 
     TextView number1Text, number2Text, answerText, correctTimesText, remainText;
     ImageView eraserImage, correctImage, incorrectImage;
-    int number1, number2, answer, correctAnswerNumber, correctTimes, timesNumber, questionNumber, eraserColor, remain, calculationKind;
+    int number1, number2, answer, correctAnswerNumber, correctTimes, timesNumber, eraserColor;
     long startTime, endTime, totalTime, stopRealtime, remainTime, questionTime;
-    ProgressBar progressBar;
     Chronometer time;
     AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_addition);
+        setContentView(R.layout.activity_addition_second);
 
         // Viewの関連付け
         eraserImage = (ImageView) findViewById(R.id.imageView);
@@ -51,19 +49,39 @@ public class AdditionActivity extends AppCompatActivity {
         time.start();
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        questionTime = prefs.getLong(SettingsActivity.KEY_QUESTION_TIME, 30);
+
+        remainTime = questionTime;
+        remainText.setText(remainTime + "秒");
+
+        CountDownTimer countDownTimer = new CountDownTimer(remainTime * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                remainTime = remainTime - 1;
+                remainText.setText(remainTime + "秒");
+            }
+
+            @Override
+            public void onFinish() {
+                endTime = System.currentTimeMillis();
+                time.stop();
+                Intent intent = new Intent();
+                intent.putExtra("correctTimes", correctTimes);
+                intent.putExtra("question_numbers", timesNumber);
+                intent.putExtra("time", questionTime * 1000);
+                intent.putExtra("last_activity", 1);
+                intent.putExtra("calculationKind", 2);
+
+                intent.setAction(Intent.ACTION_MAIN);
+                intent.setClass(DivisionSecondActivity.this, FinishActivity.class);
+                startActivity(intent);
+            }
+        };
+
+        countDownTimer.start();
+
         eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR, 1);
-
-
-        questionNumber = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
-
-        remain = questionNumber;
-
-        remainText.setText(questionNumber + "問");
-
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        progressBar.setMax(questionNumber);
-        progressBar.setProgress(0);
-
         int image = getResources().getIdentifier("delete_button_" + eraserColor, "drawable", getPackageName());
         eraserImage.setImageResource(image);
 
@@ -85,29 +103,12 @@ public class AdditionActivity extends AppCompatActivity {
         answer = 0;
         correctAnswerNumber = 0;
         answerText.setText("");
-        number1 = (int) (Math.random() * 98) + 1;
-        number1Text.setText(String.valueOf(number1));
-        number2 = (int) (Math.random() * 98) + 1;
+        number2 = (int) (Math.random() * 9) + 1;
         number2Text.setText(String.valueOf(number2));
-        correctAnswerNumber = number1 + number2;
-    }
-
-    public void finish() {
-        endTime = System.currentTimeMillis();
-        time.stop();
-        totalTime = endTime - startTime;
-        Intent intent = new Intent();
-        intent.putExtra("correct", correctTimes);
-        intent.putExtra("last_activity", 1);
-        intent.putExtra("calculationKind", 1);
-
-        if(calculationKind == 1){
-            intent.putExtra("time", totalTime);
-        }
-
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.setClass(AdditionActivity.this, FinishActivity.class);
-        startActivity(intent);
+        number1 = (int) (Math.random() * 9) + 1;
+        correctAnswerNumber = number1;
+        number1 = number1 * number2;
+        number1Text.setText(String.valueOf(number1));
     }
 
     public void click1(View v) {
@@ -227,7 +228,7 @@ public class AdditionActivity extends AppCompatActivity {
                 if (id == R.id.imageView3) {
                     // restart
                     Intent intent = new Intent();
-                    intent.setClass(AdditionActivity.this, AdditionActivity.class);
+                    intent.setClass(DivisionSecondActivity.this, AdditionActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.imageView4) {
                     // resume
@@ -240,7 +241,7 @@ public class AdditionActivity extends AppCompatActivity {
                     // go to home
                     Intent intent = new Intent();
                     intent.putExtra("correctTimes", correctTimes);
-                    intent.setClass(AdditionActivity.this, StartActivity.class);
+                    intent.setClass(DivisionSecondActivity.this, StartActivity.class);
                     startActivity(intent);
                 }
             }
@@ -263,12 +264,6 @@ public class AdditionActivity extends AppCompatActivity {
         if (answer == correctAnswerNumber) {
             correctTimes = correctTimes + 1;
 
-            if (calculationKind == 1){
-                if (timesNumber == questionNumber) {
-                    finish();
-                }
-            }
-
             correctImage.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -278,13 +273,6 @@ public class AdditionActivity extends AppCompatActivity {
                 }
             }, 1000);
         } else {
-
-            if (calculationKind == 1){
-                if (timesNumber == questionNumber) {
-                    finish();
-                }
-            }
-
             incorrectImage.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -296,15 +284,5 @@ public class AdditionActivity extends AppCompatActivity {
         }
 
         correctTimesText.setText(correctTimes + "問");
-
-        if(calculationKind == 1){
-            remain = remain - 1;
-            if (remain == questionNumber - timesNumber) {
-                remainText.setText(remain + "問");
-            } else {
-                remainText.setText("エラー");
-            }
-            progressBar.setProgress(timesNumber);
-        }
     }
 }

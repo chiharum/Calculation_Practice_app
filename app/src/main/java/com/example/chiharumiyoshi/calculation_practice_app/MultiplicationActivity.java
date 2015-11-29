@@ -1,6 +1,5 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
-import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -18,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class MaltiplicationActivity extends AppCompatActivity {
+public class MultiplicationActivity extends AppCompatActivity {
 
     TextView number1,number2,answer,correct_t,remain_t;
     ImageView eraser_image,correct_img,incorrect_img;
@@ -83,8 +82,10 @@ public class MaltiplicationActivity extends AppCompatActivity {
         intent.putExtra("correctTimes", correct);
         intent.putExtra("time", total_time);
         intent.putExtra("last_activity", 3);
+        intent.putExtra("calculationKind", 1);
+
         intent.setAction(Intent.ACTION_MAIN);
-        intent.setClass(MaltiplicationActivity.this, FinishActivity.class);
+        intent.setClass(MultiplicationActivity.this, FinishActivity.class);
         startActivity(intent);
     }
 
@@ -205,7 +206,7 @@ public class MaltiplicationActivity extends AppCompatActivity {
                 int id = v.getId();
                 if(id == R.id.imageView3){
                     Intent intent = new Intent();
-                    intent.setClass(MaltiplicationActivity.this, MaltiplicationActivity.class);
+                    intent.setClass(MultiplicationActivity.this, MultiplicationActivity.class);
                     startActivity(intent);
                 }else if(id == R.id.imageView4){
                     dialog.hide();
@@ -216,7 +217,7 @@ public class MaltiplicationActivity extends AppCompatActivity {
                 }else if(id == R.id.imageView5){
                     Intent intent = new Intent();
                     intent.putExtra("correctTimes",correct);
-                    intent.setClass(MaltiplicationActivity.this, StartActivity.class);
+                    intent.setClass(MultiplicationActivity.this, StartActivity.class);
                     startActivity(intent);
                 }
             }
@@ -245,7 +246,7 @@ public class MaltiplicationActivity extends AppCompatActivity {
             intent.putExtra("time", total_time);
             intent.putExtra("last_activity",3);
             intent.setAction(Intent.ACTION_MAIN);
-            intent.setClass(MaltiplicationActivity.this, FinishActivity.class);
+            intent.setClass(MultiplicationActivity.this, FinishActivity.class);
             startActivity(intent);
         }
 

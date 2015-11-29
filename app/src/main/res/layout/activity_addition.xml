@@ -403,23 +403,23 @@
 
     </LinearLayout>
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="fill_parent">-->
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-        <!--&lt;!&ndash;まる&ndash;&gt;-->
-        <!--<ImageView-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="fill_parent"-->
-            <!--android:id="@+id/correct_img"-->
-            <!--android:src="@drawable/correct"/>-->
+        <!--まる-->
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/correct_img"
+            android:src="@drawable/correct"/>
 
-        <!--&lt;!&ndash;ばつ&ndash;&gt;-->
-        <!--<ImageView-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="fill_parent"-->
-            <!--android:id="@+id/incorrect_img"-->
-            <!--android:src="@drawable/incorrect" />-->
-    <!--</RelativeLayout>-->
+        <!--ばつ-->
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/incorrect_img"
+            android:src="@drawable/incorrect" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -48,20 +48,20 @@ public class SettingsActivity extends AppCompatActivity {
 
         questionNumbersText = (TextView)findViewById(R.id.question_numbers_t);
 
-        // Load from prefs
         int number = prefs.getInt(KEY_QUESTION_NUMBER, 10);
         questionNumbersText.setText("問題数：" + number + "問");
         eraserImageView = (ImageView)findViewById(R.id.imageView10);
 
         int defaultTime = prefs.getInt(KEY_QUESTION_TIME, 0);
         questionTimeText = (TextView)findViewById(R.id.textView19);
-        questionTimeText.setText(String.valueOf(defaultTime));
+        questionTimeText.setText(defaultTime + "秒");
 
         int default_eraser_color = prefs.getInt(KEY_ERASER_COLOR, 0) + 1;
         int image_res = getResources().getIdentifier("delete_button_" + default_eraser_color, "drawable", getPackageName());
         eraserImageView.setImageResource(image_res);
     }
 
+    //問題数
     public void question_numbers(View view){
         AlertDialog.Builder adb1 = new AlertDialog.Builder(this);
         adb1.setTitle("問題数");
@@ -104,6 +104,7 @@ public class SettingsActivity extends AppCompatActivity {
         adb1.show();
     }
 
+    //問題の時間
     public void question_time(View view){
         AlertDialog.Builder adb1 = new AlertDialog.Builder(this);
         adb1.setTitle("時間");
@@ -143,13 +144,14 @@ public class SettingsActivity extends AppCompatActivity {
                 prefs.edit()
                         .putInt(KEY_QUESTION_TIME, question_time)
                         .apply();
-                questionNumbersText.setText("時間：" + question_time + "問");
+                questionNumbersText.setText("時間：" + question_time + "秒");
                 dialog.dismiss();
             }
         });
         adb1.show();
     }
 
+    //消しゴムの色
     public void eraser_color(View v){
         AlertDialog.Builder adb2 = new AlertDialog.Builder(this);
         adb2.setTitle("消しゴムの色");
