@@ -83,12 +83,13 @@
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
                     android:text="問題数"
                     android:textSize="20dp"
                     android:id="@+id/Button1"
                     android:layout_weight="1"
-                    android:onClick="question_numbers" />
+                    android:onClick="question_numbers"
+                    android:background="@drawable/button" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -96,7 +97,8 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="問題数：0問"
                     android:id="@+id/question_numbers_t"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:textSize="22dp" />
 
             </LinearLayout>
 
@@ -119,12 +121,13 @@
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
                     android:text="時間"
                     android:textSize="20dp"
                     android:id="@+id/button5"
                     android:layout_weight="1"
-                    android:onClick="question_time" />
+                    android:onClick="question_time"
+                    android:background="@drawable/button" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -154,12 +157,13 @@
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
                     android:text="消しゴムの色"
                     android:textSize="20dp"
                     android:id="@+id/button4"
                     android:layout_weight="1"
-                    android:onClick="eraser_color" />
+                    android:onClick="eraser_color"
+                    android:background="@drawable/button" />
 
                 <ImageView
                     android:layout_width="0dp"
