@@ -31,9 +31,9 @@ public class AdditionActivity extends AppCompatActivity {
     Chronometer time;
     AlertDialog dialog;
 
-    private SQLiteDatabase database;
-    private static String DATABASE_NAME = "questions.db";
-    private static String DATABASE_TABLE = "questions";
+//    private SQLiteDatabase database;
+//    private static String DATABASE_NAME = "questions.db";
+//    private static String DATABASE_TABLE = "questions";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +54,8 @@ public class AdditionActivity extends AppCompatActivity {
         incorrectImage = (ImageView) findViewById(R.id.incorrect_img);
 
 
-        DatabaseHelper databaseHelper = new DatabaseHelper(this);
-        database = databaseHelper.getWritableDatabase();
+//        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+//        database = databaseHelper.getWritableDatabase();
 
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -92,30 +92,30 @@ public class AdditionActivity extends AppCompatActivity {
         time.start();
     }
 
-    private void writeDatabase(String info) throws Exception {
-        ContentValues values = new ContentValues();
-        values.put("id", "0");
-        values.put("info", info);
-        int columnNumber = database.update(DATABASE_TABLE, values, null, null);
-        if (columnNumber == 0) database.insert(DATABASE_TABLE,"", values);
-    }
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-        public DatabaseHelper(Context context){
-            super(context, DATABASE_NAME, null, 1);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase database){
-            database.execSQL("create table if not exists " + DATABASE_NAME + "(id tet primary key, info text)");
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-            database.execSQL("drop table if exists " + DATABASE_TABLE);
-            onCreate(database);
-        }
-    }
+//    private void writeDatabase(String info) throws Exception {
+//        ContentValues values = new ContentValues();
+//        values.put("id", "0");
+//        values.put("info", info);
+//        int columnNumber = database.update(DATABASE_TABLE, values, null, null);
+//        if (columnNumber == 0) database.insert(DATABASE_TABLE,"", values);
+//    }
+//
+//    private static class DatabaseHelper extends SQLiteOpenHelper {
+//        public DatabaseHelper(Context context){
+//            super(context, DATABASE_NAME, null, 1);
+//        }
+//
+//        @Override
+//        public void onCreate(SQLiteDatabase database){
+//            database.execSQL("create table if not exists " + DATABASE_NAME + "(id tet primary key, info text)");
+//        }
+//
+//        @Override
+//        public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+//            database.execSQL("drop table if exists " + DATABASE_TABLE);
+//            onCreate(database);
+//        }
+//    }
 
     public void new_question() {
         answer = 0;
