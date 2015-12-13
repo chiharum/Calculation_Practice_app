@@ -54,7 +54,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         int defaultTime = prefs.getInt(KEY_QUESTION_TIME, 0);
         questionTimeText = (TextView)findViewById(R.id.textView19);
-        questionTimeText.setText(defaultTime + "秒");
+        questionTimeText.setText("時間：" + defaultTime + "秒");
 
         int default_eraser_color = prefs.getInt(KEY_ERASER_COLOR, 0) + 1;
         int image_res = getResources().getIdentifier("delete_button_" + default_eraser_color, "drawable", getPackageName());
@@ -111,7 +111,7 @@ public class SettingsActivity extends AppCompatActivity {
         final String[] question_numbers_t = getResources().getStringArray(R.array.question_time);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        int defaultTime = prefs.getInt(KEY_QUESTION_TIME, 10);
+        long defaultTime = prefs.getLong(KEY_QUESTION_TIME, 10);
         int selected_index = 0;
 
         if (defaultTime == 30){
@@ -129,22 +129,22 @@ public class SettingsActivity extends AppCompatActivity {
         adb1.setSingleChoiceItems(question_numbers_t, selected_index, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int question_time = 10;
+                long questionTime = 10;
                 if (which == 0) {
-                    question_time = 30;
+                    questionTime = 30;
                 } else if (which == 1) {
-                    question_time = 60;
+                    questionTime = 60;
                 } else if (which == 2) {
-                    question_time = 90;
+                    questionTime = 90;
                 } else if (which == 3) {
-                    question_time = 120;
+                    questionTime = 120;
                 } else if (which == 4) {
-                    question_time = 300;
+                    questionTime = 300;
                 }
                 prefs.edit()
-                        .putInt(KEY_QUESTION_TIME, question_time)
+                        .putLong(KEY_QUESTION_TIME, questionTime)
                         .apply();
-                questionNumbersText.setText("時間：" + question_time + "秒");
+                questionNumbersText.setText("時間：" + questionTime + "秒");
                 dialog.dismiss();
             }
         });

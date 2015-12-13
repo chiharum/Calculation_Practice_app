@@ -44,6 +44,8 @@ public class AdditionSecondActivity extends AppCompatActivity {
         correctImage = (ImageView) findViewById(R.id.correct_img);
         incorrectImage = (ImageView) findViewById(R.id.incorrect_img);
 
+        final ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
 
         // Viewの初期設定
         time.setBase(android.os.SystemClock.elapsedRealtime());
@@ -53,6 +55,9 @@ public class AdditionSecondActivity extends AppCompatActivity {
 
         questionTime = prefs.getLong(SettingsActivity.KEY_QUESTION_TIME, 30);
 
+        progressBar.setMax((int) questionTime);
+        progressBar.setProgress((int)questionTime);
+
         remainTime = questionTime;
         remainText.setText(remainTime + "秒");
 
@@ -61,6 +66,8 @@ public class AdditionSecondActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {
                 remainTime = remainTime - 1;
                 remainText.setText(remainTime + "秒");
+
+                progressBar.setProgress((int)remainTime);
             }
 
             @Override

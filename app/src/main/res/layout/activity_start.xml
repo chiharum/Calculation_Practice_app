@@ -33,8 +33,7 @@
                 android:layout_above="@+id/linearLayout5"
                 android:layout_toStartOf="@+id/textView9"
                 android:layout_toLeftOf="@+id/textView9"
-                android:layout_weight="1"
-                android:onClick="ogchiharu" />
+                android:layout_weight="1" />
 
             <Space
                 android:layout_width="0dp"
