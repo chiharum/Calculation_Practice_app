@@ -18,6 +18,7 @@ public class StartActivity extends AppCompatActivity {
     int lastYear, lastMonth, lastDay, lastDate,year,month,day,date, timesInADay, continuousDays, calculationKind;
     TextView timesInADayText, continuousDayTimesText, titleText;
     AlertDialog dialog;
+    boolean newYear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class StartActivity extends AppCompatActivity {
         lastMonth = prefs.getInt("lastMonth", 0);
         lastDay = prefs.getInt("lastDay", 0);
         lastDate = prefs.getInt("lastDate",0);
-
+        newYear = prefs.getBoolean("newYear", false);
 
         titleText.setTypeface(Typeface.SERIF, Typeface.BOLD);
         timesInADayText = (TextView)findViewById(R.id.textView9);
@@ -46,10 +47,9 @@ public class StartActivity extends AppCompatActivity {
         month = calendar.get(Calendar.MONTH) + 1;
         day = calendar.get(Calendar.DAY_OF_MONTH);
         date = day + month * 100 + year * 10000;
-        if(lastDate == date){
-            timesInADay = timesInADay + 1;
-        }else{
-            timesInADay = 1;
+
+        if(lastDate != date) {
+            timesInADay = 0;
         }
         if(date != lastDate + 1){
             continuousDays = 0;
@@ -83,6 +83,9 @@ public class StartActivity extends AppCompatActivity {
         prefs.edit()
                 .putInt("lastDate",date)
                 .apply();
+        prefs.edit()
+                .putBoolean("newYear",newYear)
+                .apply();
     }
 
     public void settings(View v){
@@ -93,13 +96,6 @@ public class StartActivity extends AppCompatActivity {
 
     public void calculate(View view){
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        calculationKind = prefs.getInt("calculationKind", 0);
-        calculationKind = 1;
-        prefs.edit()
-                .putInt("calculationKind", calculationKind)
-                .apply();
-
         LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View adbLayout = inflater.inflate(R.layout.calculate_dialog, null);
 
@@ -109,19 +105,27 @@ public class StartActivity extends AppCompatActivity {
                 int id = v.getId();
                 if(id == R.id.calculate_addition){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, AdditionActivity.class);
+                    intent.setClass(StartActivity.this, CalculationActivity.class);
+                    intent.putExtra("calculationKind", 0);
+                    intent.putExtra("timeKind", 0);
                     startActivity(intent);
                 }else if(id == R.id.calculate_subtraction){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, SubtractionActivity.class);
+                    intent.setClass(StartActivity.this, CalculationActivity.class);
+                    intent.putExtra("calculationKind", 1);
+                    intent.putExtra("timeKind", 0);
                     startActivity(intent);
                 }else if(id == R.id.calculate_maltiplication){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, MultiplicationActivity.class);
+                    intent.setClass(StartActivity.this, CalculationActivity.class);
+                    intent.putExtra("calculationKind", 2);
+                    intent.putExtra("timeKind", 0);
                     startActivity(intent);
                 }else if(id == R.id.calculate_division){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, DivisionActivity.class);
+                    intent.setClass(StartActivity.this, CalculationActivity.class);
+                    intent.putExtra("calculationKind", 3);
+                    intent.putExtra("timeKind", 0);
                     startActivity(intent);
                 }
             }
@@ -148,19 +152,27 @@ public class StartActivity extends AppCompatActivity {
                 int id = v.getId();
                 if(id == R.id.calculate_addition){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, AdditionSecondActivity.class);
+                    intent.setClass(StartActivity.this, CalculationActivity.class);
+                    intent.putExtra("calculationKind", 0);
+                    intent.putExtra("timeKind", 1);
                     startActivity(intent);
                 }else if(id == R.id.calculate_subtraction){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, SubtractionActivity.class);
+                    intent.setClass(StartActivity.this, CalculationActivity.class);
+                    intent.putExtra("calculationKind", 1);
+                    intent.putExtra("timeKind", 1);
                     startActivity(intent);
                 }else if(id == R.id.calculate_maltiplication){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, MultiplicationActivity.class);
+                    intent.setClass(StartActivity.this, CalculationActivity.class);
+                    intent.putExtra("calculationKind", 2);
+                    intent.putExtra("timeKind", 1);
                     startActivity(intent);
                 }else if(id == R.id.calculate_division){
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, DivisionActivity.class);
+                    intent.setClass(StartActivity.this, CalculationActivity.class);
+                    intent.putExtra("calculationKind", 3);
+                    intent.putExtra("timeKind", 1);
                     startActivity(intent);
                 }
             }

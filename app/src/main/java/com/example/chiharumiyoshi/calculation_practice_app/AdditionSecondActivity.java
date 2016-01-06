@@ -78,7 +78,7 @@ public class AdditionSecondActivity extends AppCompatActivity {
                 intent.putExtra("correctTimes", correctTimes);
                 intent.putExtra("question_numbers", timesNumber);
                 intent.putExtra("time", questionTime * 1000);
-                intent.putExtra("last_activity", 1);
+                intent.putExtra("calculationKind", 1);
                 intent.putExtra("calculationKind", 2);
                 intent.setAction(Intent.ACTION_MAIN);
                 intent.setClass(AdditionSecondActivity.this, FinishActivity.class);
@@ -234,7 +234,7 @@ public class AdditionSecondActivity extends AppCompatActivity {
                 if (id == R.id.imageView3) {
                     // restart
                     Intent intent = new Intent();
-                    intent.setClass(AdditionSecondActivity.this, AdditionActivity.class);
+                    intent.setClass(AdditionSecondActivity.this, CalculationActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.imageView4) {
                     // resume

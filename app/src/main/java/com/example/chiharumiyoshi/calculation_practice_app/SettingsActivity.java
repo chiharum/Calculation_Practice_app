@@ -20,7 +20,8 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String KEY_ERASER_COLOR = "eraser_color";
 
     boolean minus;
-    TextView questionNumbersText, questionTimeText;
+    TextView questionNumbersText;
+    TextView questionTimeText;
     ImageView eraserImageView;
     long questionTime;
 
@@ -144,7 +145,7 @@ public class SettingsActivity extends AppCompatActivity {
                 prefs.edit()
                         .putLong(KEY_QUESTION_TIME, questionTime)
                         .apply();
-                SettingsActivity.this.questionNumbersText.setText("時間：" + questionTime + "秒");
+                questionTimeText.setText("時間：" + questionTime + "秒");
                 dialog.dismiss();
             }
         });

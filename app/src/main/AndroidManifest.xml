@@ -15,18 +15,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AdditionActivity" />
         <activity android:name=".FinishActivity" />
-        <activity android:name=".MultiplicationActivity" />
         <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".StartActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".StartActivity" />
-        </activity>
-        <activity android:name=".SubtractionActivity" />
-        <activity android:name=".DivisionActivity" >
         </activity>
         <activity android:name=".ExplanationActivity" >
         </activity>
@@ -37,6 +32,8 @@
         <activity android:name=".MultiplicationSecondActivity" >
         </activity>
         <activity android:name=".DivisionSecondActivity" >
+        </activity>
+        <activity android:name=".CalculationActivity" >
         </activity>
     </application>
 

@@ -128,7 +128,7 @@
                 android:layout_alignParentStart="true"
                 android:text="計算練習"
                 android:textSize="30dp"
-                android:background="@drawable/button"
+                android:background="@drawable/button_flat"
                 android:onClick="calculate"
                 android:layout_weight="1" />
 
@@ -139,7 +139,7 @@
                 android:id="@+id/button3"
                 android:layout_below="@+id/button2"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/button"
+                android:background="@drawable/button_flat"
                 android:textSize="30dp"
                 android:onClick="calculate_much"
                 android:layout_marginTop="5dp"

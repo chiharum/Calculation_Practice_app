@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 public class FinishActivity extends AppCompatActivity {
 
-    int correct, calculationKind;
+    int correct, timeKind;
     long time, seconds, minutes, subSeconds, highestTime, highestTimeAddition, highestTimeSubtraction, highestTimeMultiplication, time_times, highestTimeMinutes, highestTimeSeconds, highestTimeSubSeconds, highestTimeDivision;
     TextView correctText, timeText, timeTimesText, highestTimeText;
-    int question_numbers,last_activity, timesInADay;
+    int question_numbers, calculationKind, timesInADay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +31,13 @@ public class FinishActivity extends AppCompatActivity {
 
         question_numbers = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
 
-        correct = getIntent().getIntExtra("correctTimes", 0);
+        correct = getIntent().getIntExtra("correct", 0);
         time = getIntent().getLongExtra("time", 0);
-        calculationKind = getIntent().getIntExtra("calculationKind", 0);
+        timeKind = getIntent().getIntExtra("timeKind", 0);
 
-        if(calculationKind == 1){
+        if(timeKind == 1){
             correctText.setText(correct + "/" + question_numbers + "回");
-        }else if(calculationKind == 2){
+        }else if(timeKind == 2){
             correctText.setText(correct + "回");
         }
 
@@ -47,18 +47,18 @@ public class FinishActivity extends AppCompatActivity {
         seconds = seconds - minutes * 60;
         timeText = (TextView)findViewById(R.id.textView2);
         timeText.setText("時間　" + minutes + "分" + seconds + "秒" + subSeconds);
-        last_activity = getIntent().getIntExtra("last_activity",1);
+        calculationKind = getIntent().getIntExtra("calculationKind",0);
 
         if(correct == 0){
             time_times = 0;
         }else{
-            time_times = seconds / correct;
+            time_times = time / correct;
         }
-        subSeconds = seconds % correct;
-        timeTimesText.setText("1問　" + time_times + "秒" + subSeconds);
+        timeTimesText.setText("1問　" + time_times + "秒");
 
-        if(calculationKind == 1){
-            if(last_activity == 1){
+        if(timeKind == 1){
+            if(calculationKind == 1){
+
                 highestTimeAddition = prefs.getLong("highestTimeAddition", 0);
                 if(highestTimeAddition > time / question_numbers || highestTimeAddition == 0){
                     highestTimeAddition = time / question_numbers;
@@ -67,7 +67,8 @@ public class FinishActivity extends AppCompatActivity {
                             .apply();
                 }
                 highestTime = highestTimeAddition;
-            }else if(last_activity == 2){
+            }else if(calculationKind == 2){
+
                 highestTimeSubtraction = prefs.getLong("highestTimeSubtraction", 0);
                 if(highestTimeSubtraction > time / question_numbers || highestTimeAddition == 0){
                     highestTimeSubtraction = time / question_numbers;
@@ -76,7 +77,8 @@ public class FinishActivity extends AppCompatActivity {
                             .apply();
                 }
                 highestTime = highestTimeSubtraction;
-            }else if(last_activity == 3){
+            }else if(calculationKind == 3){
+
                 highestTimeMultiplication = prefs.getLong("highestTimeMultiplication", 0);
                 if(highestTimeMultiplication > time / question_numbers || highestTimeAddition == 0){
                     highestTimeMultiplication = time / question_numbers;
@@ -85,7 +87,8 @@ public class FinishActivity extends AppCompatActivity {
                             .apply();
                 }
                 highestTime = highestTimeMultiplication;
-            }else if(last_activity == 4){
+            }else if(calculationKind == 4){
+
                 highestTimeDivision = prefs.getLong("highestTimeMultiplication", 0);
                 if(highestTimeDivision > time / question_numbers || highestTimeDivision == 0){
                     highestTimeDivision = time / question_numbers;
@@ -105,26 +108,21 @@ public class FinishActivity extends AppCompatActivity {
 
         timesInADay = prefs.getInt("TimesInADay",0);
         timesInADay = timesInADay + 1;
+        prefs.edit()
+                .putLong("TimesInADay", timesInADay)
+                .apply();
     }
 
-    public void restart(View v){
+    public void restart(View v) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN);
-        if (last_activity == 1){
-            intent.setClass(FinishActivity.this, AdditionActivity.class);
-        }else if (last_activity == 2){
-            intent.setClass(FinishActivity.this, SubtractionActivity.class);
-        }else if(last_activity == 3){
-            intent.setClass(FinishActivity.this, MultiplicationActivity.class);
-        }else if(last_activity == 4){
-            intent.setClass(FinishActivity.this, DivisionActivity.class);
-        }
+        intent.setClass(FinishActivity.this, CalculationActivity.class);
+        intent.putExtra("calculationKind", calculationKind);
         startActivity(intent);
     }
 
     public void home(View v){
         Intent intent = new Intent();
-        intent.putExtra("last_activity",1);
         intent.setClass(FinishActivity.this, StartActivity.class);
         startActivity(intent);
     }

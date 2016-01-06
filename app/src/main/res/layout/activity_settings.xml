@@ -89,7 +89,7 @@
                     android:id="@+id/Button1"
                     android:layout_weight="1"
                     android:onClick="question_numbers"
-                    android:background="@drawable/button" />
+                    android:background="@drawable/button_flat" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -127,7 +127,7 @@
                     android:id="@+id/button5"
                     android:layout_weight="1"
                     android:onClick="question_time"
-                    android:background="@drawable/button" />
+                    android:background="@drawable/button_flat" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -163,7 +163,7 @@
                     android:id="@+id/button4"
                     android:layout_weight="1"
                     android:onClick="eraser_color"
-                    android:background="@drawable/button" />
+                    android:background="@drawable/button_flat" />
 
                 <ImageView
                     android:layout_width="0dp"
