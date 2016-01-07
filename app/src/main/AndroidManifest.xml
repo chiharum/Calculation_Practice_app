@@ -25,14 +25,6 @@
         </activity>
         <activity android:name=".ExplanationActivity" >
         </activity>
-        <activity android:name=".AdditionSecondActivity" >
-        </activity>
-        <activity android:name=".SubtractionSecondActivity" >
-        </activity>
-        <activity android:name=".MultiplicationSecondActivity" >
-        </activity>
-        <activity android:name=".DivisionSecondActivity" >
-        </activity>
         <activity android:name=".CalculationActivity" >
         </activity>
     </application>

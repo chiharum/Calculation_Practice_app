@@ -12,9 +12,12 @@ import android.widget.TextView;
 public class FinishActivity extends AppCompatActivity {
 
     int correct, timeKind;
-    long time, seconds, minutes, subSeconds, highestTime, highestTimeAddition, highestTimeSubtraction, highestTimeMultiplication, time_times, highestTimeMinutes, highestTimeSeconds, highestTimeSubSeconds, highestTimeDivision;
+    long time, seconds, minutes, subSeconds, highestTime, highestTimeAddition, highestTimeSubtraction, highestTimeMultiplication, highestTimeMinutes, highestTimeSeconds, highestTimeSubSeconds, highestTimeDivision;
     TextView correctText, timeText, timeTimesText, highestTimeText;
     int question_numbers, calculationKind, timesInADay;
+    float timeTimes;
+
+    public static final String KEY_CALCULATION_KIND = "CalculationKind";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +50,14 @@ public class FinishActivity extends AppCompatActivity {
         seconds = seconds - minutes * 60;
         timeText = (TextView)findViewById(R.id.textView2);
         timeText.setText("時間　" + minutes + "分" + seconds + "秒" + subSeconds);
-        calculationKind = getIntent().getIntExtra("calculationKind",0);
+        calculationKind = getIntent().getIntExtra(KEY_CALCULATION_KIND,0);
 
         if(correct == 0){
-            time_times = 0;
+            timeTimes = 0;
         }else{
-            time_times = time / correct;
+            timeTimes = (float)time / 1000 / (float)correct;
         }
-        timeTimesText.setText("1問　" + time_times + "秒");
+        timeTimesText.setText("1問　" + timeTimes + "秒");
 
         if(timeKind == 1){
             if(calculationKind == 1){
@@ -106,10 +109,10 @@ public class FinishActivity extends AppCompatActivity {
             highestTimeText.setText("最高記録　1問　" + highestTimeSeconds + "秒" + highestTimeSubSeconds);
         }
 
-        timesInADay = prefs.getInt("TimesInADay",0);
-        timesInADay = timesInADay + 1;
+        timesInADay = prefs.getInt(StartActivity.KEY_TIMES_IN_A_DAY,0);
+        timesInADay += 1;
         prefs.edit()
-                .putLong("TimesInADay", timesInADay)
+                .putInt(StartActivity.KEY_TIMES_IN_A_DAY, timesInADay)
                 .apply();
     }
 
@@ -117,7 +120,7 @@ public class FinishActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN);
         intent.setClass(FinishActivity.this, CalculationActivity.class);
-        intent.putExtra("calculationKind", calculationKind);
+        intent.putExtra(KEY_CALCULATION_KIND, calculationKind);
         startActivity(intent);
     }
 

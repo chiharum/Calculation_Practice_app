@@ -23,7 +23,7 @@ public class CalculationActivity extends AppCompatActivity {
     TextView number1Text, number2Text, answerText, correctTimesText, remainText, flagText;
     ImageView eraserImage, correctImage, incorrectImage;
     int number1, number2, userAnswer, correctAnswer, correctTimes, times, questionTimes, eraserColor, remainTimes, calculationKind, timeKind;
-    long startTime, endTime, totalTime, stopRealTime, questionTime, remainTime;
+    long startedTime, endedTime, totalTime, stopRealTime, questionTime, remainTime;
     boolean minus;
     ProgressBar progressBar;
     Chronometer time;
@@ -71,12 +71,13 @@ public class CalculationActivity extends AppCompatActivity {
             progressBar.setProgress(0);
         }else if(timeKind == 1){
 
-            questionTime = prefs.getInt(SettingsActivity.KEY_QUESTION_TIME, 0);
+            questionTime = prefs.getLong(SettingsActivity.KEY_QUESTION_TIME, 30);
 
             remainTime = questionTime;
             remainText.setText(remainTime + "秒");
 
-            progressBar.setMax((int)questionTime);
+            progressBar.setMax((int) questionTime);
+            progressBar.setProgress((int) questionTime);
 
             CountDownTimer countDownTimer = new CountDownTimer(remainTime * 1000, 1000) {
                 @Override
@@ -89,11 +90,11 @@ public class CalculationActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                    endTime = System.currentTimeMillis();
+                    endedTime = System.currentTimeMillis();
                     time.stop();
                     Intent intent = new Intent();
                     intent.putExtra("correct", correctTimes);
-                    intent.putExtra("question_numbers", times);
+                    intent.putExtra(SettingsActivity.KEY_QUESTION_NUMBER, times);
                     intent.putExtra("time", questionTime * 1000);
                     intent.putExtra("calculationKind", calculationKind);
                     intent.putExtra("timeKind", 1);
@@ -131,7 +132,7 @@ public class CalculationActivity extends AppCompatActivity {
 
         totalTime = 0;
 
-        startTime = System.currentTimeMillis();
+        startedTime = System.currentTimeMillis();
 
         time.setBase(android.os.SystemClock.elapsedRealtime());
         time.start();
@@ -182,15 +183,15 @@ public class CalculationActivity extends AppCompatActivity {
     }
 
     public void finish() {
-        endTime = System.currentTimeMillis();
+        endedTime = System.currentTimeMillis();
         time.stop();
-        totalTime = endTime - startTime;
+        totalTime = endedTime - startedTime;
         Intent intent = new Intent();
         intent.putExtra("correct", correctTimes);
         intent.putExtra("calculationKind", calculationKind);
         intent.putExtra("time", totalTime);
         intent.putExtra("timeKind", 0);
-        intent.putExtra("question_numbers", questionTimes);
+        intent.putExtra(SettingsActivity.KEY_QUESTION_NUMBER, questionTimes);
 
         intent.setAction(Intent.ACTION_MAIN);
         intent.setClass(CalculationActivity.this, FinishActivity.class);
@@ -298,10 +299,10 @@ public class CalculationActivity extends AppCompatActivity {
     }
 
     public void pause(View view) {
-        endTime = System.currentTimeMillis();
+        endedTime = System.currentTimeMillis();
         stopRealTime = time.getBase() - SystemClock.elapsedRealtime();
         time.stop();
-        totalTime = endTime - startTime + totalTime;
+        totalTime = endedTime - startedTime + totalTime;
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.pause_dialog, (ViewGroup) findViewById(R.id.pause));
 
@@ -315,15 +316,15 @@ public class CalculationActivity extends AppCompatActivity {
                     // restart
                     Intent intent = new Intent();
                     intent.setClass(CalculationActivity.this, CalculationActivity.class);
-                    intent.putExtra("timeKind", calculationKind);
+                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, calculationKind);
                     startActivity(intent);
                 } else if (id == R.id.imageView4) {
                     // resume
                     dialog.hide();
                     time.setBase(android.os.SystemClock.elapsedRealtime() + stopRealTime);
                     time.start();
-                    startTime = System.currentTimeMillis();
-                    endTime = 0;
+                    startedTime = System.currentTimeMillis();
+                    endedTime = 0;
                 } else if (id == R.id.imageView5) {
                     // go to home
                     Intent intent = new Intent();

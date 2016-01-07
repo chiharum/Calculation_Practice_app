@@ -15,10 +15,12 @@ import java.util.Calendar;
 
 public class StartActivity extends AppCompatActivity {
 
-    int lastYear, lastMonth, lastDay, lastDate,year,month,day,date, timesInADay, continuousDays, calculationKind;
+    int lastYear, lastMonth, lastDay, lastDate,year,month,day,date, timesInADay, continuousDays;
     TextView timesInADayText, continuousDayTimesText, titleText;
     AlertDialog dialog;
     boolean newYear;
+
+    public static final String KEY_TIMES_IN_A_DAY = "TimesInADay";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,7 @@ public class StartActivity extends AppCompatActivity {
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        timesInADay = prefs.getInt("timesInADay",0);
+        timesInADay = prefs.getInt(KEY_TIMES_IN_A_DAY, 0);
         continuousDays = prefs.getInt("continuousDays",0);
         lastYear = prefs.getInt("lastYear", 0);
         lastMonth = prefs.getInt("lastMonth", 0);
@@ -51,9 +53,11 @@ public class StartActivity extends AppCompatActivity {
         if(lastDate != date) {
             timesInADay = 0;
         }
+
         if(date != lastDate + 1){
             continuousDays = 0;
         }
+
         timesInADayText.setText("今日(" + year + "年" + month + "月" + day + "日)、" + timesInADay + "回目のプレイです。");
         if(continuousDays > 0){
             continuousDayTimesText.setText(continuousDays + "日連続プレイです。");
@@ -75,7 +79,7 @@ public class StartActivity extends AppCompatActivity {
                 .putInt("lastDay",day)
                 .apply();
         prefs.edit()
-                .putInt("timesInADay", timesInADay)
+                .putInt(KEY_TIMES_IN_A_DAY, timesInADay)
                 .apply();
         prefs.edit()
                 .putInt("continuousDays", continuousDays)
