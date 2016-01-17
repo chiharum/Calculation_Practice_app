@@ -1,8 +1,11 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -29,10 +32,16 @@ public class CalculationActivity extends AppCompatActivity {
     Chronometer time;
     AlertDialog dialog;
 
+    SQLiteDatabase database;
+    MySQLiteOpenHelper mySQLiteOpenHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculation);
+
+        mySQLiteOpenHelper = new MySQLiteOpenHelper(getApplicationContext());
+        database = mySQLiteOpenHelper.getWritableDatabase();
 
         // Viewの関連付け
         eraserImage = (ImageView) findViewById(R.id.imageView);
@@ -96,7 +105,7 @@ public class CalculationActivity extends AppCompatActivity {
                     intent.putExtra("correct", correctTimes);
                     intent.putExtra(SettingsActivity.KEY_QUESTION_NUMBER, times);
                     intent.putExtra("time", questionTime * 1000);
-                    intent.putExtra("calculationKind", calculationKind);
+                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, calculationKind);
                     intent.putExtra("timeKind", 1);
                     intent.setAction(Intent.ACTION_MAIN);
                     intent.setClass(CalculationActivity.this, FinishActivity.class);
@@ -112,7 +121,7 @@ public class CalculationActivity extends AppCompatActivity {
 
         correctTimesText.setText("0" + "問");
 
-        calculationKind = getIntent().getIntExtra("timeKind", 0);
+        calculationKind = getIntent().getIntExtra(FinishActivity.KEY_CALCULATION_KIND, 0);
         if(calculationKind == 0){
             flagText.setText("+");
         }else if(calculationKind == 1){
@@ -136,6 +145,22 @@ public class CalculationActivity extends AppCompatActivity {
 
         time.setBase(android.os.SystemClock.elapsedRealtime());
         time.start();
+    }
+
+    public void insert(int question_number, int number1, int number2, int correct_answer, int answer, int result){
+
+        ContentValues values = new ContentValues();
+
+        values.put("question_number", question_number);
+        values.put("number1", number1);
+        values.put("number2", number2);
+        values.put("correct_answer", correct_answer);
+        values.put("answer", answer);
+        values.put("result", result);
+
+        Log.e("inserts", " " + question_number + " " + number1 + " " + number2 + " " + correct_answer + " " + answer + " " + result);
+
+        database.insert(MySQLiteOpenHelper.TABLE_NAME, null, values);
     }
 
     public void new_question() {
@@ -188,7 +213,7 @@ public class CalculationActivity extends AppCompatActivity {
         totalTime = endedTime - startedTime;
         Intent intent = new Intent();
         intent.putExtra("correct", correctTimes);
-        intent.putExtra("calculationKind", calculationKind);
+        intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, calculationKind);
         intent.putExtra("time", totalTime);
         intent.putExtra("timeKind", 0);
         intent.putExtra(SettingsActivity.KEY_QUESTION_NUMBER, questionTimes);
@@ -352,6 +377,8 @@ public class CalculationActivity extends AppCompatActivity {
 
             correctTimes = correctTimes + 1;
 
+            insert(times, number1, number2, correctAnswer, userAnswer, 0);
+
             if(timeKind == 0){
 
                 if (times == questionTimes) {
@@ -368,6 +395,8 @@ public class CalculationActivity extends AppCompatActivity {
                 }
             }, 1000);
         } else {
+
+            insert(times, number1, number2, correctAnswer, userAnswer, 1);
 
             if(timeKind == 0){
 

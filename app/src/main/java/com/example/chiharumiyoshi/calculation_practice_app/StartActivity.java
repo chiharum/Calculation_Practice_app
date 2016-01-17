@@ -110,25 +110,25 @@ public class StartActivity extends AppCompatActivity {
                 if(id == R.id.calculate_addition){
                     Intent intent = new Intent();
                     intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra("calculationKind", 0);
+                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 0);
                     intent.putExtra("timeKind", 0);
                     startActivity(intent);
                 }else if(id == R.id.calculate_subtraction){
                     Intent intent = new Intent();
                     intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra("calculationKind", 1);
+                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 1);
                     intent.putExtra("timeKind", 0);
                     startActivity(intent);
                 }else if(id == R.id.calculate_maltiplication){
                     Intent intent = new Intent();
                     intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra("calculationKind", 2);
+                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 2);
                     intent.putExtra("timeKind", 0);
                     startActivity(intent);
                 }else if(id == R.id.calculate_division){
                     Intent intent = new Intent();
                     intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra("calculationKind", 3);
+                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 3);
                     intent.putExtra("timeKind", 0);
                     startActivity(intent);
                 }
@@ -157,25 +157,25 @@ public class StartActivity extends AppCompatActivity {
                 if(id == R.id.calculate_addition){
                     Intent intent = new Intent();
                     intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra("calculationKind", 0);
+                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 0);
                     intent.putExtra("timeKind", 1);
                     startActivity(intent);
                 }else if(id == R.id.calculate_subtraction){
                     Intent intent = new Intent();
                     intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra("calculationKind", 1);
+                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 1);
                     intent.putExtra("timeKind", 1);
                     startActivity(intent);
                 }else if(id == R.id.calculate_maltiplication){
                     Intent intent = new Intent();
                     intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra("calculationKind", 2);
+                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 2);
                     intent.putExtra("timeKind", 1);
                     startActivity(intent);
                 }else if(id == R.id.calculate_division){
                     Intent intent = new Intent();
                     intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra("calculationKind", 3);
+                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 3);
                     intent.putExtra("timeKind", 1);
                     startActivity(intent);
                 }
