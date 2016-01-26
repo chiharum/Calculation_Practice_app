@@ -47,15 +47,15 @@ public class FinishActivity extends AppCompatActivity {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         question_numbers = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
-
         correct = getIntent().getIntExtra("correct", 0);
-        time = getIntent().getLongExtra("time", 0);
+        time = getIntent().getLongExtra("timeChronometer", 0);
         timeKind = getIntent().getIntExtra("timeKind", 0);
 
         if(timeKind == 0){
             correctText.setText(correct + "/" + question_numbers + "回");
         }else if(timeKind == 1){
             correctText.setText(correct + "回");
+            question_numbers = correct;
         }
 
         seconds = time / 1000;
@@ -144,7 +144,7 @@ public class FinishActivity extends AppCompatActivity {
             int indexCorrect_answer = cursor.getColumnIndex("correct_answer");
             int indexAnswer = cursor.getColumnIndex("answer");
 
-            Log.e("inserts", " " + indexQuestionNumber + " " + indexNumber1 + " " + indexNumber2 + " " + indexCorrect_answer + " " + indexAnswer);
+            Log.e("out_serts", " " + indexQuestionNumber + " " + indexNumber1 + " " + indexNumber2 + " " + indexCorrect_answer + " " + indexAnswer);
 
             while(cursor.moveToNext()) {
                 arrayAdapter.add("第" + indexQuestionNumber + "問：" + indexNumber1 + "+" + indexNumber2 + "　解答：" + indexCorrect_answer + "　あなたの答え：" + indexAnswer);
