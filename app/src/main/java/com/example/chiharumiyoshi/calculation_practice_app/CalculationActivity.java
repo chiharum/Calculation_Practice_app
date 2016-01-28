@@ -132,7 +132,7 @@ public class CalculationActivity extends AppCompatActivity {
             flagText.setText("÷");
         }
 
-        new_question();
+        NEW_QUESTION();
         correctTimes = 0;
         times = 0;
 
@@ -147,23 +147,7 @@ public class CalculationActivity extends AppCompatActivity {
         timeChronometer.start();
     }
 
-    public void insert(int question_number, int number1, int number2, int correct_answer, int answer, int result){
-
-        ContentValues values = new ContentValues();
-
-        values.put("question_number", question_number);
-        values.put("number1", number1);
-        values.put("number2", number2);
-        values.put("correct_answer", correct_answer);
-        values.put("answer", answer);
-        values.put("result", result);
-
-        Log.e("inserts", " " + question_number + " " + number1 + " " + number2 + " " + correct_answer + " " + answer + " " + result);
-
-        database.insert(MySQLiteOpenHelper.TABLE_NAME, null, values);
-    }
-
-    public void new_question() {
+    public void NEW_QUESTION() {
 
         if(calculationKind == 0){
 
@@ -214,13 +198,37 @@ public class CalculationActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra("correct", correctTimes);
         intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, calculationKind);
-        intent.putExtra("time", totalTime);
-        intent.putExtra("timeKind", 0);
-        intent.putExtra(SettingsActivity.KEY_QUESTION_NUMBER, questionTimes);
+
+        if(timeKind == 0){
+
+            intent.putExtra(SettingsActivity.KEY_QUESTION_NUMBER, questionTimes);
+            intent.putExtra("timeChronometer", totalTime);
+            intent.putExtra("timeKind", 0);
+        }else if(timeKind == 1){
+
+            intent.putExtra(SettingsActivity.KEY_QUESTION_NUMBER, times);
+            intent.putExtra("timeChronometer", questionTime * 1000);
+            intent.putExtra("timeKind", 1);
+        }
 
         intent.setAction(Intent.ACTION_MAIN);
         intent.setClass(CalculationActivity.this, FinishActivity.class);
         startActivity(intent);
+    }
+
+    public void insert(int question_number, int number1, int number2, int correct_answer, int answer){
+
+        ContentValues values = new ContentValues();
+
+        values.put("question_number", question_number);
+        values.put("number1", number1);
+        values.put("number2", number2);
+        values.put("correct_answer", correct_answer);
+        values.put("answer", answer);
+
+        Log.e("inserts", " " + question_number + " " + number1 + " " + number2 + " " + correct_answer + " " + answer);
+
+        database.insert(MySQLiteOpenHelper.TABLE_NAME, null, values);
     }
 
     public void click1(View v) {
@@ -373,11 +381,11 @@ public class CalculationActivity extends AppCompatActivity {
     public void next(View view) {
         times = times + 1;
 
+        insert(times, number1, number2, correctAnswer, userAnswer);
+
         if (userAnswer == correctAnswer) {
 
             correctTimes = correctTimes + 1;
-
-            insert(times, number1, number2, correctAnswer, userAnswer, 0);
 
             if(timeKind == 0){
 
@@ -391,12 +399,11 @@ public class CalculationActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     correctImage.setVisibility(View.GONE);
-                    new_question();
+                    NEW_QUESTION();
                 }
             }, 1000);
         } else {
 
-            insert(times, number1, number2, correctAnswer, userAnswer, 1);
 
             if(timeKind == 0){
 
@@ -410,7 +417,7 @@ public class CalculationActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     incorrectImage.setVisibility(View.GONE);
-                    new_question();
+                    NEW_QUESTION();
                 }
             }, 1000);
         }

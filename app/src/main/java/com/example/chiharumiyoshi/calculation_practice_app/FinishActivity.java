@@ -44,12 +44,14 @@ public class FinishActivity extends AppCompatActivity {
         highestTimeText = (TextView)findViewById(R.id.textView18);
         listView = (ListView)findViewById(R.id.listView);
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        //data
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         question_numbers = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
         correct = getIntent().getIntExtra("correct", 0);
         time = getIntent().getLongExtra("timeChronometer", 0);
         timeKind = getIntent().getIntExtra("timeKind", 0);
+        Log.e("time", "correct = " + correct + " timeChronometer = " + time + " timeKind = " + timeKind);
 
         if(timeKind == 0){
             correctText.setText(correct + "/" + question_numbers + "回");
@@ -121,22 +123,23 @@ public class FinishActivity extends AppCompatActivity {
                 .putInt(StartActivity.KEY_TIMES_IN_A_DAY, timesInADay)
                 .apply();
 
-        for(int i = 1; i < question_numbers; i++){
-            search(i);
+        for(int i = 1; i <= question_numbers; i++){
+            arrayAdapter.add(search(i));
         }
 
         listView.setAdapter(arrayAdapter);
     }
 
-    public void search(int question_numberValue){
+    public String search(int question_numberValue){
 
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1);
 
         Cursor cursor = null;
+        String result = "";
 
         try{
 
-            cursor = database.query(MySQLiteOpenHelper.TABLE_NAME, new String[]{"question_number", "number1", "number2", "correct_answer", "answer", "result"}, "question_number = ?", new String[]{String.valueOf(question_numberValue)}, null, null, null);
+            cursor = database.query(MySQLiteOpenHelper.TABLE_NAME, new String[]{"question_number", "number1", "number2", "correct_answer", "answer"}, "question_number = ?", new String[]{String.valueOf(question_numberValue)}, null, null, null);
 
             int indexQuestionNumber = cursor.getColumnIndex("question_number");
             int indexNumber1 = cursor.getColumnIndex("number1");
@@ -144,10 +147,10 @@ public class FinishActivity extends AppCompatActivity {
             int indexCorrect_answer = cursor.getColumnIndex("correct_answer");
             int indexAnswer = cursor.getColumnIndex("answer");
 
-            Log.e("out_serts", " " + indexQuestionNumber + " " + indexNumber1 + " " + indexNumber2 + " " + indexCorrect_answer + " " + indexAnswer);
+            Log.e("out_serts", question_numberValue + " " + indexQuestionNumber + " " + indexNumber1 + " " + indexNumber2 + " " + indexCorrect_answer + " " + indexAnswer);
 
             while(cursor.moveToNext()) {
-                arrayAdapter.add("第" + indexQuestionNumber + "問：" + indexNumber1 + "+" + indexNumber2 + "　解答：" + indexCorrect_answer + "　あなたの答え：" + indexAnswer);
+                result = "第" + question_numberValue + "問：" + indexNumber1 + "+" + indexNumber2 + "　解答：" + indexCorrect_answer + "　あなたの答え：" + indexAnswer;
             }
 
         }finally {
@@ -155,9 +158,12 @@ public class FinishActivity extends AppCompatActivity {
                 cursor.close();
             }
         }
+
+        return result;
     }
 
     public void restart(View v) {
+
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN);
         intent.setClass(FinishActivity.this, CalculationActivity.class);
@@ -166,6 +172,7 @@ public class FinishActivity extends AppCompatActivity {
     }
 
     public void home(View v){
+
         Intent intent = new Intent();
         intent.setClass(FinishActivity.this, StartActivity.class);
         startActivity(intent);
