@@ -59,10 +59,8 @@ public class CalculationActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         //値の取得
-        timeKind = getIntent().getIntExtra("timeKind", 0);
-
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
+        timeKind = getIntent().getIntExtra("timeKind", 0);
         eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR, 1);
         minus = prefs.getBoolean(SettingsActivity.KEY_MINUS, false);
 

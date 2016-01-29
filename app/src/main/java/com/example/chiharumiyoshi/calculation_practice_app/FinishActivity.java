@@ -16,13 +16,11 @@ import android.widget.TextView;
 
 public class FinishActivity extends AppCompatActivity {
 
-    int correct, timeKind;
+    int correct, timeKind, question_numbers, calculationKind, timesInADay;
     long time, seconds, minutes, subSeconds;
-    int question_numbers, calculationKind, timesInADay;
-    float timeTimes, highestTime = 0;
-    TextView correctText, timeText, timeTimesText, highestTimeText;
+    float timesPerASecond, highestTime = 0;
+    TextView correctTimesText, timeText, timesPerASecondText, highestTimeText;
     ArrayAdapter arrayAdapter;
-
     ListView listView;
 
     public static final String KEY_CALCULATION_KIND = "CalculationKind";
@@ -38,25 +36,31 @@ public class FinishActivity extends AppCompatActivity {
         mySQLiteOpenHelper = new MySQLiteOpenHelper(getApplicationContext());
         database = mySQLiteOpenHelper.getWritableDatabase();
 
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1);
+
         //View
-        timeTimesText = (TextView)findViewById(R.id.textView17);
-        correctText = (TextView)findViewById(R.id.correct_t);
+        timesPerASecondText = (TextView)findViewById(R.id.textView17);
+        correctTimesText = (TextView)findViewById(R.id.correct_t);
         highestTimeText = (TextView)findViewById(R.id.textView18);
+        timeText = (TextView)findViewById(R.id.textView2);
         listView = (ListView)findViewById(R.id.listView);
 
 
         //data
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         question_numbers = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
+        timesInADay = prefs.getInt(StartActivity.KEY_TIMES_IN_A_DAY, 0);
         correct = getIntent().getIntExtra("correct", 0);
-        time = getIntent().getLongExtra("timeChronometer", 0);
+        calculationKind = getIntent().getIntExtra(KEY_CALCULATION_KIND, 0);
         timeKind = getIntent().getIntExtra("timeKind", 0);
+        time = getIntent().getLongExtra("timeChronometer", 0);
+
         Log.e("time", "correct = " + correct + " timeChronometer = " + time + " timeKind = " + timeKind);
 
         if(timeKind == 0){
-            correctText.setText(correct + "/" + question_numbers + "回");
+            correctTimesText.setText(correct + "/" + question_numbers + "回");
         }else if(timeKind == 1){
-            correctText.setText(correct + "回");
+            correctTimesText.setText(correct + "回");
             question_numbers = correct;
         }
 
@@ -64,60 +68,54 @@ public class FinishActivity extends AppCompatActivity {
         subSeconds = time % 1000;
         minutes = seconds / 60;
         seconds = seconds - minutes * 60;
-        timeText = (TextView)findViewById(R.id.textView2);
         timeText.setText("時間　" + minutes + "分" + seconds + "秒" + subSeconds);
-        calculationKind = getIntent().getIntExtra(KEY_CALCULATION_KIND,0);
 
         if(correct == 0){
-            timeTimes = 0;
+            timesPerASecond = 0;
         }else{
-            timeTimes = (float)time / 1000 / (float)correct;
+            timesPerASecond = (float)time / 1000 / (float)correct;
         }
-        timeTimesText.setText("1問　" + timeTimes + "秒");
+        timesPerASecondText.setText("1問　" + timesPerASecond + "秒");
 
-        if(timeKind == 1){
-            if(calculationKind == 0){
+        if(calculationKind == 0){
 
-                highestTime = prefs.getFloat("highestTimeAddition", 0);
-                if(highestTime > timeTimes || highestTime == 0){
-                    highestTime = timeTimes;
-                    prefs.edit()
-                            .putFloat("highestTimeAddition",  timeTimes)
-                            .apply();
-                }
-            }else if(calculationKind == 1){
-
-                highestTime = prefs.getFloat("highestTimeSubtraction", 0);
-                if(highestTime > timeTimes || highestTime == 0){
-                    highestTime = timeTimes;
-                    prefs.edit()
-                            .putFloat("highestTimeSubtraction",  timeTimes)
-                            .apply();
-                }
-            }else if(calculationKind == 2){
-
-                highestTime = prefs.getFloat("highestTimeMultiplication", 0);
-                if(highestTime > timeTimes || highestTime == 0){
-                    highestTime = timeTimes;
-                    prefs.edit()
-                            .putFloat("highestTimeMultiplication",  timeTimes)
-                            .apply();
-                }
-            }else if(calculationKind == 3){
-
-                highestTime = prefs.getFloat("highestTimeMultiplication", 0);
-                if(highestTime > timeTimes || highestTime == 0){
-                    highestTime = timeTimes;
-                    prefs.edit()
-                            .putFloat("highestTimeMultiplication", timeTimes)
-                            .apply();
-                }
+            highestTime = prefs.getFloat("highestTimeAddition", 0);
+            if(highestTime > timesPerASecond || highestTime == 0){
+                highestTime = timesPerASecond;
+                prefs.edit()
+                        .putFloat("highestTimeAddition", timesPerASecond)
+                        .apply();
             }
+        }else if(calculationKind == 1){
 
-            highestTimeText.setText("最高記録　1問　" + highestTime + "秒");
+            highestTime = prefs.getFloat("highestTimeSubtraction", 0);
+            if(highestTime > timesPerASecond || highestTime == 0){
+                highestTime = timesPerASecond;
+                prefs.edit()
+                        .putFloat("highestTimeSubtraction", timesPerASecond)
+                        .apply();
+            }
+        }else if(calculationKind == 2){
+
+            highestTime = prefs.getFloat("highestTimeMultiplication", 0);
+            if(highestTime > timesPerASecond || highestTime == 0){
+                highestTime = timesPerASecond;
+                prefs.edit()
+                        .putFloat("highestTimeMultiplication", timesPerASecond)
+                        .apply();
+            }
+        }else if(calculationKind == 3){
+
+            highestTime = prefs.getFloat("highestTimeMultiplication", 0);
+            if(highestTime > timesPerASecond || highestTime == 0){
+                highestTime = timesPerASecond;
+                prefs.edit()
+                        .putFloat("highestTimeMultiplication", timesPerASecond)
+                        .apply();
+            }
         }
+        highestTimeText.setText("最高記録　1問　" + highestTime + "秒");
 
-        timesInADay = prefs.getInt(StartActivity.KEY_TIMES_IN_A_DAY,0);
         timesInADay += 1;
         prefs.edit()
                 .putInt(StartActivity.KEY_TIMES_IN_A_DAY, timesInADay)
@@ -131,8 +129,6 @@ public class FinishActivity extends AppCompatActivity {
     }
 
     public String search(int question_numberValue){
-
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1);
 
         Cursor cursor = null;
         String result = "";
@@ -168,6 +164,7 @@ public class FinishActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_MAIN);
         intent.setClass(FinishActivity.this, CalculationActivity.class);
         intent.putExtra(KEY_CALCULATION_KIND, calculationKind);
+        intent.putExtra("timeKind", timeKind);
         startActivity(intent);
     }
 
