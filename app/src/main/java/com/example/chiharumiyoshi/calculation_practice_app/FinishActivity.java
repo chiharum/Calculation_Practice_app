@@ -143,14 +143,24 @@ public class FinishActivity extends AppCompatActivity {
             int indexCorrect_answer = cursor.getColumnIndex("correct_answer");
             int indexAnswer = cursor.getColumnIndex("answer");
 
-            Log.e("out_serts", question_numberValue + " " + indexQuestionNumber + " " + indexNumber1 + " " + indexNumber2 + " " + indexCorrect_answer + " " + indexAnswer);
+//            Log.e("out_serts", question_numberValue + " " + indexQuestionNumber + " " + indexNumber1 + " " + indexNumber2 + " " + indexCorrect_answer + " " + indexAnswer);
 
             while(cursor.moveToNext()) {
-                result = "第" + question_numberValue + "問：" + indexNumber1 + "+" + indexNumber2 + "　解答：" + indexCorrect_answer + "　あなたの答え：" + indexAnswer;
+
+                if (calculationKind == 0){
+                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "+" + cursor.getInt(indexNumber2) + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                }else if(calculationKind == 1){
+                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "-" + cursor.getInt(indexNumber2) + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                }else if(calculationKind == 2){
+                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "×" + cursor.getInt(indexNumber2) + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                }else if(calculationKind == 3){
+                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "÷" + cursor.getInt(indexNumber2) + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                }
             }
 
         }finally {
             if (cursor != null) {
+
                 cursor.close();
             }
         }

@@ -16,7 +16,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase database){
-        database.execSQL("create table " + TABLE_NAME + " (_id integer primary key autoincrement not null, question_number integer not null, number1 integer not null, number2 integer not null, correct_answer integer not null, answer integer not null, result integer not null)");
+        database.execSQL("create table " + TABLE_NAME + " (_id integer primary key autoincrement not null, question_number integer not null, number1 integer not null, number2 integer not null, correct_answer integer not null, answer integer)");
     }
 
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion){
