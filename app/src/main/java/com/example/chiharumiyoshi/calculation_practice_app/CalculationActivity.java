@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -12,9 +13,15 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -42,6 +49,11 @@ public class CalculationActivity extends AppCompatActivity {
         mySQLiteOpenHelper = new MySQLiteOpenHelper(getApplicationContext());
         database = mySQLiteOpenHelper.getWritableDatabase();
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
+        int width = point.x;
+
         // Viewの関連付け
         eraserImage = (ImageView) findViewById(R.id.imageView);
         remainText = (TextView) findViewById(R.id.remain);
@@ -58,12 +70,15 @@ public class CalculationActivity extends AppCompatActivity {
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+        Button nextButton = (Button)findViewById(R.id.button);
+
         //値の取得
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         timeKind = getIntent().getIntExtra("timeKind", 0);
         eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR_SETTINGS, 1);
         minus = prefs.getBoolean(SettingsActivity.KEY_MINUS_SETTINGS, false);
 
+        nextButton.setTextSize((float)width / (float)25.6);
 
         if(timeKind == 0){
 
@@ -207,14 +222,11 @@ public class CalculationActivity extends AppCompatActivity {
     public void insert(int question_number, int number1, int number2, int correct_answer, int answer){
 
         ContentValues values = new ContentValues();
-
         values.put("question_number", question_number);
         values.put("number1", number1);
         values.put("number2", number2);
         values.put("correct_answer", correct_answer);
         values.put("answer", answer);
-
-        Log.e("inserts", " " + question_number + " " + number1 + " " + number2 + " " + correct_answer + " " + answer);
 
         database.insert(MySQLiteOpenHelper.QUESTIONS_TABLE_NAME, null, values);
     }

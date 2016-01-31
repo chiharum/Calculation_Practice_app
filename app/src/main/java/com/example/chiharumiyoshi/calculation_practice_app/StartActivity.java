@@ -1,12 +1,17 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.Service;
+import android.content.Context;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -28,18 +33,19 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         /*
-        Life is Tech!でやること。
+        To Do
 
         -データベースの削除。
         -日付の記録（データベース）。
-        アクションバー（上と下）。
-        戻るボタンの処理
-        百ます計算。
         画面サイズによって文字の大きさを変える。
+        アクションバー（上と下）。
+        戻るボタンの処理。
+        百ます計算。
          */
 
-        titleText = (TextView)findViewById(R.id.textView4);
-
+        titleText = (TextView)findViewById(R.id.titleText);
+        timesInADayText = (TextView)findViewById(R.id.textView9);
+        continuousDayTimesText = (TextView)findViewById(R.id.textView10);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         timesInADay = prefs.getInt(KEY_TIMES_IN_A_DAY, 0);
@@ -47,13 +53,19 @@ public class StartActivity extends AppCompatActivity {
         lastYear = prefs.getInt("lastYear", 0);
         lastMonth = prefs.getInt("lastMonth", 0);
         lastDay = prefs.getInt("lastDay", 0);
-        lastDate = prefs.getInt("lastDate",0);
+        lastDate = prefs.getInt("lastDate", 0);
         newYear = prefs.getBoolean("newYear", false);
         updateAlert = prefs.getBoolean("update_alert", false);
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
+        int width = point.x;
+
         titleText.setTypeface(Typeface.SERIF, Typeface.BOLD);
-        timesInADayText = (TextView)findViewById(R.id.textView9);
-        continuousDayTimesText = (TextView)findViewById(R.id.textView10);
+        titleText.setTextSize((float) width / (float) 17);
+        timesInADayText.setTextSize((float) width / (float) 30);
+        continuousDayTimesText.setTextSize((float)width / (float)30);
 
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -111,6 +123,9 @@ public class StartActivity extends AppCompatActivity {
             prefs.edit()
                     .putBoolean("update_alert", true)
                     .apply();
+
+            ActivityManager am = (ActivityManager) this.getSystemService(Service.ACTIVITY_SERVICE);
+            am.clearApplicationUserData();
         }
     }
 

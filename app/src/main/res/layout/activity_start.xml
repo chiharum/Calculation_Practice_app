@@ -84,8 +84,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/practice"
-                android:textSize="40dp"
-                android:id="@+id/textView4"
+                android:id="@+id/titleText"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginRight="5dp" />

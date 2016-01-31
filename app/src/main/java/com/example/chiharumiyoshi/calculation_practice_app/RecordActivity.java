@@ -78,7 +78,7 @@ public class RecordActivity extends AppCompatActivity {
                 int month = date / 100 - year * 100;
                 int day = date - year * 10000 - month * 100;
 
-                result = year + "年" + month + "月" + day + "日 " + calculationKind + " 正答率：" + correctRate + "% " + "1問：" + timePerAQuestion + "秒";
+                result = year + "年" + month + "月" + day + "日" + "\n" + calculationKind + " 正答率：" + correctRate + "% " + "1問：" + timePerAQuestion + "秒";
             }
         }finally {
             if(cursor != null){

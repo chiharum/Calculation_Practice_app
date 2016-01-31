@@ -181,13 +181,13 @@ public class FinishActivity extends AppCompatActivity {
             while(cursor.moveToNext()) {
 
                 if (calculationKind == 0){
-                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "+" + cursor.getInt(indexNumber2) + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "+" + cursor.getInt(indexNumber2) + "\n" + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
                 }else if(calculationKind == 1){
-                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "-" + cursor.getInt(indexNumber2) + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "-" + cursor.getInt(indexNumber2) + "\n" + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
                 }else if(calculationKind == 2){
-                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "×" + cursor.getInt(indexNumber2) + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "×" + cursor.getInt(indexNumber2) + "\n" + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
                 }else if(calculationKind == 3){
-                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "÷" + cursor.getInt(indexNumber2) + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "÷" + cursor.getInt(indexNumber2) + "\n" + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
                 }
             }
 
