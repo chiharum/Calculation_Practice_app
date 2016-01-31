@@ -14,10 +14,10 @@ import android.widget.TextView;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public static final String KEY_QUESTION_NUMBER = "question_number";
-    public static final String KEY_QUESTION_TIME = "question_time";
-    public static final String KEY_MINUS = "minus";
-    public static final String KEY_ERASER_COLOR = "eraser_color";
+    public static final String KEY_QUESTION_TIMES_SETTINGS = "questionTimesSettings";
+    public static final String KEY_QUESTION_TIME_SETTINGS = "questionTimeSettings";
+    public static final String KEY_MINUS_SETTINGS = "minus";
+    public static final String KEY_ERASER_COLOR_SETTINGS = "eraser_color";
 
     boolean minus;
     TextView questionNumbersText;
@@ -32,7 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         final CheckBox minus_c = new CheckBox(this);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        minus = prefs.getBoolean(KEY_MINUS, false);
+        minus = prefs.getBoolean(KEY_MINUS_SETTINGS, false);
         if(minus){
             minus_c.setChecked(true);
         }else{
@@ -43,22 +43,22 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v){
                 minus = minus_c.isChecked();
                 prefs.edit()
-                        .putBoolean(KEY_MINUS, minus)
+                        .putBoolean(KEY_MINUS_SETTINGS, minus)
                         .apply();
             }
         });
 
         questionNumbersText = (TextView)findViewById(R.id.question_numbers_t);
 
-        int number = prefs.getInt(KEY_QUESTION_NUMBER, 10);
+        int number = prefs.getInt(KEY_QUESTION_TIMES_SETTINGS, 10);
         questionNumbersText.setText("問題数：" + number + "問");
         eraserImageView = (ImageView)findViewById(R.id.imageView10);
 
-        questionTime = prefs.getLong(KEY_QUESTION_TIME, 30);
+        questionTime = prefs.getLong(KEY_QUESTION_TIME_SETTINGS, 30);
         questionTimeText = (TextView)findViewById(R.id.textView19);
         questionTimeText.setText("時間：" + questionTime + "秒");
 
-        int default_eraser_color = prefs.getInt(KEY_ERASER_COLOR, 0) + 1;
+        int default_eraser_color = prefs.getInt(KEY_ERASER_COLOR_SETTINGS, 0) + 1;
         int image_res = getResources().getIdentifier("delete_button_" + default_eraser_color, "drawable", getPackageName());
         eraserImageView.setImageResource(image_res);
     }
@@ -70,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
         final String[] question_numbers_t = getResources().getStringArray(R.array.question_numbers);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        int number = prefs.getInt(KEY_QUESTION_NUMBER, 10);
+        int number = prefs.getInt(KEY_QUESTION_TIMES_SETTINGS, 10);
         int selected_index = 0;
 
         if (number == 10){
@@ -97,7 +97,7 @@ public class SettingsActivity extends AppCompatActivity {
                     question_numbers = 100;
                 }
                 prefs.edit()
-                        .putInt(KEY_QUESTION_NUMBER, question_numbers)
+                        .putInt(KEY_QUESTION_TIMES_SETTINGS, question_numbers)
                         .apply();
                 questionNumbersText.setText("問題数：" + question_numbers + "問");
                 dialog.dismiss();
@@ -143,7 +143,7 @@ public class SettingsActivity extends AppCompatActivity {
                     questionTime = 300;
                 }
                 prefs.edit()
-                        .putLong(KEY_QUESTION_TIME, questionTime)
+                        .putLong(KEY_QUESTION_TIME_SETTINGS, questionTime)
                         .apply();
                 questionTimeText.setText("時間：" + questionTime + "秒");
                 dialog.dismiss();
@@ -158,13 +158,13 @@ public class SettingsActivity extends AppCompatActivity {
         adb2.setTitle("消しゴムの色");
         String[] eraser_color = getResources().getStringArray(R.array.eraser_color);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int default_eraser_color = prefs.getInt(KEY_ERASER_COLOR, 1) - 1;
+        int default_eraser_color = prefs.getInt(KEY_ERASER_COLOR_SETTINGS, 1) - 1;
         adb2.setSingleChoiceItems(eraser_color, default_eraser_color, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 which = which + 1;
                 prefs.edit()
-                        .putInt(KEY_ERASER_COLOR,which)
+                        .putInt(KEY_ERASER_COLOR_SETTINGS,which)
                         .apply();
 
                 int image_res = getResources().getIdentifier("delete_button_" + which, "drawable", getPackageName());

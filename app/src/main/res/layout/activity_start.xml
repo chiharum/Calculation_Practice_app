@@ -38,7 +38,15 @@
             <Space
                 android:layout_width="0dp"
                 android:layout_height="20px"
-                android:layout_weight="4" />
+                android:layout_weight="3" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView6"
+                android:src="@drawable/list_image"
+                android:layout_weight="1.5"
+                android:onClick="history" />
 
             <ImageView
                 android:layout_width="0dp"

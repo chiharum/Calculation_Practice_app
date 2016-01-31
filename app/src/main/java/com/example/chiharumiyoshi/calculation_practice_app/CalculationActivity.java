@@ -61,13 +61,13 @@ public class CalculationActivity extends AppCompatActivity {
         //値の取得
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         timeKind = getIntent().getIntExtra("timeKind", 0);
-        eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR, 1);
-        minus = prefs.getBoolean(SettingsActivity.KEY_MINUS, false);
+        eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR_SETTINGS, 1);
+        minus = prefs.getBoolean(SettingsActivity.KEY_MINUS_SETTINGS, false);
 
 
         if(timeKind == 0){
 
-            questionTimes = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
+            questionTimes = prefs.getInt(SettingsActivity.KEY_QUESTION_TIMES_SETTINGS, 10);
 
             remainTimes = questionTimes;
 
@@ -78,7 +78,7 @@ public class CalculationActivity extends AppCompatActivity {
 
         }else if(timeKind == 1){
 
-            questionTime = prefs.getLong(SettingsActivity.KEY_QUESTION_TIME, 30);
+            questionTime = prefs.getLong(SettingsActivity.KEY_QUESTION_TIME_SETTINGS, 30);
 
             remainTime = questionTime;
             remainText.setText(remainTime + "秒");
@@ -97,17 +97,7 @@ public class CalculationActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                    endedTime = System.currentTimeMillis();
-                    timeChronometer.stop();
-                    Intent intent = new Intent();
-                    intent.putExtra("correct", correctTimes);
-                    intent.putExtra(SettingsActivity.KEY_QUESTION_NUMBER, times);
-                    intent.putExtra("timeChronometer", questionTime * 1000);
-                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, calculationKind);
-                    intent.putExtra("timeKind", 1);
-                    intent.setAction(Intent.ACTION_MAIN);
-                    intent.setClass(CalculationActivity.this, FinishActivity.class);
-                    startActivity(intent);
+                    finish();
                 }
             };
 
@@ -130,7 +120,7 @@ public class CalculationActivity extends AppCompatActivity {
             flagText.setText("÷");
         }
 
-        NEW_QUESTION();
+        newQuestion();
         correctTimes = 0;
         times = 0;
 
@@ -145,7 +135,7 @@ public class CalculationActivity extends AppCompatActivity {
         timeChronometer.start();
     }
 
-    public void NEW_QUESTION() {
+    public void newQuestion() {
 
         if(calculationKind == 0){
 
@@ -195,17 +185,17 @@ public class CalculationActivity extends AppCompatActivity {
         totalTime = endedTime - startedTime;
         Intent intent = new Intent();
         intent.putExtra("correct", correctTimes);
-        intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, calculationKind);
+        intent.putExtra("calculation_kind", calculationKind);
 
         if(timeKind == 0){
 
-            intent.putExtra(SettingsActivity.KEY_QUESTION_NUMBER, questionTimes);
-            intent.putExtra("timeChronometer", totalTime);
+            intent.putExtra("question_times", questionTimes);
+            intent.putExtra("time", totalTime);
             intent.putExtra("timeKind", 0);
         }else if(timeKind == 1){
 
-            intent.putExtra(SettingsActivity.KEY_QUESTION_NUMBER, times);
-            intent.putExtra("timeChronometer", questionTime * 1000);
+            intent.putExtra("question_times", times);
+            intent.putExtra("time", questionTime * 1000);
             intent.putExtra("timeKind", 1);
         }
 
@@ -226,7 +216,7 @@ public class CalculationActivity extends AppCompatActivity {
 
         Log.e("inserts", " " + question_number + " " + number1 + " " + number2 + " " + correct_answer + " " + answer);
 
-        database.insert(MySQLiteOpenHelper.TABLE_NAME, null, values);
+        database.insert(MySQLiteOpenHelper.QUESTIONS_TABLE_NAME, null, values);
     }
 
     public void click1(View v) {
@@ -397,7 +387,7 @@ public class CalculationActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     correctImage.setVisibility(View.GONE);
-                    NEW_QUESTION();
+                    newQuestion();
                 }
             }, 1000);
         } else {
@@ -415,7 +405,7 @@ public class CalculationActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     incorrectImage.setVisibility(View.GONE);
-                    NEW_QUESTION();
+                    newQuestion();
                 }
             }, 1000);
         }

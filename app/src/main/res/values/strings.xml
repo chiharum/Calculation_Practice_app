@@ -6,6 +6,8 @@
     <string name="multiplication">かけ算(九九)</string>
     <string name="division">割り算</string>
     <string name="correct_answer">正解数　</string>
+    <string name="recordTitle">プレイ記録</string>
+    <string name="corrected_rate">今までの正答率：</string>
     <string-array name="question_numbers">
         <item>10問</item>
         <item>15問</item>

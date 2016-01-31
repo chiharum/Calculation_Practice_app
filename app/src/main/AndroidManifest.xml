@@ -8,6 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+
         <activity android:name=".StartActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -15,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".FinishActivity" />
+
         <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".StartActivity" >
@@ -23,10 +26,25 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".StartActivity" />
         </activity>
-        <activity android:name=".ExplanationActivity" >
+
+        <activity android:name=".ExplanationActivity"
+            android:parentActivityName=".StartActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".StartActivity" />
         </activity>
+
         <activity android:name=".CalculationActivity" >
         </activity>
+
+        <activity
+            android:name=".RecordActivity"
+            android:parentActivityName=".StartActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".StartActivity" />
+        </activity>
+
     </application>
 
 </manifest>

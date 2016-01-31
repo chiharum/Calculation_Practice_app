@@ -1,5 +1,6 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -16,14 +17,17 @@ import android.widget.TextView;
 
 public class FinishActivity extends AppCompatActivity {
 
-    int correct, timeKind, question_numbers, calculationKind, timesInADay;
+    int correct, timeKind, questionTimes, calculationKind, timesInADay;
     long time, seconds, minutes, subSeconds;
-    float timesPerASecond, highestTime = 0;
+    float timePerAQuestion, highestTime, correctRate;
     TextView correctTimesText, timeText, timesPerASecondText, highestTimeText;
     ArrayAdapter arrayAdapter;
     ListView listView;
 
     public static final String KEY_CALCULATION_KIND = "CalculationKind";
+    public static final String KEY_TOTAL_QUESTION_TIMES = "totalQuestionTimes";
+    public static final String KEY_TOTAL_CORRECT_TIMES = "totalCorrectTimes";
+    public static final String KEY_TOTALS = "totals";
 
     MySQLiteOpenHelper mySQLiteOpenHelper;
     SQLiteDatabase database;
@@ -48,21 +52,37 @@ public class FinishActivity extends AppCompatActivity {
 
         //data
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        question_numbers = prefs.getInt(SettingsActivity.KEY_QUESTION_NUMBER, 10);
         timesInADay = prefs.getInt(StartActivity.KEY_TIMES_IN_A_DAY, 0);
-        correct = getIntent().getIntExtra("correct", 0);
-        calculationKind = getIntent().getIntExtra(KEY_CALCULATION_KIND, 0);
-        timeKind = getIntent().getIntExtra("timeKind", 0);
-        time = getIntent().getLongExtra("timeChronometer", 0);
 
-        Log.e("time", "correct = " + correct + " timeChronometer = " + time + " timeKind = " + timeKind);
+        correct = getIntent().getIntExtra("correct", 0);
+        questionTimes = getIntent().getIntExtra("question_times", 0);
+        calculationKind = getIntent().getIntExtra("calculation_kind", 0);
+        timeKind = getIntent().getIntExtra("timeKind", 0);
+        time = getIntent().getLongExtra("time", 0);
+
+        if(correct == 0){
+            correctRate = 0;
+        }else{
+            correctRate = (float)correct / (float)questionTimes * 100;
+        }
+
+        prefs.edit()
+                .putInt(KEY_TOTALS, prefs.getInt(KEY_TOTALS, 0) + 1)
+                .apply();
 
         if(timeKind == 0){
-            correctTimesText.setText(correct + "/" + question_numbers + "回");
+            correctTimesText.setText(correct + "/" + questionTimes + "回");
         }else if(timeKind == 1){
             correctTimesText.setText(correct + "回");
-            question_numbers = correct;
+            questionTimes = correct;
         }
+
+        prefs.edit()
+                .putInt(KEY_TOTAL_QUESTION_TIMES, prefs.getInt(KEY_TOTAL_QUESTION_TIMES, 0) + questionTimes)
+                .apply();
+        prefs.edit()
+                .putInt(KEY_TOTAL_CORRECT_TIMES, prefs.getInt(KEY_TOTAL_CORRECT_TIMES, 0) + correct)
+                .apply();
 
         seconds = time / 1000;
         subSeconds = time % 1000;
@@ -71,58 +91,71 @@ public class FinishActivity extends AppCompatActivity {
         timeText.setText("時間　" + minutes + "分" + seconds + "秒" + subSeconds);
 
         if(correct == 0){
-            timesPerASecond = 0;
+            timePerAQuestion = 0;
         }else{
-            timesPerASecond = (float)time / 1000 / (float)correct;
+            timePerAQuestion = (float)time / 1000 / (float)correct;
         }
-        timesPerASecondText.setText("1問　" + timesPerASecond + "秒");
+        timesPerASecondText.setText("1問　" + timePerAQuestion + "秒");
 
         if(calculationKind == 0){
 
             highestTime = prefs.getFloat("highestTimeAddition", 0);
-            if(highestTime > timesPerASecond || highestTime == 0){
-                highestTime = timesPerASecond;
+            if(highestTime > timePerAQuestion || highestTime == 0){
+                highestTime = timePerAQuestion;
                 prefs.edit()
-                        .putFloat("highestTimeAddition", timesPerASecond)
+                        .putFloat("highestTimeAddition", timePerAQuestion)
                         .apply();
             }
         }else if(calculationKind == 1){
 
             highestTime = prefs.getFloat("highestTimeSubtraction", 0);
-            if(highestTime > timesPerASecond || highestTime == 0){
-                highestTime = timesPerASecond;
+            if(highestTime > timePerAQuestion || highestTime == 0){
+                highestTime = timePerAQuestion;
                 prefs.edit()
-                        .putFloat("highestTimeSubtraction", timesPerASecond)
+                        .putFloat("highestTimeSubtraction", timePerAQuestion)
                         .apply();
             }
         }else if(calculationKind == 2){
 
             highestTime = prefs.getFloat("highestTimeMultiplication", 0);
-            if(highestTime > timesPerASecond || highestTime == 0){
-                highestTime = timesPerASecond;
+            if(highestTime > timePerAQuestion || highestTime == 0){
+                highestTime = timePerAQuestion;
                 prefs.edit()
-                        .putFloat("highestTimeMultiplication", timesPerASecond)
+                        .putFloat("highestTimeMultiplication", timePerAQuestion)
                         .apply();
             }
         }else if(calculationKind == 3){
 
             highestTime = prefs.getFloat("highestTimeMultiplication", 0);
-            if(highestTime > timesPerASecond || highestTime == 0){
-                highestTime = timesPerASecond;
+            if(highestTime > timePerAQuestion || highestTime == 0){
+                highestTime = timePerAQuestion;
                 prefs.edit()
-                        .putFloat("highestTimeMultiplication", timesPerASecond)
+                        .putFloat("highestTimeMultiplication", timePerAQuestion)
                         .apply();
             }
         }
         highestTimeText.setText("最高記録　1問　" + highestTime + "秒");
+
+        if(calculationKind == 0){
+            insert("足し算", (int)correctRate, (int)timePerAQuestion);
+        }else if(calculationKind == 1){
+            insert("引き算", (int)correctRate, (int)timePerAQuestion);
+        }else if(calculationKind == 2){
+            insert("かけ算", (int)correctRate, (int)timePerAQuestion);
+        }else if(calculationKind == 3){
+            insert("割り算", (int)correctRate, (int)timePerAQuestion);
+        }
 
         timesInADay += 1;
         prefs.edit()
                 .putInt(StartActivity.KEY_TIMES_IN_A_DAY, timesInADay)
                 .apply();
 
-        for(int i = 1; i <= question_numbers; i++){
+        for(int i = 1; i <= questionTimes; i++){
+
             arrayAdapter.add(search(i));
+
+            database.delete(MySQLiteOpenHelper.QUESTIONS_TABLE_NAME, "_id = " + i, null);
         }
 
         listView.setAdapter(arrayAdapter);
@@ -135,7 +168,7 @@ public class FinishActivity extends AppCompatActivity {
 
         try{
 
-            cursor = database.query(MySQLiteOpenHelper.TABLE_NAME, new String[]{"question_number", "number1", "number2", "correct_answer", "answer"}, "question_number = ?", new String[]{String.valueOf(question_numberValue)}, null, null, null);
+            cursor = database.query(MySQLiteOpenHelper.QUESTIONS_TABLE_NAME, new String[]{"question_number", "number1", "number2", "correct_answer", "answer"}, "question_number = ?", new String[]{String.valueOf(question_numberValue)}, null, null, null);
 
             int indexQuestionNumber = cursor.getColumnIndex("question_number");
             int indexNumber1 = cursor.getColumnIndex("number1");
@@ -166,6 +199,20 @@ public class FinishActivity extends AppCompatActivity {
         }
 
         return result;
+    }
+
+    public void insert(String calculationKind, int correctRate, int timePerAQuestion){
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int date = prefs.getInt("lastDate", 0);
+
+        ContentValues values = new ContentValues();
+        values.put("date", date);
+        values.put("calculation_kind", calculationKind);
+        values.put("correct_rate", correctRate);
+        values.put("time_per_a_question", timePerAQuestion);
+
+        database.insert(MySQLiteOpenHelper.RECORD_TABLE_NAME, null, values);
     }
 
     public void restart(View v) {

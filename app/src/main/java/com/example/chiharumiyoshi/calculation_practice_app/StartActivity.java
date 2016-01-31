@@ -18,7 +18,7 @@ public class StartActivity extends AppCompatActivity {
     int lastYear, lastMonth, lastDay, lastDate,year,month,day,date, timesInADay, continuousDays;
     TextView timesInADayText, continuousDayTimesText, titleText;
     AlertDialog dialog;
-    boolean newYear;
+    boolean newYear, updateAlert;
 
     public static final String KEY_TIMES_IN_A_DAY = "TimesInADay";
 
@@ -27,11 +27,21 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        /*
+        Life is Tech!でやること。
+
+        -データベースの削除。
+        -日付の記録（データベース）。
+        アクションバー（上と下）。
+        戻るボタンの処理
+        百ます計算。
+        画面サイズによって文字の大きさを変える。
+         */
+
         titleText = (TextView)findViewById(R.id.textView4);
 
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         timesInADay = prefs.getInt(KEY_TIMES_IN_A_DAY, 0);
         continuousDays = prefs.getInt("continuousDays",0);
         lastYear = prefs.getInt("lastYear", 0);
@@ -39,6 +49,7 @@ public class StartActivity extends AppCompatActivity {
         lastDay = prefs.getInt("lastDay", 0);
         lastDate = prefs.getInt("lastDate",0);
         newYear = prefs.getBoolean("newYear", false);
+        updateAlert = prefs.getBoolean("update_alert", false);
 
         titleText.setTypeface(Typeface.SERIF, Typeface.BOLD);
         timesInADayText = (TextView)findViewById(R.id.textView9);
@@ -85,16 +96,33 @@ public class StartActivity extends AppCompatActivity {
                 .putInt("continuousDays", continuousDays)
                 .apply();
         prefs.edit()
-                .putInt("lastDate",date)
+                .putInt("lastDate", date)
                 .apply();
         prefs.edit()
-                .putBoolean("newYear",newYear)
+                .putBoolean("newYear", newYear)
                 .apply();
+
+        if(!updateAlert){
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setTitle("プレイ履歴機能について");
+            alertDialog.setMessage("プレイ計算にプレイ履歴機能が追加されました。" + "\n" + "スタート画面の右上の「リストアイコン」を押して確認してみてください。");
+            alertDialog.setPositiveButton("了解！", null);
+            alertDialog.show();
+            prefs.edit()
+                    .putBoolean("update_alert", true)
+                    .apply();
+        }
     }
 
     public void settings(View v){
         Intent intent = new Intent();
         intent.setClass(StartActivity.this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    public void history(View v){
+        Intent intent = new Intent();
+        intent.setClass(StartActivity.this, RecordActivity.class);
         startActivity(intent);
     }
 
