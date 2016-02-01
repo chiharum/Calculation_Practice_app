@@ -37,9 +37,10 @@ public class StartActivity extends AppCompatActivity {
 
         -データベースの削除。
         -日付の記録（データベース）。
-        画面サイズによって文字の大きさを変える。
+        -画面サイズによって文字の大きさを変える。
+        -戻るボタンの処理。
+        説明文
         アクションバー（上と下）。
-        戻るボタンの処理。
         百ます計算。
          */
 
@@ -61,9 +62,8 @@ public class StartActivity extends AppCompatActivity {
         Point point = new Point();
         display.getSize(point);
         int width = point.x;
-
         titleText.setTypeface(Typeface.SERIF, Typeface.BOLD);
-        titleText.setTextSize((float) width / (float) 17);
+        titleText.setTextSize((float) width / (float) 12);
         timesInADayText.setTextSize((float) width / (float) 30);
         continuousDayTimesText.setTextSize((float)width / (float)30);
 
@@ -124,8 +124,12 @@ public class StartActivity extends AppCompatActivity {
                     .putBoolean("update_alert", true)
                     .apply();
 
-            ActivityManager am = (ActivityManager) this.getSystemService(Service.ACTIVITY_SERVICE);
-            am.clearApplicationUserData();
+            try{
+                ActivityManager am = (ActivityManager) this.getSystemService(Service.ACTIVITY_SERVICE);
+                am.clearApplicationUserData();
+            }finally{
+
+            }
         }
     }
 

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -49,7 +50,6 @@ public class FinishActivity extends AppCompatActivity {
         timeText = (TextView)findViewById(R.id.textView2);
         listView = (ListView)findViewById(R.id.listView);
 
-
         //data
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         timesInADay = prefs.getInt(StartActivity.KEY_TIMES_IN_A_DAY, 0);
@@ -71,7 +71,7 @@ public class FinishActivity extends AppCompatActivity {
                 .apply();
 
         if(timeKind == 0){
-            correctTimesText.setText(correct + "/" + questionTimes + "回");
+            correctTimesText.setText(correct + "/" + questionTimes + "回（" + correctRate +  "%）");
         }else if(timeKind == 1){
             correctTimesText.setText(correct + "回");
             questionTimes = correct;
@@ -230,5 +230,18 @@ public class FinishActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(FinishActivity.this, StartActivity.class);
         startActivity(intent);
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+
+            Intent intent = new Intent();
+            intent.setClass(FinishActivity.this, StartActivity.class);
+            startActivity(intent);
+
+            return super.onKeyDown(keyCode, event);
+        }else{
+            return false;
+        }
     }
 }

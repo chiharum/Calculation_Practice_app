@@ -44,7 +44,7 @@ public class RecordActivity extends AppCompatActivity {
         if(totalTimes == 0){
             correctRateText.setText("0%");
         }else{
-            correctRate = (float)totalTimes / (float)totalCorrectTimes * 100;
+            correctRate = (float)totalCorrectTimes / (float) totalTimes * 100;
             correctRateText.setText((int)correctRate + "%");
         }
 

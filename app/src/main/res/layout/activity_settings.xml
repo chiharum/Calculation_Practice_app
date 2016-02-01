@@ -92,7 +92,7 @@
                     android:id="@+id/Button1"
                     android:layout_weight="1"
                     android:onClick="question_numbers"
-                    android:background="@drawable/button_flat" />
+                    android:background="@drawable/button2" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -130,7 +130,7 @@
                     android:id="@+id/button5"
                     android:layout_weight="1"
                     android:onClick="question_time"
-                    android:background="@drawable/button_flat" />
+                    android:background="@drawable/button2" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -166,7 +166,7 @@
                     android:id="@+id/button4"
                     android:layout_weight="1"
                     android:onClick="eraser_color"
-                    android:background="@drawable/button_flat" />
+                    android:background="@drawable/button2" />
 
                 <ImageView
                     android:layout_width="0dp"
@@ -177,6 +177,18 @@
                     android:padding="8dp" />
 
             </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/explanation_title"
+                android:id="@+id/button7"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="20dp"
+                android:layout_margin="5dp"
+                android:onClick="explain"
+                android:background="@drawable/button2" />
 
         </LinearLayout>
     </ScrollView>

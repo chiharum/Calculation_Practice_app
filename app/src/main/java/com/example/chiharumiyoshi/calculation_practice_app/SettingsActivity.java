@@ -1,5 +1,6 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -164,7 +165,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 which = which + 1;
                 prefs.edit()
-                        .putInt(KEY_ERASER_COLOR_SETTINGS,which)
+                        .putInt(KEY_ERASER_COLOR_SETTINGS, which)
                         .apply();
 
                 int image_res = getResources().getIdentifier("delete_button_" + which, "drawable", getPackageName());
@@ -173,5 +174,12 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         adb2.show();
+    }
+
+    public void explain(View v){
+
+        Intent intent = new Intent();
+        intent.setClass(SettingsActivity.this, ExplanationActivity.class);
+        startActivity(intent);
     }
 }

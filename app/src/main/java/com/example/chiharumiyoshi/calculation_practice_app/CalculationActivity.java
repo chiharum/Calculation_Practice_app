@@ -37,6 +37,7 @@ public class CalculationActivity extends AppCompatActivity {
     ProgressBar progressBar;
     Chronometer timeChronometer;
     AlertDialog dialog;
+    Button nextButton;
 
     SQLiteDatabase database;
     MySQLiteOpenHelper mySQLiteOpenHelper;
@@ -54,25 +55,21 @@ public class CalculationActivity extends AppCompatActivity {
         display.getSize(point);
         int width = point.x;
 
-        // Viewの関連付け
+        // View
         eraserImage = (ImageView) findViewById(R.id.imageView);
         remainText = (TextView) findViewById(R.id.remain);
         timeChronometer = (Chronometer) findViewById(R.id.chronometer);
-
         number1Text = (TextView) findViewById(R.id.number1);
         number2Text = (TextView) findViewById(R.id.number2);
         answerText = (TextView) findViewById(R.id.answer);
         correctTimesText = (TextView) findViewById(R.id.correct);
         flagText = (TextView)findViewById(R.id.flagText);
-
         correctImage = (ImageView) findViewById(R.id.correct_image);
         incorrectImage = (ImageView) findViewById(R.id.incorrect_image);
-
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        nextButton = (Button)findViewById(R.id.button);
 
-        Button nextButton = (Button)findViewById(R.id.button);
-
-        //値の取得
+        //data
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         timeKind = getIntent().getIntExtra("timeKind", 0);
         eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR_SETTINGS, 1);
