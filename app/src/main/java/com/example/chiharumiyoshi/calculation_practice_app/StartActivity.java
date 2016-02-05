@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -20,7 +22,7 @@ import java.util.Calendar;
 
 public class StartActivity extends AppCompatActivity {
 
-    int lastYear, lastMonth, lastDay, lastDate,year,month,day,date, timesInADay, continuousDays;
+    int lastYear, lastMonth, lastDay, lastDate, year, month, day, date, timesInADay, continuousDays;
     TextView timesInADayText, continuousDayTimesText, titleText;
     AlertDialog dialog;
     boolean newYear, updateAlert;
@@ -123,13 +125,14 @@ public class StartActivity extends AppCompatActivity {
             prefs.edit()
                     .putBoolean("update_alert", true)
                     .apply();
+        }
 
-            try{
-                ActivityManager am = (ActivityManager) this.getSystemService(Service.ACTIVITY_SERVICE);
-                am.clearApplicationUserData();
-            }finally{
-
-            }
+        if(lastYear != 0 && lastYear != year){
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setTitle("あけましておめでとうございます");
+            alertDialog.setMessage("今年もよろしくおねがいします");
+            alertDialog.setPositiveButton("OK", null);
+            alertDialog.show();
         }
     }
 
@@ -237,5 +240,34 @@ public class StartActivity extends AppCompatActivity {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setView(adbLayout);
         dialog = adb.show();
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setMessage("アプリを終了します。");
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    quit();
+                }
+            });
+            alertDialog.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            alertDialog.show();
+
+            return super.onKeyDown(keyCode, event);
+        }else{
+            return false;
+        }
+    }
+
+    public void quit(){
+        this.moveTaskToBack(true);
     }
 }

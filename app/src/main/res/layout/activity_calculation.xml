@@ -400,7 +400,7 @@
             android:id="@+id/button"
             android:onClick="next"
             android:layout_weight="1"
-            android:background="@drawable/button2" />
+            android:background="@drawable/button_flat" />
 
     </LinearLayout>
 
