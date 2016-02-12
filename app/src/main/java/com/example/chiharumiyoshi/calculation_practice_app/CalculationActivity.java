@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.CountDownTimer;
@@ -12,15 +13,10 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
@@ -31,13 +27,14 @@ public class CalculationActivity extends AppCompatActivity {
 
     TextView number1Text, number2Text, answerText, correctTimesText, remainText, flagText;
     ImageView eraserImage, correctImage, incorrectImage;
-    int number1, number2, userAnswer, correctAnswer, correctTimes, times, questionTimes, eraserColor, remainTimes, calculationKind, timeKind;
+    int number1, number2, userAnswer, correctAnswer, correctTimes, times, questionTimes, eraserColor, remainTimes, calculationKind, timeKind, totalReviewNumbers;
     long startedTime, endedTime, totalTime, stopRealTime, questionTime, remainTime;
     boolean minus;
     ProgressBar progressBar;
     Chronometer timeChronometer;
     AlertDialog dialog;
     Button nextButton;
+    SharedPreferences prefs;
 
     SQLiteDatabase database;
     MySQLiteOpenHelper mySQLiteOpenHelper;
@@ -70,10 +67,13 @@ public class CalculationActivity extends AppCompatActivity {
         nextButton = (Button)findViewById(R.id.button);
 
         //data
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //final SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs  = PreferenceManager.getDefaultSharedPreferences(this);
         timeKind = getIntent().getIntExtra("timeKind", 0);
         eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR_SETTINGS, 1);
         minus = prefs.getBoolean(SettingsActivity.KEY_MINUS_SETTINGS, false);
+        totalReviewNumbers = prefs.getInt("totalReviewNumbers", 1);
 
         nextButton.setTextSize((float)width / (float)25.6);
 
@@ -168,6 +168,26 @@ public class CalculationActivity extends AppCompatActivity {
             correctAnswer = number1 - number2;
         }else if(calculationKind == 2){
 
+            int reviewRandom = (int)(Math.random() * 5);
+            int reviewNumber = (int)(Math.random() * totalReviewNumbers + 1);
+
+            if(reviewRandom == 0){
+                Cursor cursor = null;
+
+                try{
+                    cursor = database.query(MySQLiteOpenHelper.FORWARD_TABLE_NAME, new String[]{"id", "number1", "number2", "correct_times", "total_times"}, "id = ?", new String[]{String.valueOf(reviewNumber)}, null, null, null);
+
+                    int indexNumber1 = cursor.getColumnIndex("number1");
+                    int indexNumber2 = cursor.getColumnIndex("number2");
+                    int indexCorrect_times = cursor.getColumnIndex("correct_times");
+                    int indexTotal_time = cursor.getColumnIndex("total_time");
+                }finally {
+                    if(cursor != null){
+                        cursor.close();
+                    }
+                }
+            }
+
             userAnswer = 0;
             correctAnswer = 0;
             answerText.setText("");
@@ -226,6 +246,16 @@ public class CalculationActivity extends AppCompatActivity {
         values.put("answer", answer);
 
         database.insert(MySQLiteOpenHelper.QUESTIONS_TABLE_NAME, null, values);
+    }
+
+    public void insert_forward(int calculation_kind, int number1, int number2){
+
+        ContentValues values = new ContentValues();
+        values.put("calculation_kind", calculation_kind);
+        values.put("number1", number1);
+        values.put("number2", number2);
+
+        database.insert(MySQLiteOpenHelper.FORWARD_TABLE_NAME, null, values);
     }
 
     public void click1(View v) {
@@ -401,12 +431,18 @@ public class CalculationActivity extends AppCompatActivity {
             }, 1000);
         } else {
 
-
             if(timeKind == 0){
-
                 if (times == questionTimes) {
                     finish();
                 }
+            }
+
+            if(calculationKind == 2){
+                insert_forward(calculationKind, number1, number2);
+                totalReviewNumbers += 1;
+                prefs.edit()
+                        .putInt("totalReviewNumbers", totalReviewNumbers)
+                        .apply();
             }
 
             incorrectImage.setVisibility(View.VISIBLE);
