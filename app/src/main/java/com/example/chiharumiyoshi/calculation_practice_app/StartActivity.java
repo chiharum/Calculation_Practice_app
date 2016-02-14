@@ -83,12 +83,12 @@ public class StartActivity extends AppCompatActivity {
             continuousDays = 0;
         }
 
-        timesInADayText.setText("今日(" + year + "年" + month + "月" + day + "日)、" + timesInADay + "回目のプレイです。");
+        //timesInADayText.setText("今日(" + year + "年" + month + "月" + day + "日)、" + timesInADay + "回目のプレイです。");
         if(continuousDays > 0){
             continuousDayTimesText.setText(continuousDays + "日連続プレイです。");
         }else if(continuousDays == 0){
             if (lastDate != 0){
-                continuousDayTimesText.setText("前回のプレイは" + lastYear + "年" + lastMonth + "月" + lastDay + "日です。");
+                //continuousDayTimesText.setText("前回のプレイは" + lastYear + "年" + lastMonth + "月" + lastDay + "日です。");
             }else if (lastDate == 0){
                 continuousDayTimesText.setText("");
             }

@@ -71,7 +71,7 @@ public class FinishActivity extends AppCompatActivity {
                 .apply();
 
         if(timeKind == 0){
-            correctTimesText.setText(correct + "/" + questionTimes + "回（" + correctRate +  "%）");
+            correctTimesText.setText(correct + "/" + questionTimes + "回\n（" + correctRate +  "%）");
         }else if(timeKind == 1){
             correctTimesText.setText(correct + "回");
             questionTimes = correct;
@@ -155,7 +155,7 @@ public class FinishActivity extends AppCompatActivity {
 
             arrayAdapter.add(search(i));
 
-            database.delete(MySQLiteOpenHelper.QUESTIONS_TABLE_NAME, "_id = " + i, null);
+            database.delete(MySQLiteOpenHelper.QUESTIONS_TABLE_NAME, "id = " + i, null);
         }
 
         listView.setAdapter(arrayAdapter);
