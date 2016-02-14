@@ -47,14 +47,15 @@ public class CalculationActivity extends AppCompatActivity {
 
         mySQLiteOpenHelper = new MySQLiteOpenHelper(getApplicationContext());
         database = mySQLiteOpenHelper.getWritableDatabase();
-        Log.e("TAG","TAG1");
+        Log.e("TAG", "TAG1");
 
-        insert_forward(2, 1, 1);
-        insert_forward(2,2,2);
-        insert_forward(2,3,3);
-        insert_forward(2,4,4);
-        insert_forward(2,5,5);
-        insert_forward(2,6,6);
+//        insert_forward(2, 1, 1);
+//        insert_forward(2,2,2);
+//        insert_forward(2,3,3);
+//        insert_forward(2,4,4);
+//        insert_forward(2,5,5);
+//        insert_forward(2,6,6);
+//        totalReviewNumbers = 6;
 
         Display display = getWindowManager().getDefaultDisplay();
         Point point = new Point();
@@ -179,16 +180,16 @@ public class CalculationActivity extends AppCompatActivity {
             correctAnswer = number1 - number2;
         }else if(calculationKind == 2){
 
-            reviewRandom = (int)(Math.random() * 5);
-            reviewRandom = 0;
+            reviewRandom = (int)(Math.random() * 3);
 
             if(reviewRandom == 0 && totalReviewNumbers != 0){
 
                 review = true;
                 reviewId = (int)(Math.random() * totalReviewNumbers + 1);
-                Log.i("totalReviewNumbers", String.valueOf(reviewId));
-                //searchForward(reviewId);
+                searchForward(reviewId);
+                Log.i("review", "reviewed");
             }else{
+
                 number1 = (int) (Math.random() * 9) + 1;
                 number2 = (int) (Math.random() * 9) + 1;
             }
@@ -219,7 +220,6 @@ public class CalculationActivity extends AppCompatActivity {
         Cursor cursor = null;
 
         try{
-
             cursor = database.query(MySQLiteOpenHelper.REVIEW_TABLE_NAME, new String[]{"id", "number1", "number2", "correct_times", "total_times"}, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
 
             int indexNumber1 = cursor.getColumnIndex("number1");
@@ -227,10 +227,10 @@ public class CalculationActivity extends AppCompatActivity {
             indexCorrect_times = cursor.getColumnIndex("correct_times");
             indexTotal_time = cursor.getColumnIndex("total_time");
 
-            Log.i("reviewed", String.valueOf(indexNumber1) + " " +  String.valueOf(indexNumber2));
-
-            number1 = cursor.getInt(indexNumber1);
-            number2 = cursor.getInt(indexNumber2);
+            while(cursor.moveToNext()){
+                number2 = cursor.getInt(indexNumber2);
+                number1 = cursor.getInt(indexNumber1);
+            }
         }finally {
             if(cursor != null){
                 cursor.close();
@@ -448,10 +448,11 @@ public class CalculationActivity extends AppCompatActivity {
                 }
             }
 
-            if(calculationKind == 2 && review == true){
+            if(calculationKind == 2 && review){
                 indexTotal_time += 1;
                 indexCorrect_times += 1;
-                database.execSQL("update" + MySQLiteOpenHelper.REVIEW_TABLE_NAME + "set total_times = '" + indexTotal_time + "' set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
+                database.execSQL("update " + MySQLiteOpenHelper.REVIEW_TABLE_NAME + " set total_times = '" + indexTotal_time + "' where id = " + reviewId);
+                database.execSQL("update " + MySQLiteOpenHelper.REVIEW_TABLE_NAME + " set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
             }
 
             correctImage.setVisibility(View.VISIBLE);
@@ -472,13 +473,17 @@ public class CalculationActivity extends AppCompatActivity {
 
             if(calculationKind == 2){
                 insert_forward(calculationKind, number1, number2);
+
+                Log.i("update", "updated");
+
                 prefs.edit()
                         .putInt("totalReviewNumbers", totalReviewNumbers + 1)
                         .apply();
 
-                if(review == true){
+                if(review){
                     indexTotal_time += 1;
-                    database.execSQL("update" + MySQLiteOpenHelper.REVIEW_TABLE_NAME + "set total_times = '" + indexTotal_time + "' set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
+                    database.execSQL("update " + MySQLiteOpenHelper.REVIEW_TABLE_NAME + " set total_times = '" + indexTotal_time + "' where id = " + reviewId);
+                    database.execSQL("update " + MySQLiteOpenHelper.REVIEW_TABLE_NAME + " set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
                 }
             }
 
@@ -497,11 +502,7 @@ public class CalculationActivity extends AppCompatActivity {
         if(timeKind == 0){
 
             remainTimes = remainTimes - 1;
-            if (remainTimes == questionTimes - times) {
-                remainText.setText(remainTimes + "問");
-            } else {
-                remainText.setText("エラー");
-            }
+            remainText.setText(remainTimes + "問");
             progressBar.setProgress(times);
         }
     }
