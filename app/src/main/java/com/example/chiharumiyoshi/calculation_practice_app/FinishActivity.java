@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -71,7 +70,7 @@ public class FinishActivity extends AppCompatActivity {
                 .apply();
 
         if(timeKind == 0){
-            correctTimesText.setText(correct + "/" + questionTimes + "回\n（" + correctRate +  "%）");
+            correctTimesText.setText(correct + "/" + questionTimes + "回\n（" + (int)correctRate +  "%）");
         }else if(timeKind == 1){
             correctTimesText.setText(correct + "回");
             questionTimes = correct;
@@ -155,7 +154,7 @@ public class FinishActivity extends AppCompatActivity {
 
             arrayAdapter.add(search(i));
 
-            database.delete(MySQLiteOpenHelper.QUESTIONS_TABLE_NAME, "id = " + i, null);
+            database.delete(MySQLiteOpenHelper.QUESTIONS_TABLE, "id = " + i, null);
         }
 
         listView.setAdapter(arrayAdapter);
@@ -168,7 +167,7 @@ public class FinishActivity extends AppCompatActivity {
 
         try{
 
-            cursor = database.query(MySQLiteOpenHelper.QUESTIONS_TABLE_NAME, new String[]{"question_number", "number1", "number2", "correct_answer", "answer"}, "question_number = ?", new String[]{String.valueOf(question_numberValue)}, null, null, null);
+            cursor = database.query(MySQLiteOpenHelper.QUESTIONS_TABLE, new String[]{"question_number", "number1", "number2", "correct_answer", "answer"}, "question_number = ?", new String[]{String.valueOf(question_numberValue)}, null, null, null);
 
             int indexQuestionNumber = cursor.getColumnIndex("question_number");
             int indexNumber1 = cursor.getColumnIndex("number1");
@@ -212,7 +211,7 @@ public class FinishActivity extends AppCompatActivity {
         values.put("correct_rate", correctRate);
         values.put("time_per_a_question", timePerAQuestion);
 
-        database.insert(MySQLiteOpenHelper.RECORD_TABLE_NAME, null, values);
+        database.insert(MySQLiteOpenHelper.RECORD_TABLE, null, values);
     }
 
     public void restart(View v) {

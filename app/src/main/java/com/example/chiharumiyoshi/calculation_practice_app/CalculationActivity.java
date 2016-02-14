@@ -28,7 +28,7 @@ public class CalculationActivity extends AppCompatActivity {
 
     TextView number1Text, number2Text, answerText, correctTimesText, remainText, flagText;
     ImageView eraserImage, correctImage, incorrectImage;
-    int number1, number2, userAnswer, correctAnswer, correctTimes, times, questionTimes, eraserColor, remainTimes, calculationKind, timeKind, totalReviewNumbers, indexCorrect_times, indexTotal_time, reviewId, reviewRandom;
+    int number1, number2, userAnswer, correctAnswer, correctTimes, times, questionTimes, eraserColor, remainTimes, calculationKind, timeKind, indexCorrect_times, indexTotal_time, reviewId, reviewRandom, totalForwardAddition,totalForwardAdditionSubtraction, totalForwardMultiplication, totalForwardDivision;
     long startedTime, endedTime, totalTime, stopRealTime, questionTime, remainTime;
     boolean minus, review;
     ProgressBar progressBar;
@@ -36,6 +36,11 @@ public class CalculationActivity extends AppCompatActivity {
     AlertDialog dialog;
     Button nextButton;
     SharedPreferences prefs;
+
+    static final String TOTAL_FORWARD_ADDITION = "totalForwardAddition";
+    static final String TOTAL_FORWARD_SUBTRACTION = "totalForwardDivision";
+    static final String TOTAL_FORWARD_MULTIPLICATION = "totalForwardMultiplication";
+    static final String TOTAL_FORWARD_DIVISION = "totalForwardDivision";
 
     MySQLiteOpenHelper mySQLiteOpenHelper;
     SQLiteDatabase database;
@@ -47,15 +52,6 @@ public class CalculationActivity extends AppCompatActivity {
 
         mySQLiteOpenHelper = new MySQLiteOpenHelper(getApplicationContext());
         database = mySQLiteOpenHelper.getWritableDatabase();
-        Log.e("TAG", "TAG1");
-
-//        insert_forward(2, 1, 1);
-//        insert_forward(2,2,2);
-//        insert_forward(2,3,3);
-//        insert_forward(2,4,4);
-//        insert_forward(2,5,5);
-//        insert_forward(2,6,6);
-//        totalReviewNumbers = 6;
 
         Display display = getWindowManager().getDefaultDisplay();
         Point point = new Point();
@@ -77,13 +73,15 @@ public class CalculationActivity extends AppCompatActivity {
         nextButton = (Button)findViewById(R.id.button);
 
         //data
-
-        //final SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(this);
+        // final SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(this);
         prefs  = PreferenceManager.getDefaultSharedPreferences(this);
         timeKind = getIntent().getIntExtra("timeKind", 0);
         eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR_SETTINGS, 1);
         minus = prefs.getBoolean(SettingsActivity.KEY_MINUS_SETTINGS, false);
-        totalReviewNumbers = prefs.getInt("totalReviewNumbers", 0);
+        totalForwardAddition = prefs.getInt(TOTAL_FORWARD_ADDITION, 0);
+        totalForwardAdditionSubtraction = prefs.getInt(TOTAL_FORWARD_SUBTRACTION, 0);
+        totalForwardMultiplication = prefs.getInt(TOTAL_FORWARD_MULTIPLICATION, 0);
+        totalForwardDivision = prefs.getInt(TOTAL_FORWARD_DIVISION, 0);
 
         nextButton.setTextSize((float)width / (float)25.6);
 
@@ -163,13 +161,38 @@ public class CalculationActivity extends AppCompatActivity {
 
         if(calculationKind == 0){
 
-            number1 = (int) (Math.random() * 98) + 1;
-            number2 = (int) (Math.random() * 98) + 1;
+            reviewRandom = (int)(Math.random() * 3);
+
+            if(reviewRandom == 0 && totalForwardAddition != 0){
+
+                review = true;
+                reviewId = (int)(Math.random() * totalForwardAddition + 1);
+                searchForward(reviewId);
+                Log.i("review", "reviewed");
+            }else{
+
+                number1 = (int) (Math.random() * 98) + 1;
+                number2 = (int) (Math.random() * 98) + 1;
+            }
+
             correctAnswer = number1 + number2;
+
         }else if(calculationKind == 1){
 
-            number1 = (int) (Math.random() * 98) + 1;
-            number2 = (int) (Math.random() * 98) + 1;
+            reviewRandom = (int)(Math.random() * 3);
+
+            if(reviewRandom == 0 && totalForwardAdditionSubtraction != 0){
+
+                review = true;
+                reviewId = (int)(Math.random() * totalForwardAdditionSubtraction + 1);
+                searchForward(reviewId);
+                Log.i("review", "reviewed");
+            }else{
+
+                number1 = (int) (Math.random() * 98) + 1;
+                number2 = (int) (Math.random() * 98) + 1;
+            }
+
             if (!minus) {
                 if (number1 < number2){
                     userAnswer = number1;
@@ -178,14 +201,15 @@ public class CalculationActivity extends AppCompatActivity {
                 }
             }
             correctAnswer = number1 - number2;
+
         }else if(calculationKind == 2){
 
             reviewRandom = (int)(Math.random() * 3);
 
-            if(reviewRandom == 0 && totalReviewNumbers != 0){
+            if(reviewRandom == 0 && totalForwardMultiplication != 0){
 
                 review = true;
-                reviewId = (int)(Math.random() * totalReviewNumbers + 1);
+                reviewId = (int)(Math.random() * totalForwardMultiplication + 1);
                 searchForward(reviewId);
                 Log.i("review", "reviewed");
             }else{
@@ -194,15 +218,23 @@ public class CalculationActivity extends AppCompatActivity {
                 number2 = (int) (Math.random() * 9) + 1;
             }
 
-            userAnswer = 0;
-            correctAnswer = 0;
-            answerText.setText("");
             correctAnswer = number1 * number2;
         }else if(calculationKind == 3){
 
-            userAnswer = 0;
-            correctAnswer = 0;
-            answerText.setText("");
+            reviewRandom = (int)(Math.random() * 3);
+
+            if(reviewRandom == 0 && totalForwardDivision != 0){
+
+                review = true;
+                reviewId = (int)(Math.random() * totalForwardDivision + 1);
+                searchForward(reviewId);
+                Log.i("review", "reviewed");
+            }else{
+
+                number1 = (int) (Math.random() * 9) + 1;
+                number2 = (int) (Math.random() * 9) + 1;
+            }
+
             number2 = (int) (Math.random() * 9) + 1;
             number1 = (int) (Math.random() * 9) + 1;
             correctAnswer = number1;
@@ -217,23 +249,85 @@ public class CalculationActivity extends AppCompatActivity {
 
     public void searchForward(int id){
 
-        Cursor cursor = null;
+        if(calculationKind == 0){
+            Cursor cursor = null;
 
-        try{
-            cursor = database.query(MySQLiteOpenHelper.REVIEW_TABLE_NAME, new String[]{"id", "number1", "number2", "correct_times", "total_times"}, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+            try{
+                cursor = database.query(MySQLiteOpenHelper.FORWARD_ADDITION_TABLE, new String[]{"id", "number1", "number2", "correct_times", "total_times"}, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
 
-            int indexNumber1 = cursor.getColumnIndex("number1");
-            int indexNumber2 = cursor.getColumnIndex("number2");
-            indexCorrect_times = cursor.getColumnIndex("correct_times");
-            indexTotal_time = cursor.getColumnIndex("total_time");
+                int indexNumber1 = cursor.getColumnIndex("number1");
+                int indexNumber2 = cursor.getColumnIndex("number2");
+                indexCorrect_times = cursor.getColumnIndex("correct_times");
+                indexTotal_time = cursor.getColumnIndex("total_time");
 
-            while(cursor.moveToNext()){
-                number2 = cursor.getInt(indexNumber2);
-                number1 = cursor.getInt(indexNumber1);
+                while(cursor.moveToNext()){
+                    number2 = cursor.getInt(indexNumber2);
+                    number1 = cursor.getInt(indexNumber1);
+                }
+            }finally {
+                if(cursor != null){
+                    cursor.close();
+                }
             }
-        }finally {
-            if(cursor != null){
-                cursor.close();
+        }else if(calculationKind == 1){
+            Cursor cursor = null;
+
+            try{
+                cursor = database.query(MySQLiteOpenHelper.FORWARD_SUBTRACTION_TABLE, new String[]{"id", "number1", "number2", "correct_times", "total_times"}, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+
+                int indexNumber1 = cursor.getColumnIndex("number1");
+                int indexNumber2 = cursor.getColumnIndex("number2");
+                indexCorrect_times = cursor.getColumnIndex("correct_times");
+                indexTotal_time = cursor.getColumnIndex("total_time");
+
+                while(cursor.moveToNext()){
+                    number2 = cursor.getInt(indexNumber2);
+                    number1 = cursor.getInt(indexNumber1);
+                }
+            }finally {
+                if(cursor != null){
+                    cursor.close();
+                }
+            }
+        }else if(calculationKind == 3){
+            Cursor cursor = null;
+
+            try{
+                cursor = database.query(MySQLiteOpenHelper.FORWARD_MULTIPLICATION_TABLE, new String[]{"id", "number1", "number2", "correct_times", "total_times"}, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+
+                int indexNumber1 = cursor.getColumnIndex("number1");
+                int indexNumber2 = cursor.getColumnIndex("number2");
+                indexCorrect_times = cursor.getColumnIndex("correct_times");
+                indexTotal_time = cursor.getColumnIndex("total_time");
+
+                while(cursor.moveToNext()){
+                    number2 = cursor.getInt(indexNumber2);
+                    number1 = cursor.getInt(indexNumber1);
+                }
+            }finally {
+                if(cursor != null){
+                    cursor.close();
+                }
+            }
+        }else if(calculationKind == 4){
+            Cursor cursor = null;
+
+            try{
+                cursor = database.query(MySQLiteOpenHelper.FORWARD_DIVISION_TABLE, new String[]{"id", "number1", "number2", "correct_times", "total_times"}, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+
+                int indexNumber1 = cursor.getColumnIndex("number1");
+                int indexNumber2 = cursor.getColumnIndex("number2");
+                indexCorrect_times = cursor.getColumnIndex("correct_times");
+                indexTotal_time = cursor.getColumnIndex("total_time");
+
+                while(cursor.moveToNext()){
+                    number2 = cursor.getInt(indexNumber2);
+                    number1 = cursor.getInt(indexNumber1);
+                }
+            }finally {
+                if(cursor != null){
+                    cursor.close();
+                }
             }
         }
     }
@@ -272,7 +366,7 @@ public class CalculationActivity extends AppCompatActivity {
         values.put("correct_answer", correct_answer);
         values.put("answer", answer);
 
-        database.insert(MySQLiteOpenHelper.QUESTIONS_TABLE_NAME, null, values);
+        database.insert(MySQLiteOpenHelper.QUESTIONS_TABLE, null, values);
     }
 
     public void insert_forward(int calculation_kind, int number1, int number2){
@@ -282,7 +376,7 @@ public class CalculationActivity extends AppCompatActivity {
         values.put("number1", number1);
         values.put("number2", number2);
 
-        database.insert(MySQLiteOpenHelper.REVIEW_TABLE_NAME, null, values);
+        database.insert(MySQLiteOpenHelper.FORWARD_MULTIPLICATION_TABLE, null, values);
     }
 
     public void click1(View v) {
@@ -448,11 +542,30 @@ public class CalculationActivity extends AppCompatActivity {
                 }
             }
 
-            if(calculationKind == 2 && review){
+            if(calculationKind == 0 && review){
+
                 indexTotal_time += 1;
                 indexCorrect_times += 1;
-                database.execSQL("update " + MySQLiteOpenHelper.REVIEW_TABLE_NAME + " set total_times = '" + indexTotal_time + "' where id = " + reviewId);
-                database.execSQL("update " + MySQLiteOpenHelper.REVIEW_TABLE_NAME + " set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
+                database.execSQL("update " + MySQLiteOpenHelper.FORWARD_ADDITION_TABLE + " set total_times = '" + indexTotal_time + "' where id = " + reviewId);
+                database.execSQL("update " + MySQLiteOpenHelper.FORWARD_ADDITION_TABLE + " set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
+            }else if(calculationKind == 2 && review){
+
+                indexTotal_time += 1;
+                indexCorrect_times += 1;
+                database.execSQL("update " + MySQLiteOpenHelper.FORWARD_SUBTRACTION_TABLE + " set total_times = '" + indexTotal_time + "' where id = " + reviewId);
+                database.execSQL("update " + MySQLiteOpenHelper.FORWARD_SUBTRACTION_TABLE + " set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
+            }else if(calculationKind == 3 && review){
+
+                indexTotal_time += 1;
+                indexCorrect_times += 1;
+                database.execSQL("update " + MySQLiteOpenHelper.FORWARD_MULTIPLICATION_TABLE + " set total_times = '" + indexTotal_time + "' where id = " + reviewId);
+                database.execSQL("update " + MySQLiteOpenHelper.FORWARD_MULTIPLICATION_TABLE + " set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
+            }else if(calculationKind == 4 && review){
+
+                indexTotal_time += 1;
+                indexCorrect_times += 1;
+                database.execSQL("update " + MySQLiteOpenHelper.FORWARD_DIVISION_TABLE + " set total_times = '" + indexTotal_time + "' where id = " + reviewId);
+                database.execSQL("update " + MySQLiteOpenHelper.FORWARD_DIVISION_TABLE + " set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
             }
 
             correctImage.setVisibility(View.VISIBLE);
@@ -477,13 +590,13 @@ public class CalculationActivity extends AppCompatActivity {
                 Log.i("update", "updated");
 
                 prefs.edit()
-                        .putInt("totalReviewNumbers", totalReviewNumbers + 1)
+                        .putInt(TOTAL_FORWARD_MULTIPLICATION, totalForwardMultiplication + 1)
                         .apply();
 
                 if(review){
                     indexTotal_time += 1;
-                    database.execSQL("update " + MySQLiteOpenHelper.REVIEW_TABLE_NAME + " set total_times = '" + indexTotal_time + "' where id = " + reviewId);
-                    database.execSQL("update " + MySQLiteOpenHelper.REVIEW_TABLE_NAME + " set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
+                    database.execSQL("update " + MySQLiteOpenHelper.FORWARD_MULTIPLICATION_TABLE + " set total_times = '" + indexTotal_time + "' where id = " + reviewId);
+                    database.execSQL("update " + MySQLiteOpenHelper.FORWARD_MULTIPLICATION_TABLE + " set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
                 }
             }
 
