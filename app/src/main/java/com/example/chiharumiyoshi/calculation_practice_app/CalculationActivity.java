@@ -49,6 +49,12 @@ public class CalculationActivity extends AppCompatActivity {
         database = mySQLiteOpenHelper.getWritableDatabase();
         Log.e("TAG","TAG1");
 
+        insert_forward(2, 1, 1);
+        insert_forward(2,2,2);
+        insert_forward(2,3,3);
+        insert_forward(2,4,4);
+        insert_forward(2,5,5);
+        insert_forward(2,6,6);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point point = new Point();
