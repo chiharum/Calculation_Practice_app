@@ -118,8 +118,8 @@ public class StartActivity extends AppCompatActivity {
 
         if(!updateAlert){
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-            alertDialog.setTitle("プレイ履歴機能について");
-            alertDialog.setMessage("プレイ計算にプレイ履歴機能が追加されました。" + "\n" + "スタート画面の右上の「リストアイコン」を押して確認してみてください。");
+            alertDialog.setTitle("アップデート情報");
+            alertDialog.setMessage("間違えた問題を重点的に出す機能を追加しました。");
             alertDialog.setPositiveButton("了解！", null);
             alertDialog.show();
             prefs.edit()
