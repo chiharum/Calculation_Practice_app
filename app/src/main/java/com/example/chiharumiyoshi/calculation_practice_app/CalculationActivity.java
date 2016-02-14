@@ -26,11 +26,11 @@ import android.widget.TextView;
 
 public class CalculationActivity extends AppCompatActivity {
 
-    TextView number1Text, number2Text, answerText, correctTimesText, remainText, flagText;
-    ImageView eraserImage, correctImage, incorrectImage;
     int number1, number2, userAnswer, correctAnswer, correctTimes, times, questionTimes, eraserColor, remainTimes, calculationKind, timeKind, indexCorrect_times, indexTotal_time, reviewId, reviewRandom, totalForwardAddition,totalForwardAdditionSubtraction, totalForwardMultiplication, totalForwardDivision;
     long startedTime, endedTime, totalTime, stopRealTime, questionTime, remainTime;
-    boolean minus, review;
+    boolean minus, forward, review;
+    TextView number1Text, number2Text, answerText, correctTimesText, remainText, flagText;
+    ImageView eraserImage, correctImage, incorrectImage;
     ProgressBar progressBar;
     Chronometer timeChronometer;
     AlertDialog dialog;
@@ -78,6 +78,7 @@ public class CalculationActivity extends AppCompatActivity {
         timeKind = getIntent().getIntExtra("timeKind", 0);
         eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR_SETTINGS, 1);
         minus = prefs.getBoolean(SettingsActivity.KEY_MINUS_SETTINGS, false);
+        forward = prefs.getBoolean(SettingsActivity.KEY_FORWARD_SETTINGS, false);
         totalForwardAddition = prefs.getInt(TOTAL_FORWARD_ADDITION, 0);
         totalForwardAdditionSubtraction = prefs.getInt(TOTAL_FORWARD_SUBTRACTION, 0);
         totalForwardMultiplication = prefs.getInt(TOTAL_FORWARD_MULTIPLICATION, 0);
@@ -163,7 +164,7 @@ public class CalculationActivity extends AppCompatActivity {
 
             reviewRandom = (int)(Math.random() * 3);
 
-            if(reviewRandom == 0 && totalForwardAddition != 0){
+            if(forward && reviewRandom == 0 && totalForwardAddition > 10){
 
                 review = true;
                 reviewId = (int)(Math.random() * totalForwardAddition + 1);
@@ -181,7 +182,7 @@ public class CalculationActivity extends AppCompatActivity {
 
             reviewRandom = (int)(Math.random() * 3);
 
-            if(reviewRandom == 0 && totalForwardAdditionSubtraction != 0){
+            if(forward && reviewRandom == 0 && totalForwardAdditionSubtraction > 10){
 
                 review = true;
                 reviewId = (int)(Math.random() * totalForwardAdditionSubtraction + 1);
@@ -206,7 +207,7 @@ public class CalculationActivity extends AppCompatActivity {
 
             reviewRandom = (int)(Math.random() * 3);
 
-            if(reviewRandom == 0 && totalForwardMultiplication != 0){
+            if(forward && reviewRandom == 0 && totalForwardMultiplication > 10){
 
                 review = true;
                 reviewId = (int)(Math.random() * totalForwardMultiplication + 1);
@@ -223,7 +224,7 @@ public class CalculationActivity extends AppCompatActivity {
 
             reviewRandom = (int)(Math.random() * 3);
 
-            if(reviewRandom == 0 && totalForwardDivision != 0){
+            if(forward && reviewRandom == 0 && totalForwardDivision > 10){
 
                 review = true;
                 reviewId = (int)(Math.random() * totalForwardDivision + 1);

@@ -18,9 +18,10 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String KEY_QUESTION_TIMES_SETTINGS = "questionTimesSettings";
     public static final String KEY_QUESTION_TIME_SETTINGS = "questionTimeSettings";
     public static final String KEY_MINUS_SETTINGS = "minus";
+    public static final String KEY_FORWARD_SETTINGS = "forward";
     public static final String KEY_ERASER_COLOR_SETTINGS = "eraser_color";
 
-    boolean minus;
+    boolean minus, forward;
     TextView questionNumbersText;
     TextView questionTimeText;
     ImageView eraserImageView;
@@ -40,7 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
             minus_c.setChecked(false);
         }
         minus_c.setOnClickListener(new View.OnClickListener(){
-            @Override
+
             public void onClick(View v){
                 minus = minus_c.isChecked();
                 prefs.edit()
@@ -49,14 +50,30 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        questionNumbersText = (TextView)findViewById(R.id.question_numbers_t);
+        final CheckBox forward_c = new CheckBox(this);
+        forward = prefs.getBoolean(KEY_FORWARD_SETTINGS, false);
+        if(forward){
+            forward_c.setChecked(true);
+        }else{
+            forward_c.setChecked(false);
+        }
+        forward_c.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                forward = forward_c.isChecked();
+                prefs.edit()
+                        .putBoolean(KEY_FORWARD_SETTINGS, forward)
+                        .apply();
+            }
+        });
 
+        questionNumbersText = (TextView)findViewById(R.id.question_numbers_t);
         int number = prefs.getInt(KEY_QUESTION_TIMES_SETTINGS, 10);
         questionNumbersText.setText("問題数：" + number + "問");
         eraserImageView = (ImageView)findViewById(R.id.imageView10);
 
-        questionTime = prefs.getLong(KEY_QUESTION_TIME_SETTINGS, 30);
         questionTimeText = (TextView)findViewById(R.id.textView19);
+        questionTime = prefs.getLong(KEY_QUESTION_TIME_SETTINGS, 30);
         questionTimeText.setText("時間：" + questionTime + "秒");
 
         int default_eraser_color = prefs.getInt(KEY_ERASER_COLOR_SETTINGS, 0) + 1;
