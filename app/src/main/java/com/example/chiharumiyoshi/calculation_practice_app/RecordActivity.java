@@ -61,7 +61,7 @@ public class RecordActivity extends AppCompatActivity {
 
         try{
 
-            cursor = database.query(MySQLiteOpenHelper.RECORD_TABLE, new String[]{"_id","calculation_kind", "date", "correct_rate", "time_per_a_question"}, "_id = ?", new String[]{String.valueOf(idNum)}, null, null, null);
+            cursor = database.query(MySQLiteOpenHelper.RECORD_TABLE, new String[]{"id","calculation_kind", "date", "correct_rate", "time_per_a_question"}, "id = ?", new String[]{String.valueOf(idNum)}, null, null, null);
 
             int indexDate = cursor.getColumnIndex("date");
             int indexCalculationKind = cursor.getColumnIndex("calculation_kind");

@@ -5,15 +5,19 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FinishActivity extends AppCompatActivity {
 
@@ -23,6 +27,9 @@ public class FinishActivity extends AppCompatActivity {
     TextView correctTimesText, timeText, timesPerASecondText, highestTimeText;
     ArrayAdapter arrayAdapter;
     ListView listView;
+    LinearLayout resultLayout, detailLayout;
+
+    Animation animation1, animation2;
 
     public static final String KEY_CALCULATION_KIND = "CalculationKind";
     public static final String KEY_TOTAL_QUESTION_TIMES = "totalQuestionTimes";
@@ -31,6 +38,9 @@ public class FinishActivity extends AppCompatActivity {
 
     MySQLiteOpenHelper mySQLiteOpenHelper;
     SQLiteDatabase database;
+
+    List<Item> items;
+    CustomAdapter customAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +58,11 @@ public class FinishActivity extends AppCompatActivity {
         highestTimeText = (TextView)findViewById(R.id.textView18);
         timeText = (TextView)findViewById(R.id.textView2);
         listView = (ListView)findViewById(R.id.listView);
+        detailLayout = (LinearLayout)findViewById(R.id.detailLayout);
+        resultLayout = (LinearLayout)findViewById(R.id.resultLayout);
+
+        animation1 = AnimationUtils.loadAnimation(this, R.anim.below_to_stage_animation);
+        animation2 = AnimationUtils.loadAnimation(this, R.anim.stage_to_below_animation);
 
         //data
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -58,6 +73,8 @@ public class FinishActivity extends AppCompatActivity {
         calculationKind = getIntent().getIntExtra("calculation_kind", 0);
         timeKind = getIntent().getIntExtra("timeKind", 0);
         time = getIntent().getLongExtra("time", 0);
+
+        detailLayout.setVisibility(View.INVISIBLE);
 
         if(correct == 0){
             correctRate = 0;
@@ -70,9 +87,9 @@ public class FinishActivity extends AppCompatActivity {
                 .apply();
 
         if(timeKind == 0){
-            correctTimesText.setText(correct + "/" + questionTimes + "回\n（" + (int)correctRate +  "%）");
+            correctTimesText.setText("正解数：" + correct + "/" + questionTimes + "回\n（" + (int)correctRate +  "%）");
         }else if(timeKind == 1){
-            correctTimesText.setText(correct + "回");
+            correctTimesText.setText("正解数：" + correct + "回");
             questionTimes = correct;
         }
 
@@ -94,7 +111,7 @@ public class FinishActivity extends AppCompatActivity {
         }else{
             timePerAQuestion = (float)time / 1000 / (float)correct;
         }
-        timesPerASecondText.setText("1問　" + timePerAQuestion + "秒");
+        timesPerASecondText.setText("1問：" + timePerAQuestion + "秒");
 
         if(calculationKind == 0){
 
@@ -150,14 +167,16 @@ public class FinishActivity extends AppCompatActivity {
                 .putInt(StartActivity.KEY_TIMES_IN_A_DAY, timesInADay)
                 .apply();
 
+        items = new ArrayList<>();
+
         for(int i = 1; i <= questionTimes; i++){
 
-            arrayAdapter.add(search(i));
-
+            items.add(getResult(i));
             database.delete(MySQLiteOpenHelper.QUESTIONS_TABLE, "id = " + i, null);
         }
 
-        listView.setAdapter(arrayAdapter);
+        customAdapter = new CustomAdapter(this, R.layout.result_list, items);
+        listView.setAdapter(customAdapter);
     }
 
     public String search(int question_numberValue){
@@ -167,7 +186,9 @@ public class FinishActivity extends AppCompatActivity {
 
         try{
 
-            cursor = database.query(MySQLiteOpenHelper.QUESTIONS_TABLE, new String[]{"question_number", "number1", "number2", "correct_answer", "answer"}, "question_number = ?", new String[]{String.valueOf(question_numberValue)}, null, null, null);
+            cursor = database.query(MySQLiteOpenHelper.QUESTIONS_TABLE,
+                    new String[]{"question_number", "number1", "number2", "correct_answer", "answer"},
+                    "question_number = ?", new String[]{String.valueOf(question_numberValue)}, null, null, null);
 
             int indexQuestionNumber = cursor.getColumnIndex("question_number");
             int indexNumber1 = cursor.getColumnIndex("number1");
@@ -175,18 +196,16 @@ public class FinishActivity extends AppCompatActivity {
             int indexCorrect_answer = cursor.getColumnIndex("correct_answer");
             int indexAnswer = cursor.getColumnIndex("answer");
 
-//            Log.e("out_serts", question_numberValue + " " + indexQuestionNumber + " " + indexNumber1 + " " + indexNumber2 + " " + indexCorrect_answer + " " + indexAnswer);
-
             while(cursor.moveToNext()) {
 
                 if (calculationKind == 0){
-                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "+" + cursor.getInt(indexNumber2) + "\n" + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                    result = cursor.getInt(indexNumber1) + "+" + cursor.getInt(indexNumber2);
                 }else if(calculationKind == 1){
-                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "-" + cursor.getInt(indexNumber2) + "\n" + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                    result = cursor.getInt(indexNumber1) + "-" + cursor.getInt(indexNumber2);
                 }else if(calculationKind == 2){
-                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "×" + cursor.getInt(indexNumber2) + "\n" + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                    result = cursor.getInt(indexNumber1) + "×" + cursor.getInt(indexNumber2);
                 }else if(calculationKind == 3){
-                    result = "第" + cursor.getInt(indexQuestionNumber) + "問：" + cursor.getInt(indexNumber1) + "÷" + cursor.getInt(indexNumber2) + "\n" + " 解答：" + cursor.getInt(indexCorrect_answer) + "　あなたの答え：" + cursor.getInt(indexAnswer);
+                    result = cursor.getInt(indexNumber1) + "÷" + cursor.getInt(indexNumber2);
                 }
             }
 
@@ -198,6 +217,32 @@ public class FinishActivity extends AppCompatActivity {
         }
 
         return result;
+    }
+
+    public Item getResult(int questionNumberValue){
+
+        Cursor cursor = null;
+
+        Item item = null;
+
+        try{
+
+            cursor = database.query(MySQLiteOpenHelper.QUESTIONS_TABLE, new String[]{"question_number", "correct_answer", "answer"}, "question_number = ?", new String[]{String.valueOf(questionNumberValue)}, null, null, null);
+
+            int indexCorrectAnswer = cursor.getColumnIndex("correct_answer");
+            int indexAnswer = cursor.getColumnIndex("answer");
+
+            while(cursor.moveToNext()){
+                item = new Item(questionNumberValue, cursor.getInt(indexAnswer), cursor.getInt(indexCorrectAnswer), search(questionNumberValue));
+            }
+
+        }finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return item;
     }
 
     public void insert(String calculationKind, int correctRate, int timePerAQuestion){
@@ -212,6 +257,19 @@ public class FinishActivity extends AppCompatActivity {
         values.put("time_per_a_question", timePerAQuestion);
 
         database.insert(MySQLiteOpenHelper.RECORD_TABLE, null, values);
+    }
+
+    public void detail(View view){
+        animation1.setFillAfter(true);
+        animation1.setFillEnabled(true);
+        detailLayout.startAnimation(animation1);
+        resultLayout.setVisibility(View.INVISIBLE);
+    }
+
+    public void hideDetail(View view){
+        detailLayout.startAnimation(animation2);
+        detailLayout.setVisibility(View.INVISIBLE);
+        resultLayout.setVisibility(View.VISIBLE);
     }
 
     public void restart(View v) {

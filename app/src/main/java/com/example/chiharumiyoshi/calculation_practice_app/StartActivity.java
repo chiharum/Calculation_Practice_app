@@ -1,9 +1,6 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.Service;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -16,14 +13,16 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Calendar;
 
 public class StartActivity extends AppCompatActivity {
 
-    int lastYear, lastMonth, lastDay, lastDate, year, month, day, date, timesInADay, continuousDays;
+    int lastYear, lastMonth, lastDay, lastDate, year, month, day, date, timesInADay, continuousDays, width, height;
     TextView timesInADayText, continuousDayTimesText, titleText;
+    Button calculateButton1, calculateButton2, calculateButton3, calculateButton4;
     AlertDialog dialog;
     boolean newYear, updateAlert;
 
@@ -34,21 +33,13 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        /*
-        To Do
-
-        -データベースの削除。
-        -日付の記録（データベース）。
-        -画面サイズによって文字の大きさを変える。
-        -戻るボタンの処理。
-        説明文
-        アクションバー（上と下）。
-        百ます計算。
-         */
-
         titleText = (TextView)findViewById(R.id.titleText);
         timesInADayText = (TextView)findViewById(R.id.textView9);
         continuousDayTimesText = (TextView)findViewById(R.id.textView10);
+        calculateButton1 = (Button)findViewById(R.id.calculate_addition);
+        calculateButton2 = (Button)findViewById(R.id.calculate_subtraction);
+        calculateButton3 = (Button)findViewById(R.id.calculate_maltiplication);
+        calculateButton4 = (Button)findViewById(R.id.calculate_division);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         timesInADay = prefs.getInt(KEY_TIMES_IN_A_DAY, 0);
@@ -63,11 +54,12 @@ public class StartActivity extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         Point point = new Point();
         display.getSize(point);
-        int width = point.x;
+        width = point.x;
+        height = point.y;
         titleText.setTypeface(Typeface.SERIF, Typeface.BOLD);
         titleText.setTextSize((float) width / (float) 12);
         timesInADayText.setTextSize((float) width / (float) 30);
-        continuousDayTimesText.setTextSize((float)width / (float)30);
+        continuousDayTimesText.setTextSize((float) width / (float) 30);
 
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -192,6 +184,10 @@ public class StartActivity extends AppCompatActivity {
 
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setView(adbLayout);
+//        calculateButton1.setHeight(height / 21);
+//        calculateButton2.setHeight(height / 21);
+//        calculateButton3.setHeight(height / 21);
+//        calculateButton4.setHeight(height / 21);
         dialog = adb.show();
     }
 
@@ -239,6 +235,10 @@ public class StartActivity extends AppCompatActivity {
 
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setView(adbLayout);
+//        calculateButton1.setHeight(height/ 21);
+//        calculateButton2.setHeight(height/ 21);
+//        calculateButton3.setHeight(height/ 21);
+//        calculateButton4.setHeight(height/ 21);
         dialog = adb.show();
     }
 

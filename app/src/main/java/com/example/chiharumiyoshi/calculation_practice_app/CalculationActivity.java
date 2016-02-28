@@ -169,7 +169,6 @@ public class CalculationActivity extends AppCompatActivity {
                 review = true;
                 reviewId = (int)(Math.random() * totalForwardAddition + 1);
                 searchForward(reviewId);
-                Log.i("review", "reviewed");
             }else{
 
                 number1 = (int) (Math.random() * 98) + 1;
@@ -187,7 +186,6 @@ public class CalculationActivity extends AppCompatActivity {
                 review = true;
                 reviewId = (int)(Math.random() * totalForwardAdditionSubtraction + 1);
                 searchForward(reviewId);
-                Log.i("review", "reviewed");
             }else{
 
                 number1 = (int) (Math.random() * 98) + 1;
