@@ -24,6 +24,7 @@ public class FinishActivity extends AppCompatActivity {
     int correct, timeKind, questionTimes, calculationKind, timesInADay;
     long time, seconds, minutes, subSeconds;
     float timePerAQuestion, highestTime, correctRate;
+    ArrayList<Integer> number1Records, number2Records, correctAnswerRecords, answerRecords;
     TextView correctTimesText, timeText, timesPerASecondText, highestTimeText;
     ArrayAdapter arrayAdapter;
     ListView listView;
@@ -73,6 +74,11 @@ public class FinishActivity extends AppCompatActivity {
         calculationKind = getIntent().getIntExtra("calculation_kind", 0);
         timeKind = getIntent().getIntExtra("timeKind", 0);
         time = getIntent().getLongExtra("time", 0);
+        number1Records = getIntent().getIntegerArrayListExtra("number1Records");
+        number2Records = getIntent().getIntegerArrayListExtra("number2Records");
+        correctAnswerRecords = getIntent().getIntegerArrayListExtra("correctAnswerRecords");
+        answerRecords = getIntent().getIntegerArrayListExtra("answerRecords");
+
 
         detailLayout.setVisibility(View.INVISIBLE);
 
@@ -169,80 +175,28 @@ public class FinishActivity extends AppCompatActivity {
 
         items = new ArrayList<>();
 
-        for(int i = 1; i <= questionTimes; i++){
+        for(int i = 0; i <= questionTimes; i++){
 
-            items.add(getResult(i));
-            database.delete(MySQLiteOpenHelper.QUESTIONS_TABLE, "id = " + i, null);
+            String text = "";
+
+            if(calculationKind == 0){
+                text = number1Records.get(i) + "+" + number2Records.get(i);
+            }else if(calculationKind == 2){
+                text = number1Records.get(i) + "-" + number2Records.get(i);
+            }else if(calculationKind == 3){
+                text = number1Records.get(i) + "×" + number2Records.get(i);
+            }else if(calculationKind == 4){
+                text = number1Records.get(i) + "÷" + number2Records.get(i);
+            }
+
+            Item item;
+            item = new Item(i + 1, answerRecords.get(i), correctAnswerRecords.get(i), text);
+
+            items.add(item);
         }
 
         customAdapter = new CustomAdapter(this, R.layout.result_list, items);
         listView.setAdapter(customAdapter);
-    }
-
-    public String search(int question_numberValue){
-
-        Cursor cursor = null;
-        String result = "";
-
-        try{
-
-            cursor = database.query(MySQLiteOpenHelper.QUESTIONS_TABLE,
-                    new String[]{"question_number", "number1", "number2", "correct_answer", "answer"},
-                    "question_number = ?", new String[]{String.valueOf(question_numberValue)}, null, null, null);
-
-            int indexQuestionNumber = cursor.getColumnIndex("question_number");
-            int indexNumber1 = cursor.getColumnIndex("number1");
-            int indexNumber2 = cursor.getColumnIndex("number2");
-            int indexCorrect_answer = cursor.getColumnIndex("correct_answer");
-            int indexAnswer = cursor.getColumnIndex("answer");
-
-            while(cursor.moveToNext()) {
-
-                if (calculationKind == 0){
-                    result = cursor.getInt(indexNumber1) + "+" + cursor.getInt(indexNumber2);
-                }else if(calculationKind == 1){
-                    result = cursor.getInt(indexNumber1) + "-" + cursor.getInt(indexNumber2);
-                }else if(calculationKind == 2){
-                    result = cursor.getInt(indexNumber1) + "×" + cursor.getInt(indexNumber2);
-                }else if(calculationKind == 3){
-                    result = cursor.getInt(indexNumber1) + "÷" + cursor.getInt(indexNumber2);
-                }
-            }
-
-        }finally {
-            if (cursor != null) {
-
-                cursor.close();
-            }
-        }
-
-        return result;
-    }
-
-    public Item getResult(int questionNumberValue){
-
-        Cursor cursor = null;
-
-        Item item = null;
-
-        try{
-
-            cursor = database.query(MySQLiteOpenHelper.QUESTIONS_TABLE, new String[]{"question_number", "correct_answer", "answer"}, "question_number = ?", new String[]{String.valueOf(questionNumberValue)}, null, null, null);
-
-            int indexCorrectAnswer = cursor.getColumnIndex("correct_answer");
-            int indexAnswer = cursor.getColumnIndex("answer");
-
-            while(cursor.moveToNext()){
-                item = new Item(questionNumberValue, cursor.getInt(indexAnswer), cursor.getInt(indexCorrectAnswer), search(questionNumberValue));
-            }
-
-        }finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
-        return item;
     }
 
     public void insert(String calculationKind, int correctRate, int timePerAQuestion){

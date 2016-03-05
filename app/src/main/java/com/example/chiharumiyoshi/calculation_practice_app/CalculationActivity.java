@@ -24,11 +24,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CalculationActivity extends AppCompatActivity {
 
     int number1, number2, userAnswer, correctAnswer, correctTimes, times, questionTimes, eraserColor, remainTimes, calculationKind, timeKind, indexCorrect_times, indexTotal_time, reviewId, reviewRandom, totalForwardAddition,totalForwardAdditionSubtraction, totalForwardMultiplication, totalForwardDivision;
     long startedTime, endedTime, totalTime, stopRealTime, questionTime, remainTime;
     boolean minus, forward, review;
+    ArrayList<Integer> number1Records, number2Records, correctAnswerRecords, answerRecords;
     TextView number1Text, number2Text, answerText, correctTimesText, remainText, flagText;
     ImageView eraserImage, correctImage, incorrectImage;
     ProgressBar progressBar;
@@ -338,6 +342,9 @@ public class CalculationActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra("correct", correctTimes);
         intent.putExtra("calculation_kind", calculationKind);
+        intent.putExtra("number1Records", number1Records);
+        intent.putExtra("number2Records", number2Records);
+        intent.putExtra("correctAnswerRecords", correctAnswerRecords);
 
         if(timeKind == 0){
 
@@ -354,18 +361,6 @@ public class CalculationActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_MAIN);
         intent.setClass(CalculationActivity.this, FinishActivity.class);
         startActivity(intent);
-    }
-
-    public void insert(int question_number, int number1, int number2, int correct_answer, int answer){
-
-        ContentValues values = new ContentValues();
-        values.put("question_number", question_number);
-        values.put("number1", number1);
-        values.put("number2", number2);
-        values.put("correct_answer", correct_answer);
-        values.put("answer", answer);
-
-        database.insert(MySQLiteOpenHelper.QUESTIONS_TABLE, null, values);
     }
 
     public void insert_forward(int calculation_kind, int number1, int number2){
@@ -528,7 +523,10 @@ public class CalculationActivity extends AppCompatActivity {
     public void next(View view) {
         times = times + 1;
 
-        insert(times, number1, number2, correctAnswer, userAnswer);
+        number1Records.add(number1);
+        number2Records.add(number2);
+        correctAnswerRecords.add(correctAnswer);
+        answerRecords.add(userAnswer);
 
         if (userAnswer == correctAnswer) {
 
