@@ -1,6 +1,10 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Point;
+import android.preference.PreferenceManager;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,10 @@ import java.util.List;
 public class CustomAdapter extends ArrayAdapter<Item> {
 
     LayoutInflater layoutInflater;
+
+    final SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(getContext());
+    int width = prefs.getInt("width", 0);
+    int height = prefs.getInt("height", 0);
 
     public CustomAdapter(Context context, int resource, List<Item> items){
 
@@ -44,6 +52,10 @@ public class CustomAdapter extends ArrayAdapter<Item> {
             viewHolder.questionTextView.setText(item.question);
             viewHolder.correctAnswerTextView.setText(item.correctAnswer);
             viewHolder.answerTextView.setText(item.answer);
+            viewHolder.resultIconImage.setMaxWidth(width / 7);
+            viewHolder.resultIconImage.setMaxHeight(height / 7);
+            viewHolder.resultIconImage.setMinimumWidth(width / 7);
+            viewHolder.resultIconImage.setMinimumHeight(height / 7);
         }
 
         return convertView;

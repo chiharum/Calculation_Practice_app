@@ -56,10 +56,18 @@ public class StartActivity extends AppCompatActivity {
         display.getSize(point);
         width = point.x;
         height = point.y;
-        titleText.setTypeface(Typeface.SERIF, Typeface.BOLD);
+
+        prefs.edit()
+                .putInt("width", width)
+                .apply();
+        prefs.edit()
+                .putInt("height", height)
+                .apply();
+
         titleText.setTextSize((float) width / (float) 12);
         timesInADayText.setTextSize((float) width / (float) 30);
         continuousDayTimesText.setTextSize((float) width / (float) 30);
+        titleText.setTypeface(Typeface.SERIF, Typeface.BOLD);
 
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);

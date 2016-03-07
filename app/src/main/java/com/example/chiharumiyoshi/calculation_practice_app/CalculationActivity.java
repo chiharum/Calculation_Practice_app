@@ -77,7 +77,6 @@ public class CalculationActivity extends AppCompatActivity {
         nextButton = (Button)findViewById(R.id.button);
 
         //data
-        // final SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(this);
         prefs  = PreferenceManager.getDefaultSharedPreferences(this);
         timeKind = getIntent().getIntExtra("timeKind", 0);
         eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR_SETTINGS, 1);
@@ -91,6 +90,10 @@ public class CalculationActivity extends AppCompatActivity {
         nextButton.setTextSize((float)width / (float)25.6);
 
         review = false;
+        number1Records = new ArrayList<Integer>();
+        number2Records = new ArrayList<Integer>();
+        answerRecords = new ArrayList<Integer>();
+        correctAnswerRecords = new ArrayList<Integer>();
 
         if(timeKind == 0){
 
@@ -345,6 +348,7 @@ public class CalculationActivity extends AppCompatActivity {
         intent.putExtra("number1Records", number1Records);
         intent.putExtra("number2Records", number2Records);
         intent.putExtra("correctAnswerRecords", correctAnswerRecords);
+        intent.putExtra("answerRecords", answerRecords);
 
         if(timeKind == 0){
 
@@ -520,7 +524,14 @@ public class CalculationActivity extends AppCompatActivity {
         dialog = adb.show();
     }
 
+    public void test(){
+        userAnswer = correctAnswer;
+    }
+
     public void next(View view) {
+
+        test();
+
         times = times + 1;
 
         number1Records.add(number1);

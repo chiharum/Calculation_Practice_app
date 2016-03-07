@@ -1,18 +1,21 @@
 package com.example.chiharumiyoshi.calculation_practice_app;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,9 +28,10 @@ public class FinishActivity extends AppCompatActivity {
     long time, seconds, minutes, subSeconds;
     float timePerAQuestion, highestTime, correctRate;
     ArrayList<Integer> number1Records, number2Records, correctAnswerRecords, answerRecords;
-    TextView correctTimesText, timeText, timesPerASecondText, highestTimeText;
+    TextView correctTimesText, timeText, timesPerASecondText, highestTimeText, resultQuestionNumberText, resultQuestionText, resultCorrectAnswerText, resultAnswerText;
     ArrayAdapter arrayAdapter;
     ListView listView;
+    ImageView resultImage;
     LinearLayout resultLayout, detailLayout;
 
     Animation animation1, animation2;
@@ -61,9 +65,15 @@ public class FinishActivity extends AppCompatActivity {
         listView = (ListView)findViewById(R.id.listView);
         detailLayout = (LinearLayout)findViewById(R.id.detailLayout);
         resultLayout = (LinearLayout)findViewById(R.id.resultLayout);
+        resultImage = (ImageView)findViewById(R.id.resultImage);
 
         animation1 = AnimationUtils.loadAnimation(this, R.anim.below_to_stage_animation);
         animation2 = AnimationUtils.loadAnimation(this, R.anim.stage_to_below_animation);
+
+        number1Records = new ArrayList<>();
+        number2Records = new ArrayList<>();
+        answerRecords = new ArrayList<>();
+        correctAnswerRecords = new ArrayList<>();
 
         //data
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -79,6 +89,7 @@ public class FinishActivity extends AppCompatActivity {
         correctAnswerRecords = getIntent().getIntegerArrayListExtra("correctAnswerRecords");
         answerRecords = getIntent().getIntegerArrayListExtra("answerRecords");
 
+        Log.i("calculationKind = ", String.valueOf(calculationKind));
 
         detailLayout.setVisibility(View.INVISIBLE);
 
@@ -175,7 +186,7 @@ public class FinishActivity extends AppCompatActivity {
 
         items = new ArrayList<>();
 
-        for(int i = 0; i <= questionTimes; i++){
+        for(int i = 0; i < questionTimes; i++){
 
             String text = "";
 

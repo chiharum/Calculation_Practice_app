@@ -9,7 +9,7 @@ public class Item {
     String question;
 
     public Item(int questionNumber, int answer, int correctAnswer, String question) {
-        this.questionNumber = questionNumber + "問目";
+        this.questionNumber = String.valueOf(questionNumber);
         this.question = question;
         this.answer = String.valueOf(answer);
         this.correctAnswer = String.valueOf(correctAnswer);
@@ -19,7 +19,5 @@ public class Item {
         } else {
             isRight = false;
         }
-
-//        isRight = (answer == correctAnswer);
     }
 }
