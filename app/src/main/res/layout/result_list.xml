@@ -8,10 +8,9 @@
     android:gravity="center_vertical">
 
     <ImageView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:id="@+id/resultImage"
-        android:layout_weight="1" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/resultImage" />
 
     <TextView
         android:layout_width="0dp"
@@ -20,8 +19,9 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/resultQuestionNumberText"
-        android:layout_weight="1"
-        android:text="qn" />
+        android:layout_weight="2"
+        android:text="qn"
+        android:gravity="center_horizontal" />
 
     <TextView
         android:layout_width="0dp"
@@ -30,8 +30,9 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/resultQuestionText"
-        android:layout_weight="2.2"
-        android:text="qt" />
+        android:layout_weight="4.8"
+        android:text="qt"
+        android:gravity="center_horizontal" />
 
     <TextView
         android:layout_width="0dp"
@@ -40,8 +41,9 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/resultCorrectAnswerText"
-        android:layout_weight="1.4"
-        android:text="ca" />
+        android:layout_weight="3"
+        android:text="ca"
+        android:gravity="center_horizontal" />
 
     <TextView
         android:layout_width="0dp"
@@ -50,7 +52,8 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/resultAnswerText"
-        android:layout_weight="1.4"
-        android:text="a" />
+        android:layout_weight="3"
+        android:text="a"
+        android:gravity="center_horizontal" />
 
 </LinearLayout>

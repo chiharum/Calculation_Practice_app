@@ -31,10 +31,10 @@ public class CalculationActivity extends AppCompatActivity {
 
     int number1, number2, userAnswer, correctAnswer, correctTimes, times, questionTimes, eraserColor, remainTimes, calculationKind, timeKind, indexCorrect_times, indexTotal_time, reviewId, reviewRandom, totalForwardAddition,totalForwardAdditionSubtraction, totalForwardMultiplication, totalForwardDivision;
     long startedTime, endedTime, totalTime, stopRealTime, questionTime, remainTime;
-    boolean minus, forward, review;
+    boolean minus, forward, review, imageSkipped;
     ArrayList<Integer> number1Records, number2Records, correctAnswerRecords, answerRecords;
     TextView number1Text, number2Text, answerText, correctTimesText, remainText, flagText;
-    ImageView eraserImage, correctImage, incorrectImage;
+    ImageView eraserImage, judgeImage;
     ProgressBar progressBar;
     Chronometer timeChronometer;
     AlertDialog dialog;
@@ -57,11 +57,6 @@ public class CalculationActivity extends AppCompatActivity {
         mySQLiteOpenHelper = new MySQLiteOpenHelper(getApplicationContext());
         database = mySQLiteOpenHelper.getWritableDatabase();
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point point = new Point();
-        display.getSize(point);
-        int width = point.x;
-
         // View
         eraserImage = (ImageView) findViewById(R.id.imageView);
         remainText = (TextView) findViewById(R.id.remain);
@@ -71,8 +66,7 @@ public class CalculationActivity extends AppCompatActivity {
         answerText = (TextView) findViewById(R.id.answer);
         correctTimesText = (TextView) findViewById(R.id.correct);
         flagText = (TextView)findViewById(R.id.flagText);
-        correctImage = (ImageView) findViewById(R.id.correct_image);
-        incorrectImage = (ImageView) findViewById(R.id.incorrect_image);
+        judgeImage = (ImageView)findViewById(R.id.judgeImage);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         nextButton = (Button)findViewById(R.id.button);
 
@@ -86,6 +80,7 @@ public class CalculationActivity extends AppCompatActivity {
         totalForwardAdditionSubtraction = prefs.getInt(TOTAL_FORWARD_SUBTRACTION, 0);
         totalForwardMultiplication = prefs.getInt(TOTAL_FORWARD_MULTIPLICATION, 0);
         totalForwardDivision = prefs.getInt(TOTAL_FORWARD_DIVISION, 0);
+        int width = prefs.getInt("width", 500);
 
         nextButton.setTextSize((float)width / (float)25.6);
 
@@ -154,8 +149,7 @@ public class CalculationActivity extends AppCompatActivity {
         correctTimes = 0;
         times = 0;
 
-        correctImage.setVisibility(View.GONE);
-        incorrectImage.setVisibility(View.GONE);
+        judgeImage.setVisibility(View.GONE);
 
         totalTime = 0;
 
@@ -521,16 +515,11 @@ public class CalculationActivity extends AppCompatActivity {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setTitle("Pausing");
         adb.setView(layout);
+        adb.setCancelable(false);
         dialog = adb.show();
     }
 
-    public void test(){
-        userAnswer = correctAnswer;
-    }
-
     public void next(View view) {
-
-        test();
 
         times = times + 1;
 
@@ -576,12 +565,18 @@ public class CalculationActivity extends AppCompatActivity {
                 database.execSQL("update " + MySQLiteOpenHelper.FORWARD_DIVISION_TABLE + " set correct_times = '" + indexCorrect_times + "' where id = " + reviewId);
             }
 
-            correctImage.setVisibility(View.VISIBLE);
+            judgeImage.setImageResource(R.drawable.correct);
+            judgeImage.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    correctImage.setVisibility(View.GONE);
-                    newQuestion();
+                    judgeImage.setVisibility(View.INVISIBLE);
+
+                    if(!imageSkipped){
+                        newQuestion();
+                    }else{
+                        imageSkipped = false;
+                    }
                 }
             }, 1000);
         } else {
@@ -608,12 +603,18 @@ public class CalculationActivity extends AppCompatActivity {
                 }
             }
 
-            incorrectImage.setVisibility(View.VISIBLE);
+            judgeImage.setImageResource(R.drawable.incorrect);
+            judgeImage.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    incorrectImage.setVisibility(View.GONE);
-                    newQuestion();
+                    judgeImage.setVisibility(View.INVISIBLE);
+
+                    if(!imageSkipped){
+                        newQuestion();
+                    }else{
+                        imageSkipped = false;
+                    }
                 }
             }, 1000);
         }
@@ -626,5 +627,11 @@ public class CalculationActivity extends AppCompatActivity {
             remainText.setText(remainTimes + "問");
             progressBar.setProgress(times);
         }
+    }
+
+    public void skipImage(View view){
+        imageSkipped = true;
+        judgeImage.setVisibility(View.INVISIBLE);
+        newQuestion();
     }
 }

@@ -5,11 +5,29 @@
     <string name="subtraction">引き算</string>
     <string name="multiplication">かけ算(九九)</string>
     <string name="division">割り算</string>
-    <string name="correct_answer">正解数　</string>
     <string name="recordTitle">プレイ記録</string>
     <string name="corrected_rate">今までの正答率：</string>
     <string name="explanation_title">アプリの使い方</string>
-    <string name="explanation">「Play!計算」は計算練習アプリです。ここではこのアプリの使い方を説明します。\n\nアプリ起動時に最初に起動する画面を「ホーム画面」とします。\n「ホーム画面」の右上にあるのは、右から、設定とプレイ履歴です。設定画面ではこのアプリの設定を変えられます。プレイ履歴画面では今までのプレイの履歴を見ることができます。\n「ホーム画面」の下の2つのボタンは、計算練習のボタンです。「計算練習」では指定した問題数をどれくらいの時間でできるかをテストできます。「難問できる？」では一定時間内でできる問題数がテストできます。それぞれ、問題数と時間は設定から変えることができます。\n\n計算練習画面では下にある数字ボタンを使って計算の答えを入力してください。間違えた場合は答えの隣にある、消しゴムボタンで消してください。消しゴムの色は設定から変えることができます。</string>
+    <string name="que">問</string>
+    <string name="ans">答</string>
+    <string name="next">次へ</string>
+    <string name="remain">残り</string>
+    <string name="question">問題</string>
+    <string name="user_answer">あなたの答え</string>
+    <string name="correct_answer">正解</string>
+    <string name="setting">設定</string>
+    <string name="general_setting_title">全般の設定</string>
+    <string name="minus_setting">マイナスの計算あり</string>
+    <string name="forward_setting">間違えた問題を重点的に出題</string>
+    <string name="calculation_setting_title">計算練習の設定</string>
+    <string name="question_number_setting">問題数</string>
+    <string name="time_calculation_setting">何問できる？の設定</string>
+    <string name="other_setting_title">その他の設定</string>
+    <string name="eraser_color_setting">消しゴムの色</string>
+    <string name="explanation_setting">アプリの説明を見る</string>
+    <string name="choose_calculation_kind">計算方法をえらんでください</string>
+    <string name="choose_level">問題の桁数（けた）をえらんでください</string>
+    <string name="choose_time_kind">出題方法をえらんでください</string>
     <string-array name="question_numbers">
         <item>10問</item>
         <item>15問</item>
@@ -47,4 +65,5 @@
         <item>マイナスの計算なし</item>
         <item>マイナスの計算あり</item>
     </string-array>
+    <string name="explanation">「Play!計算」は計算練習アプリです。ここではこのアプリの使い方を説明します。\n\nアプリ起動時に最初に起動する画面を「ホーム画面」とします。\n「ホーム画面」の右上にあるのは、右から、設定とプレイ履歴です。設定画面ではこのアプリの設定を変えられます。プレイ履歴画面では今までのプレイの履歴を見ることができます。\n「ホーム画面」の下の2つのボタンは、計算練習のボタンです。「計算練習」では指定した問題数をどれくらいの時間でできるかをテストできます。「難問できる？」では一定時間内でできる問題数がテストできます。それぞれ、問題数と時間は設定から変えることができます。\n\n計算練習画面では下にある数字ボタンを使って計算の答えを入力してください。間違えた場合は答えの隣にある、消しゴムボタンで消してください。消しゴムの色は設定から変えることができます。</string>
 </resources>

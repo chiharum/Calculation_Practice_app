@@ -104,8 +104,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="残り　"
-                        android:id="@+id/textView20" />
+                        android:id="@+id/textView20"
+                        android:text="@string/remain" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -148,7 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="問"
+                    android:text="@string/que"
                     android:textSize="40dp"
                     android:id="@+id/textView8" />
 
@@ -201,7 +201,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="答"
+                    android:text="@string/ans"
                     android:textSize="40dp"
                     android:id="@+id/textView11" />
 
@@ -397,7 +397,7 @@
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_below="@+id/b0"
-            android:text="次へ！"
+            android:text="@string/next"
             android:textSize="30dp"
             android:id="@+id/button"
             android:onClick="next"
@@ -411,16 +411,10 @@
         android:layout_height="fill_parent" >
 
         <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/correct_image"
-            android:src="@drawable/correct" />
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/incorrect_image"
-            android:src="@drawable/incorrect" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/judgeImage"
+            android:onClick="skipImage" />
     </RelativeLayout>
 
 </RelativeLayout>

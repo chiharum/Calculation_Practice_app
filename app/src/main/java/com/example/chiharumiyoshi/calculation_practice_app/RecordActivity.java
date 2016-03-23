@@ -6,16 +6,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecordActivity extends AppCompatActivity {
 
     int totalTimes, totalCorrectTimes, totals;
     float correctRate;
+    List<RecordItem> recordItems;
+    RecordCustomAdapter recordCustomAdapter;
     TextView correctRateText;
-    ArrayAdapter arrayAdapter;
     ListView recordList;
 
     MySQLiteOpenHelper mySQLiteOpenHelper;
@@ -34,12 +37,11 @@ public class RecordActivity extends AppCompatActivity {
         recordList = (ListView)findViewById(R.id.recordList);
 
         //data
+        recordItems = new ArrayList<>();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         totalTimes = prefs.getInt(FinishActivity.KEY_TOTAL_QUESTION_TIMES, 0);
         totalCorrectTimes = prefs.getInt(FinishActivity.KEY_TOTAL_CORRECT_TIMES, 0);
         totals = prefs.getInt(FinishActivity.KEY_TOTALS, 0);
-
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1);
 
         if(totalTimes == 0){
             correctRateText.setText("0%");
@@ -49,9 +51,41 @@ public class RecordActivity extends AppCompatActivity {
         }
 
         for(int a = 0; a < totals; a++){
-            arrayAdapter.add(search(totals - a));
+            RecordItem item = new RecordItem(searchDate(totals - a), search(totals - a));
+            recordItems.add(item);
         }
-        recordList.setAdapter(arrayAdapter);
+
+        recordCustomAdapter = new RecordCustomAdapter(this, R.layout.record_list, recordItems);
+        recordList.setAdapter(recordCustomAdapter);
+    }
+
+    public String searchDate(int idNum){
+
+        Cursor cursor = null;
+        String result = "";
+
+        try{
+
+            cursor = database.query(MySQLiteOpenHelper.RECORD_TABLE, new String[]{"id", "date"}, "id = ?", new String[]{String.valueOf(idNum)}, null, null, null);
+
+            int indexDate = cursor.getColumnIndex("date");
+
+            while(cursor.moveToNext()){
+                int date = cursor.getInt(indexDate);
+
+                int year = date / 10000;
+                int month = date / 100 - year * 100;
+                int day = date - year * 10000 - month * 100;
+
+                result = year + "年" + month + "月" + day + "日";
+            }
+        }finally {
+            if(cursor != null){
+                cursor.close();
+            }
+        }
+
+        return result;
     }
 
     public String search(int idNum){
@@ -61,24 +95,18 @@ public class RecordActivity extends AppCompatActivity {
 
         try{
 
-            cursor = database.query(MySQLiteOpenHelper.RECORD_TABLE, new String[]{"id","calculation_kind", "date", "correct_rate", "time_per_a_question"}, "id = ?", new String[]{String.valueOf(idNum)}, null, null, null);
+            cursor = database.query(MySQLiteOpenHelper.RECORD_TABLE, new String[]{"id","calculation_kind", "correct_rate", "time_per_a_question"}, "id = ?", new String[]{String.valueOf(idNum)}, null, null, null);
 
-            int indexDate = cursor.getColumnIndex("date");
             int indexCalculationKind = cursor.getColumnIndex("calculation_kind");
             int indexCorrect_rate = cursor.getColumnIndex("correct_rate");
             int indexTime_per_a_question = cursor.getColumnIndex("time_per_a_question");
 
             while(cursor.moveToNext()){
-                int date = cursor.getInt(indexDate);
                 String calculationKind = cursor.getString(indexCalculationKind);
                 int correctRate = cursor.getInt(indexCorrect_rate);
                 int timePerAQuestion = cursor.getInt(indexTime_per_a_question);
 
-                int year = date / 10000;
-                int month = date / 100 - year * 100;
-                int day = date - year * 10000 - month * 100;
-
-                result = year + "年" + month + "月" + day + "日" + "\n" + calculationKind + " 正答率：" + correctRate + "% " + "1問：" + timePerAQuestion + "秒";
+                result = calculationKind + " 正答率：" + correctRate + "% " + "1問：" + timePerAQuestion + "秒";
             }
         }finally {
             if(cursor != null){

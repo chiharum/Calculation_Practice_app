@@ -89,8 +89,6 @@ public class FinishActivity extends AppCompatActivity {
         correctAnswerRecords = getIntent().getIntegerArrayListExtra("correctAnswerRecords");
         answerRecords = getIntent().getIntegerArrayListExtra("answerRecords");
 
-        Log.i("calculationKind = ", String.valueOf(calculationKind));
-
         detailLayout.setVisibility(View.INVISIBLE);
 
         if(correct == 0){

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,10 +53,14 @@ public class CustomAdapter extends ArrayAdapter<Item> {
             viewHolder.questionTextView.setText(item.question);
             viewHolder.correctAnswerTextView.setText(item.correctAnswer);
             viewHolder.answerTextView.setText(item.answer);
+
+            viewHolder.resultIconImage.setAdjustViewBounds(true);
             viewHolder.resultIconImage.setMaxWidth(width / 7);
-            viewHolder.resultIconImage.setMaxHeight(height / 7);
-            viewHolder.resultIconImage.setMinimumWidth(width / 7);
-            viewHolder.resultIconImage.setMinimumHeight(height / 7);
+            viewHolder.resultIconImage.setMinimumWidth((int)(width / 7.5));
+            viewHolder.questionNumberTextView.setTextSize(width / 20);
+            viewHolder.questionTextView.setTextSize(width / 20);
+            viewHolder.correctAnswerTextView.setTextSize(width / 20);
+            viewHolder.answerTextView.setTextSize(width / 20);
         }
 
         return convertView;

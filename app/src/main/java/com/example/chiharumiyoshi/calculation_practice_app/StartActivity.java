@@ -20,7 +20,7 @@ import java.util.Calendar;
 
 public class StartActivity extends AppCompatActivity {
 
-    int lastYear, lastMonth, lastDay, lastDate, year, month, day, date, timesInADay, continuousDays, width, height;
+    int lastYear, lastMonth, lastDay, lastDate, year, month, day, date, timesInADay, continuousDays, width, height, previousVersion;
     TextView timesInADayText, continuousDayTimesText, titleText;
     Button calculateButton1, calculateButton2, calculateButton3, calculateButton4;
     AlertDialog dialog;
@@ -50,6 +50,9 @@ public class StartActivity extends AppCompatActivity {
         lastDate = prefs.getInt("lastDate", 0);
         newYear = prefs.getBoolean("newYear", false);
         updateAlert = prefs.getBoolean("update_alert", false);
+        previousVersion = prefs.getInt("previousVersion", 18);
+
+        prefs.edit().putInt("previousVersion", 18).apply();
 
         Display display = getWindowManager().getDefaultDisplay();
         Point point = new Point();
@@ -145,6 +148,12 @@ public class StartActivity extends AppCompatActivity {
     public void history(View v){
         Intent intent = new Intent();
         intent.setClass(StartActivity.this, RecordActivity.class);
+        startActivity(intent);
+    }
+
+    public void help(View view){
+        Intent intent = new Intent();
+        intent.setClass(StartActivity.this, ExplanationActivity.class);
         startActivity(intent);
     }
 

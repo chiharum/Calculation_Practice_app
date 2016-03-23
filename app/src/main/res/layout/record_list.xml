@@ -7,12 +7,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/dateText" />
+        android:id="@+id/dateText"
+        android:textSize="25dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/detail"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginLeft="20dp"
+        android:textSize="25dp" />
 </LinearLayout>
