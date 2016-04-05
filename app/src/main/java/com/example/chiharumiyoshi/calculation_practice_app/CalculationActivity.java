@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Point;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -14,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +23,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CalculationActivity extends AppCompatActivity {
 
-    int number1, number2, userAnswer, correctAnswer, correctTimes, times, questionTimes, eraserColor, remainTimes, calculationKind, timeKind, indexCorrect_times, indexTotal_time, reviewId, reviewRandom, totalForwardAddition,totalForwardAdditionSubtraction, totalForwardMultiplication, totalForwardDivision;
+    int number1, number2, userAnswer, correctAnswer, correctTimes, times, questionTimes, eraserColor, remainTimes, calculationKind, timeKind, indexCorrect_times, indexTotal_time, reviewId, reviewRandom, totalForwardAddition,totalForwardAdditionSubtraction, totalForwardMultiplication, totalForwardDivision, numberNumbersAmount;
     long startedTime, endedTime, totalTime, stopRealTime, questionTime, remainTime;
-    boolean minus, forward, review, imageSkipped;
+    boolean minus, forward, review, imageSkipped, addition, subtraction, multiplication, division, additionNumberOne, additionNumberTwo, additionNumberThree, subtractionNumberOne, subtractionNumberTwo, subtractionNumberThree, multiplicationNumberOne, multiplicationNumberTwo, multiplicationNumberThree, divisionNumberOne, divisionNumberTwo, divisionNumberThree;
+    String[] calculationKinds;
     ArrayList<Integer> number1Records, number2Records, correctAnswerRecords, answerRecords;
     TextView number1Text, number2Text, answerText, correctTimesText, remainText, flagText;
     ImageView eraserImage, judgeImage;
@@ -71,8 +69,7 @@ public class CalculationActivity extends AppCompatActivity {
         nextButton = (Button)findViewById(R.id.button);
 
         //data
-        prefs  = PreferenceManager.getDefaultSharedPreferences(this);
-        timeKind = getIntent().getIntExtra("timeKind", 0);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         eraserColor = prefs.getInt(SettingsActivity.KEY_ERASER_COLOR_SETTINGS, 1);
         minus = prefs.getBoolean(SettingsActivity.KEY_MINUS_SETTINGS, false);
         forward = prefs.getBoolean(SettingsActivity.KEY_FORWARD_SETTINGS, false);
@@ -80,8 +77,25 @@ public class CalculationActivity extends AppCompatActivity {
         totalForwardAdditionSubtraction = prefs.getInt(TOTAL_FORWARD_SUBTRACTION, 0);
         totalForwardMultiplication = prefs.getInt(TOTAL_FORWARD_MULTIPLICATION, 0);
         totalForwardDivision = prefs.getInt(TOTAL_FORWARD_DIVISION, 0);
-        int width = prefs.getInt("width", 500);
+        timeKind = getIntent().getIntExtra("timeKind", 0);
+        addition = getIntent().getBooleanExtra("addition", true);
+        subtraction = getIntent().getBooleanExtra("subtraction", true);
+        multiplication = getIntent().getBooleanExtra("multiplication", true);
+        division = getIntent().getBooleanExtra("division", true);
+        additionNumberOne = getIntent().getBooleanExtra("additionNumberOne", true);
+        additionNumberTwo = getIntent().getBooleanExtra("additionNumberTwo", true);
+        additionNumberThree = getIntent().getBooleanExtra("additionNumberThree", true);
+        subtractionNumberOne = getIntent().getBooleanExtra("subtractionNumberOne", true);
+        subtractionNumberTwo = getIntent().getBooleanExtra("subtractionNumberTwo", true);
+        subtractionNumberThree = getIntent().getBooleanExtra("subtractionNumberThree", true);
+        multiplicationNumberOne = getIntent().getBooleanExtra("multiplicationNumberOne", true);
+        multiplicationNumberTwo = getIntent().getBooleanExtra("multiplicationNumberTwo", true);
+        multiplicationNumberThree = getIntent().getBooleanExtra("multiplicationNumberThree", true);
+        divisionNumberOne = getIntent().getBooleanExtra("divisionNumberOne", true);
+        divisionNumberTwo = getIntent().getBooleanExtra("divisionNumberTwo", true);
+        divisionNumberThree = getIntent().getBooleanExtra("divisionNumberThree", true);
 
+        int width = prefs.getInt("width", 500);
         nextButton.setTextSize((float)width / (float)25.6);
 
         review = false;
@@ -89,6 +103,7 @@ public class CalculationActivity extends AppCompatActivity {
         number2Records = new ArrayList<Integer>();
         answerRecords = new ArrayList<Integer>();
         correctAnswerRecords = new ArrayList<Integer>();
+        calculationKinds = new String[4];
 
         if(timeKind == 0){
 
@@ -134,17 +149,6 @@ public class CalculationActivity extends AppCompatActivity {
 
         correctTimesText.setText("0" + "問");
 
-        calculationKind = getIntent().getIntExtra(FinishActivity.KEY_CALCULATION_KIND, 0);
-        if(calculationKind == 0){
-            flagText.setText("+");
-        }else if(calculationKind == 1){
-            flagText.setText("-");
-        }else if(calculationKind == 2){
-            flagText.setText("×");
-        }else if(calculationKind == 3){
-            flagText.setText("÷");
-        }
-
         newQuestion();
         correctTimes = 0;
         times = 0;
@@ -161,6 +165,8 @@ public class CalculationActivity extends AppCompatActivity {
 
     public void newQuestion() {
 
+        setCalculationKind();
+
         if(calculationKind == 0){
 
             reviewRandom = (int)(Math.random() * 3);
@@ -172,11 +178,42 @@ public class CalculationActivity extends AppCompatActivity {
                 searchForward(reviewId);
             }else{
 
-                number1 = (int) (Math.random() * 98) + 1;
-                number2 = (int) (Math.random() * 98) + 1;
+                if(additionNumberOne && additionNumberTwo && additionNumberThree){
+                    numberNumbersAmount = (int)(Math.random() * 3 + 1);
+                }else if(additionNumberOne && additionNumberTwo){
+                    numberNumbersAmount = (int)(Math.random() * 2 + 1);
+                }else if(additionNumberOne){
+                    numberNumbersAmount = (int)(Math.random() * 1 + 1);
+                }
+
+                if(numberNumbersAmount == 1){
+                    number1 = (int) (Math.random() * 9) + 1;
+                }else if(numberNumbersAmount == 2){
+                    number1 = (int) (Math.random() * 98) + 1;
+                }else if(numberNumbersAmount == 3){
+                    number1 = (int) (Math.random() * 998) + 1;
+                }
+
+                if(additionNumberOne && additionNumberTwo && additionNumberThree){
+                    numberNumbersAmount = (int)(Math.random() * 3 + 1);
+                }else if(additionNumberOne && additionNumberTwo){
+                    numberNumbersAmount = (int)(Math.random() * 2 + 1);
+                }else if(additionNumberOne){
+                    numberNumbersAmount = (int)(Math.random() * 1 + 1);
+                }
+
+                if(numberNumbersAmount == 1){
+                    number2 = (int) (Math.random() * 9) + 1;
+                }else if(numberNumbersAmount == 2){
+                    number2 = (int) (Math.random() * 98) + 1;
+                }else if(numberNumbersAmount == 3){
+                    number2 = (int) (Math.random() * 998) + 1;
+                }
             }
 
             correctAnswer = number1 + number2;
+
+            flagText.setText("+");
 
         }else if(calculationKind == 1){
 
@@ -189,8 +226,37 @@ public class CalculationActivity extends AppCompatActivity {
                 searchForward(reviewId);
             }else{
 
-                number1 = (int) (Math.random() * 98) + 1;
-                number2 = (int) (Math.random() * 98) + 1;
+                if(subtractionNumberOne && subtractionNumberTwo && subtractionNumberThree){
+                    numberNumbersAmount = (int)(Math.random() * 3 + 1);
+                }else if(subtractionNumberOne && subtractionNumberTwo){
+                    numberNumbersAmount = (int)(Math.random() * 2 + 1);
+                }else if(subtractionNumberThree){
+                    numberNumbersAmount = (int)(Math.random() * 1 + 1);
+                }
+
+                if(numberNumbersAmount == 1){
+                    number1 = (int) (Math.random() * 9) + 1;
+                }else if(numberNumbersAmount == 2){
+                    number1 = (int) (Math.random() * 98) + 1;
+                }else if(numberNumbersAmount == 3){
+                    number1 = (int) (Math.random() * 998) + 1;
+                }
+
+                if(subtractionNumberOne && subtractionNumberTwo && subtractionNumberThree){
+                    numberNumbersAmount = (int)(Math.random() * 3 + 1);
+                }else if(subtractionNumberOne && subtractionNumberTwo){
+                    numberNumbersAmount = (int)(Math.random() * 2 + 1);
+                }else if(subtractionNumberThree){
+                    numberNumbersAmount = (int)(Math.random() * 1 + 1);
+                }
+
+                if(numberNumbersAmount == 1){
+                    number2 = (int) (Math.random() * 9) + 1;
+                }else if(numberNumbersAmount == 2){
+                    number2 = (int) (Math.random() * 98) + 1;
+                }else if(numberNumbersAmount == 3){
+                    number2 = (int) (Math.random() * 998) + 1;
+                }
             }
 
             if (!minus) {
@@ -201,6 +267,8 @@ public class CalculationActivity extends AppCompatActivity {
                 }
             }
             correctAnswer = number1 - number2;
+
+            flagText.setText("-");
 
         }else if(calculationKind == 2){
 
@@ -214,11 +282,43 @@ public class CalculationActivity extends AppCompatActivity {
                 Log.i("review", "reviewed");
             }else{
 
-                number1 = (int) (Math.random() * 9) + 1;
-                number2 = (int) (Math.random() * 9) + 1;
+                if(multiplicationNumberOne && multiplicationNumberTwo && multiplicationNumberThree){
+                    numberNumbersAmount = (int)(Math.random() * 3 + 1);
+                }else if(multiplicationNumberOne && multiplicationNumberTwo){
+                    numberNumbersAmount = (int)(Math.random() * 2 + 1);
+                }else if(multiplicationNumberThree){
+                    numberNumbersAmount = (int)(Math.random() * 1 + 1);
+                }
+
+                if(numberNumbersAmount == 1){
+                    number1 = (int) (Math.random() * 9) + 1;
+                }else if(numberNumbersAmount == 2){
+                    number1 = (int) (Math.random() * 98) + 1;
+                }else if(numberNumbersAmount == 3){
+                    number1 = (int) (Math.random() * 998) + 1;
+                }
+
+                if(multiplicationNumberOne && multiplicationNumberTwo && multiplicationNumberThree){
+                    numberNumbersAmount = (int)(Math.random() * 3 + 1);
+                }else if(multiplicationNumberOne && multiplicationNumberTwo){
+                    numberNumbersAmount = (int)(Math.random() * 2 + 1);
+                }else if(multiplicationNumberThree){
+                    numberNumbersAmount = (int)(Math.random() * 1 + 1);
+                }
+
+                if(numberNumbersAmount == 1){
+                    number2 = (int) (Math.random() * 9) + 1;
+                }else if(numberNumbersAmount == 2){
+                    number2 = (int) (Math.random() * 98) + 1;
+                }else if(numberNumbersAmount == 3){
+                    number2 = (int) (Math.random() * 998) + 1;
+                }
             }
 
             correctAnswer = number1 * number2;
+
+            flagText.setText("×");
+
         }else if(calculationKind == 3){
 
             reviewRandom = (int)(Math.random() * 3);
@@ -231,20 +331,54 @@ public class CalculationActivity extends AppCompatActivity {
                 Log.i("review", "reviewed");
             }else{
 
-                number1 = (int) (Math.random() * 9) + 1;
-                number2 = (int) (Math.random() * 9) + 1;
+                chooseDivision();
+
+                if(divisionNumberThree){
+                    while(number1 * number2 >= 1000){
+                        chooseDivision();
+                    }
+                }else if(divisionNumberTwo){
+                    while(number1 * number2 >= 100){
+                        chooseDivision();
+                    }
+                }else if(divisionNumberOne){
+                    while(number1 * number2 >= 10){
+                        chooseDivision();
+                    }
+                }
             }
 
-            number2 = (int) (Math.random() * 9) + 1;
-            number1 = (int) (Math.random() * 9) + 1;
             correctAnswer = number1;
             number1 = number1 * number2;
+
+            flagText.setText("÷");
         }
 
         userAnswer = 0;
         answerText.setText("");
         number1Text.setText(String.valueOf(number1));
         number2Text.setText(String.valueOf(number2));
+    }
+
+    public void chooseDivision(){
+
+        if(divisionNumberOne && divisionNumberTwo && divisionNumberThree){
+            numberNumbersAmount = (int)(Math.random() * 3 + 1);
+        }else if(divisionNumberOne && divisionNumberTwo){
+            numberNumbersAmount = (int)(Math.random() * 2 + 1);
+        }else if(divisionNumberOne){
+            numberNumbersAmount = (int)(Math.random() * 1 + 1);
+        }
+
+        if(numberNumbersAmount == 1){
+            number2 = (int) (Math.random() * 9) + 1;
+        }else if(numberNumbersAmount == 2){
+            number2 = (int) (Math.random() * 98) + 1;
+        }else if(numberNumbersAmount == 3){
+            number2 = (int) (Math.random() * 998) + 1;
+        }
+
+        number1 = (int) (Math.random() * 99) + 1;
     }
 
     public void searchForward(int id){
@@ -369,6 +503,32 @@ public class CalculationActivity extends AppCompatActivity {
         values.put("number2", number2);
 
         database.insert(MySQLiteOpenHelper.FORWARD_MULTIPLICATION_TABLE, null, values);
+    }
+
+    public void setCalculationKind(){
+
+        calculationKind = (int)(Math.random() * 4);
+
+        if(calculationKind == 0){
+            if(!addition){
+                setCalculationKind();
+            }
+        }else if(calculationKind == 1){
+
+            if(!subtraction){
+                setCalculationKind();
+            }
+        }else if(calculationKind == 2){
+
+            if(!multiplication){
+                setCalculationKind();
+            }
+        }else if(calculationKind == 3){
+
+            if(!division){
+                setCalculationKind();
+            }
+        }
     }
 
     public void click1(View v) {

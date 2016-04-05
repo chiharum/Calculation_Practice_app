@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">Play！計算</string>
-    <string name="practice">Play！計算</string>
+    <string name="practice">計算練習</string>
+    <string name="classic">クラシック</string>
     <string name="addition">足し算</string>
     <string name="subtraction">引き算</string>
-    <string name="multiplication">かけ算(九九)</string>
+    <string name="multiplication">かけ算</string>
     <string name="division">割り算</string>
+    <string name="one_number">1けた</string>
+    <string name="two_numbers">2けた</string>
+    <string name="three_numbers">3けた</string>
     <string name="recordTitle">プレイ記録</string>
     <string name="corrected_rate">今までの正答率：</string>
     <string name="explanation_title">アプリの使い方</string>
@@ -15,6 +19,8 @@
     <string name="question">問題</string>
     <string name="user_answer">あなたの答え</string>
     <string name="correct_answer">正解</string>
+    <string name="go">GO!</string>
+    <string name="ok">OK</string>
     <string name="setting">設定</string>
     <string name="general_setting_title">全般の設定</string>
     <string name="minus_setting">マイナスの計算あり</string>
@@ -25,9 +31,12 @@
     <string name="other_setting_title">その他の設定</string>
     <string name="eraser_color_setting">消しゴムの色</string>
     <string name="explanation_setting">アプリの説明を見る</string>
-    <string name="choose_calculation_kind">計算方法をえらんでください</string>
-    <string name="choose_level">問題の桁数（けた）をえらんでください</string>
-    <string name="choose_time_kind">出題方法をえらんでください</string>
+    <string name="choose_calculation_kind">計算方法を選択</string>
+    <string name="choose_level">問題の桁数（けた）を選択</string>
+    <string name="choose_time_kind">出題方法を選択</string>
+    <string name="question_amount">問題数で出題</string>
+    <string name="question_time">時間で出題</string>
+    <string name="and">と</string>
     <string-array name="question_numbers">
         <item>10問</item>
         <item>15問</item>

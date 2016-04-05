@@ -21,10 +21,10 @@ import java.util.Calendar;
 public class StartActivity extends AppCompatActivity {
 
     int lastYear, lastMonth, lastDay, lastDate, year, month, day, date, timesInADay, continuousDays, width, height, previousVersion;
+    boolean newYear, updateAlert, kindAddition, kindSubtraction, kindMultiplication, kindDivision, additionNumberOne, additionNumberTwo, additionNumberThree, subtractionNumberOne, subtractionNumberTwo, subtractionNumberThree, multiplicationNumberOne, multiplicationNumberTwo, multiplicationNumberThree, divisionNumberOne, divisionNumberTwo, divisionNumberThree, timeQuestionNumbers, timeQuestionTime, informationOk;
     TextView timesInADayText, continuousDayTimesText, titleText;
     Button calculateButton1, calculateButton2, calculateButton3, calculateButton4;
     AlertDialog dialog;
-    boolean newYear, updateAlert;
 
     public static final String KEY_TIMES_IN_A_DAY = "TimesInADay";
 
@@ -49,10 +49,30 @@ public class StartActivity extends AppCompatActivity {
         lastDay = prefs.getInt("lastDay", 0);
         lastDate = prefs.getInt("lastDate", 0);
         newYear = prefs.getBoolean("newYear", false);
-        updateAlert = prefs.getBoolean("update_alert", false);
-        previousVersion = prefs.getInt("previousVersion", 18);
+        updateAlert = prefs.getBoolean("update_alert_19", false);
+        previousVersion = prefs.getInt("previousVersion", 19);
 
-        prefs.edit().putInt("previousVersion", 18).apply();
+        prefs.edit().putInt("previousVersion", 19).apply();
+
+        kindAddition = true;
+        kindSubtraction = false;
+        kindMultiplication = false;
+        kindDivision = false;
+        additionNumberOne = true;
+        additionNumberTwo = false;
+        additionNumberThree = false;
+        subtractionNumberOne = false;
+        subtractionNumberTwo = false;
+        subtractionNumberThree = false;
+        multiplicationNumberOne = false;
+        multiplicationNumberTwo = false;
+        multiplicationNumberThree = false;
+        divisionNumberOne = false;
+        divisionNumberTwo = false;
+        divisionNumberThree = false;
+        timeQuestionNumbers = true;
+        timeQuestionTime = false;
+        informationOk = true;
 
         Display display = getWindowManager().getDefaultDisplay();
         Point point = new Point();
@@ -122,12 +142,10 @@ public class StartActivity extends AppCompatActivity {
         if(!updateAlert){
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("アップデート情報");
-            alertDialog.setMessage("間違えた問題を重点的に出す機能を追加しました。");
+            alertDialog.setMessage("デザインの変更をしました。\n計算練習をするには、「計算練習」ボタンを押して、計算練習の条件を決定してください。");
             alertDialog.setPositiveButton("了解！", null);
             alertDialog.show();
-            prefs.edit()
-                    .putBoolean("update_alert", true)
-                    .apply();
+            prefs.edit().putBoolean("update_alert_19", true).apply();
         }
 
         if(lastYear != 0 && lastYear != year){
@@ -159,89 +177,376 @@ public class StartActivity extends AppCompatActivity {
 
     public void calculate(View view){
 
+        kindAddition = true;
+        kindSubtraction = false;
+        kindMultiplication = false;
+        kindDivision = false;
+        additionNumberOne = true;
+        additionNumberTwo = false;
+        additionNumberThree = false;
+        subtractionNumberOne = false;
+        subtractionNumberTwo = false;
+        subtractionNumberThree = false;
+        multiplicationNumberOne = false;
+        multiplicationNumberTwo = false;
+        multiplicationNumberThree = false;
+        divisionNumberOne = false;
+        divisionNumberTwo = false;
+        divisionNumberThree = false;
+        timeQuestionNumbers = true;
+        timeQuestionTime = false;
+        informationOk = true;
+
         LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View adbLayout = inflater.inflate(R.layout.calculate_dialog, null);
+        final View adbLayout = inflater.inflate(R.layout.calculation_chooser_dialog_layout, null);
+
+        pushed(adbLayout.findViewById(R.id.button9), kindAddition);
+        pushed(adbLayout.findViewById(R.id.additionNumberOne), additionNumberOne);
+        pushed(adbLayout.findViewById(R.id.button19), timeQuestionNumbers);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v){
                 int id = v.getId();
-                if(id == R.id.calculate_addition){
-                    Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 0);
-                    intent.putExtra("timeKind", 0);
-                    startActivity(intent);
-                }else if(id == R.id.calculate_subtraction){
-                    Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 1);
-                    intent.putExtra("timeKind", 0);
-                    startActivity(intent);
-                }else if(id == R.id.calculate_maltiplication){
-                    Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 2);
-                    intent.putExtra("timeKind", 0);
-                    startActivity(intent);
-                }else if(id == R.id.calculate_division){
-                    Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 3);
-                    intent.putExtra("timeKind", 0);
-                    startActivity(intent);
+                if(id == R.id.button9){
+
+                    kindAddition = !kindAddition;
+                    pushed(adbLayout.findViewById(R.id.button9), kindAddition);
+                }else if(id == R.id.button10){
+
+                    kindSubtraction = !kindSubtraction;
+                    pushed(adbLayout.findViewById(R.id.button10), kindSubtraction);
+                }else if(id == R.id.button11){
+
+                    kindMultiplication = !kindMultiplication;
+                    pushed(adbLayout.findViewById(R.id.button11), kindMultiplication);
+                }else if(id == R.id.button12){
+
+                    kindDivision = !kindDivision;
+                    pushed(adbLayout.findViewById(R.id.button12), kindDivision);
+                }else if(id == R.id.additionNumberOne){
+
+                    additionNumberOne = !additionNumberOne;
+                    pushed(adbLayout.findViewById(R.id.additionNumberOne), additionNumberOne);
+                    if(additionNumberTwo){
+                        additionNumberTwo = false;
+                        pushed(adbLayout.findViewById(R.id.additionNumberTwo), additionNumberTwo);
+                        if(additionNumberThree){
+                            additionNumberThree = false;
+                            pushed(adbLayout.findViewById(R.id.additionNumberThree), additionNumberThree);
+                        }
+                    }
+                }else if(id == R.id.additionNumberTwo){
+
+                    additionNumberTwo = !additionNumberTwo;
+                    pushed(adbLayout.findViewById(R.id.additionNumberTwo), additionNumberTwo);
+                    if(additionNumberTwo){
+                        additionNumberOne = true;
+                        pushed(adbLayout.findViewById(R.id.additionNumberOne), additionNumberOne);
+                    }else if(additionNumberThree){
+                        additionNumberThree = false;
+                        pushed(adbLayout.findViewById(R.id.additionNumberThree), additionNumberThree);
+                    }
+                }else if(id == R.id.additionNumberThree){
+
+                    additionNumberThree = !additionNumberThree;
+                    pushed(adbLayout.findViewById(R.id.additionNumberThree), additionNumberThree);
+                    if(additionNumberThree){
+                        additionNumberOne = true;
+                        pushed(adbLayout.findViewById(R.id.additionNumberOne), additionNumberOne);
+                        additionNumberTwo = true;
+                        pushed(adbLayout.findViewById(R.id.additionNumberTwo), additionNumberTwo);
+                    }
+                }else if(id == R.id.subtractionNumberOne){
+
+                    subtractionNumberOne = !subtractionNumberOne;
+                    pushed(adbLayout.findViewById(R.id.subtractionNumberOne), subtractionNumberOne);
+                    if(subtractionNumberTwo){
+                        subtractionNumberTwo = false;
+                        pushed(adbLayout.findViewById(R.id.subtractionNumberTwo), subtractionNumberTwo);
+                        if(subtractionNumberThree){
+                            subtractionNumberThree = false;
+                            pushed(adbLayout.findViewById(R.id.subtractionNumberThree), subtractionNumberThree);
+                        }
+                    }
+                }else if(id == R.id.subtractionNumberTwo){
+
+                    subtractionNumberTwo = !subtractionNumberTwo;
+                    pushed(adbLayout.findViewById(R.id.subtractionNumberTwo), subtractionNumberTwo);
+                    if (subtractionNumberTwo) {
+                        subtractionNumberOne = true;
+                        pushed(adbLayout.findViewById(R.id.subtractionNumberOne), subtractionNumberOne);
+                    }else if(subtractionNumberThree){
+                        subtractionNumberThree = false;
+                        pushed(adbLayout.findViewById(R.id.subtractionNumberThree), subtractionNumberThree);
+                    }
+                }else if(id == R.id.subtractionNumberThree){
+
+                    subtractionNumberThree = !subtractionNumberThree;
+                    pushed(adbLayout.findViewById(R.id.subtractionNumberThree), subtractionNumberThree);
+                    if(subtractionNumberThree){
+                        subtractionNumberTwo = true;
+                        pushed(adbLayout.findViewById(R.id.subtractionNumberTwo), subtractionNumberTwo);
+                        subtractionNumberOne = true;
+                        pushed(adbLayout.findViewById(R.id.subtractionNumberOne), subtractionNumberOne);
+                    }
+                }else if(id == R.id.multiplicationNumberOne){
+
+                    multiplicationNumberOne = !multiplicationNumberOne;
+                    pushed(adbLayout.findViewById(R.id.multiplicationNumberOne), multiplicationNumberOne);
+                    if(multiplicationNumberTwo){
+                        multiplicationNumberTwo = false;
+                        pushed(adbLayout.findViewById(R.id.multiplicationNumberTwo), multiplicationNumberTwo);
+                        if(multiplicationNumberThree){
+                            multiplicationNumberThree = false;
+                            pushed(adbLayout.findViewById(R.id.multiplicationNumberThree), multiplicationNumberThree);
+                        }
+                    }
+                }else if(id == R.id.multiplicationNumberTwo){
+
+                    multiplicationNumberTwo = !multiplicationNumberTwo;
+                    pushed(adbLayout.findViewById(R.id.multiplicationNumberTwo), multiplicationNumberTwo);
+                    if(multiplicationNumberTwo){
+                        multiplicationNumberOne = true;
+                        pushed(adbLayout.findViewById(R.id.multiplicationNumberOne), multiplicationNumberOne);
+                    }else if(multiplicationNumberThree){
+                        multiplicationNumberThree = false;
+                        pushed(adbLayout.findViewById(R.id.multiplicationNumberThree), multiplicationNumberThree);
+                    }
+                }else if(id == R.id.multiplicationNumberThree){
+
+                    multiplicationNumberThree = !multiplicationNumberThree;
+                    pushed(adbLayout.findViewById(R.id.multiplicationNumberThree), multiplicationNumberThree);
+                    if(multiplicationNumberThree){
+                        multiplicationNumberTwo = true;
+                        pushed(adbLayout.findViewById(R.id.multiplicationNumberTwo), multiplicationNumberTwo);
+                        multiplicationNumberOne = true;
+                        pushed(adbLayout.findViewById(R.id.multiplicationNumberOne), multiplicationNumberOne);
+                    }
+                }else if(id == R.id.divisionNumberOne){
+
+                    divisionNumberOne = !divisionNumberOne;
+                    pushed(adbLayout.findViewById(R.id.divisionNumberOne), divisionNumberOne);
+                    if(divisionNumberTwo){
+                        divisionNumberTwo = false;
+                        pushed(adbLayout.findViewById(R.id.divisionNumberTwo), divisionNumberTwo);
+                        if(divisionNumberThree){
+                            divisionNumberThree = false;
+                            pushed(adbLayout.findViewById(R.id.divisionNumberThree), divisionNumberThree);
+                        }
+                    }
+                }else if(id == R.id.divisionNumberTwo){
+
+                    divisionNumberTwo = !divisionNumberTwo;
+                    pushed(adbLayout.findViewById(R.id.divisionNumberTwo), divisionNumberTwo);
+                    if(divisionNumberTwo){
+                        divisionNumberOne = true;
+                        pushed(adbLayout.findViewById(R.id.divisionNumberOne), divisionNumberOne);
+                    }else if(divisionNumberThree){
+                        divisionNumberThree = false;
+                        pushed(adbLayout.findViewById(R.id.divisionNumberThree), divisionNumberThree);
+                    }
+                }else if(id == R.id.divisionNumberThree){
+
+                    divisionNumberThree = !divisionNumberThree;
+                    pushed(adbLayout.findViewById(R.id.divisionNumberThree), divisionNumberThree);
+                    if(divisionNumberThree){
+                        divisionNumberTwo = true;
+                        pushed(adbLayout.findViewById(R.id.divisionNumberTwo), divisionNumberTwo);
+                        divisionNumberOne = true;
+                        pushed(adbLayout.findViewById(R.id.divisionNumberOne), divisionNumberOne);
+                    }
+                }else if(id == R.id.button19){
+
+                    timeQuestionNumbers = true;
+                    pushed(adbLayout.findViewById(R.id.button19), timeQuestionNumbers);
+                    timeQuestionTime = false;
+                    pushed(adbLayout.findViewById(R.id.button20), timeQuestionTime);
+                }else if(id == R.id.button20){
+
+                    timeQuestionTime = true;
+                    pushed(adbLayout.findViewById(R.id.button20), timeQuestionTime);
+                    timeQuestionNumbers = false;
+                    pushed(adbLayout.findViewById(R.id.button19), timeQuestionNumbers);
                 }
             }
         };
 
-        adbLayout.findViewById(R.id.calculate_addition).setOnClickListener(listener);
-        adbLayout.findViewById(R.id.calculate_subtraction).setOnClickListener(listener);
-        adbLayout.findViewById(R.id.calculate_maltiplication).setOnClickListener(listener);
-        adbLayout.findViewById(R.id.calculate_division).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.button9).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.button10).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.button11).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.button12).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.additionNumberOne).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.additionNumberTwo).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.additionNumberThree).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.subtractionNumberOne).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.subtractionNumberTwo).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.subtractionNumberThree).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.multiplicationNumberOne).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.multiplicationNumberTwo).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.multiplicationNumberThree).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.divisionNumberOne).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.divisionNumberTwo).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.divisionNumberThree).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.button19).setOnClickListener(listener);
+        adbLayout.findViewById(R.id.button20).setOnClickListener(listener);
 
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setView(adbLayout);
-//        calculateButton1.setHeight(height / 21);
-//        calculateButton2.setHeight(height / 21);
-//        calculateButton3.setHeight(height / 21);
-//        calculateButton4.setHeight(height / 21);
+        adb.setPositiveButton(getString(R.string.go), new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which){
+
+                if(!kindAddition && !kindSubtraction && !kindMultiplication && !kindDivision){
+
+                    errorDialog("計算方法を決定してください。");
+                    informationOk = false;
+
+                }
+
+                if(kindAddition){
+
+                    if(!additionNumberOne && !additionNumberTwo && !additionNumberThree){
+                        errorDialog("ケタ数を決定してください。");
+                        informationOk = false;
+                    }else{
+                        informationOk = true;
+                    }
+                }
+
+                if(kindSubtraction){
+
+                    if(!subtractionNumberOne && !subtractionNumberTwo && !subtractionNumberThree){
+                        errorDialog("ケタ数を決定してください。");
+                        informationOk = false;
+                    }else{
+                        informationOk = true;
+                    }
+                }
+
+                if(kindMultiplication){
+
+                    if(!multiplicationNumberOne && !multiplicationNumberTwo && !multiplicationNumberThree){
+                        errorDialog("ケタ数を決定してください。");
+                        informationOk = false;
+                    }else{
+                        informationOk = true;
+                    }
+                }
+
+                if(kindDivision){
+
+                    if(!divisionNumberOne && !divisionNumberTwo && !divisionNumberThree){
+                        errorDialog("ケタ数を決定してください。");
+                        informationOk = false;
+                    }else{
+                        informationOk = true;
+                    }
+                }
+
+                if(informationOk){
+                    go();
+                }
+            }
+        });
         dialog = adb.show();
     }
 
-    public void calculate_much(View view){
+    public void errorDialog(String text){
+
+        AlertDialog.Builder errorDialog = new AlertDialog.Builder(this);
+        errorDialog.setTitle("設定情報不足です！");
+        errorDialog.setMessage(text);
+        errorDialog.setPositiveButton(getText(R.string.ok), null);
+        dialog = errorDialog.show();
+    }
+
+    public void pushed(View view, boolean state){
+        if(state){
+            view.setBackgroundResource(R.drawable.small_button_selected);
+        }else{
+            view.setBackgroundResource(R.drawable.small_button);
+        }
+    }
+
+    public void go(){
+        Intent intent = new Intent();
+        intent.setClass(StartActivity.this, CalculationActivity.class);
+        if(timeQuestionNumbers){
+            intent.putExtra("timeKind", 0);
+        }else{
+            intent.putExtra("timeKind", 1);
+        }
+        intent.putExtra("addition", kindAddition);
+        intent.putExtra("subtraction", kindSubtraction);
+        intent.putExtra("multiplication", kindMultiplication);
+        intent.putExtra("division", kindDivision);
+        intent.putExtra("additionNumberOne", additionNumberOne);
+        intent.putExtra("additionNumberTwo", additionNumberTwo);
+        intent.putExtra("additionNumberThree", additionNumberThree);
+        intent.putExtra("subtractionNumberOne", subtractionNumberOne);
+        intent.putExtra("subtractionNumberTwo", subtractionNumberTwo);
+        intent.putExtra("subtractionNumberThree", subtractionNumberThree);
+        intent.putExtra("multiplicationNumberOne", multiplicationNumberOne);
+        intent.putExtra("multiplicationNumberTwo", multiplicationNumberTwo);
+        intent.putExtra("multiplicationNumberThree", multiplicationNumberThree);
+        intent.putExtra("divisionNumberOne", divisionNumberOne);
+        intent.putExtra("divisionNumberTwo", divisionNumberTwo);
+        intent.putExtra("divisionNumberThree", divisionNumberThree);
+        startActivity(intent);
+    }
+
+    public void play_classic(View view){
+
+        kindAddition = true;
+        kindSubtraction = false;
+        kindMultiplication = false;
+        kindDivision = false;
+        additionNumberOne = true;
+        additionNumberTwo = false;
+        additionNumberThree = false;
+        subtractionNumberOne = false;
+        subtractionNumberTwo = false;
+        subtractionNumberThree = false;
+        multiplicationNumberOne = false;
+        multiplicationNumberTwo = false;
+        multiplicationNumberThree = false;
+        divisionNumberOne = false;
+        divisionNumberTwo = false;
+        divisionNumberThree = false;
+        timeQuestionNumbers = true;
+        timeQuestionTime = false;
+        informationOk = true;
 
         LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
         final View adbLayout = inflater.inflate(R.layout.calculate_dialog, null);
 
         View.OnClickListener listener = new View.OnClickListener() {
+
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
+
                 int id = v.getId();
-                if(id == R.id.calculate_addition){
-                    Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 0);
-                    intent.putExtra("timeKind", 1);
-                    startActivity(intent);
-                }else if(id == R.id.calculate_subtraction){
-                    Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 1);
-                    intent.putExtra("timeKind", 1);
-                    startActivity(intent);
-                }else if(id == R.id.calculate_maltiplication){
-                    Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 2);
-                    intent.putExtra("timeKind", 1);
-                    startActivity(intent);
-                }else if(id == R.id.calculate_division){
-                    Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, CalculationActivity.class);
-                    intent.putExtra(FinishActivity.KEY_CALCULATION_KIND, 3);
-                    intent.putExtra("timeKind", 1);
-                    startActivity(intent);
+                if (id == R.id.calculate_addition) {
+                    kindAddition = true;
+                    additionNumberOne = true;
+                    additionNumberTwo = true;
+                } else if (id == R.id.calculate_subtraction) {
+                    kindSubtraction = true;
+                    subtractionNumberOne = true;
+                    subtractionNumberTwo = true;
+                } else if (id == R.id.calculate_maltiplication) {
+                    kindMultiplication = true;
+                    multiplicationNumberOne = true;
+                    multiplicationNumberTwo = true;
+                } else if (id == R.id.calculate_division) {
+                    kindDivision = true;
+                    divisionNumberOne = true;
+                    divisionNumberTwo = true;
                 }
+
+                timeQuestionNumbers = true;
+                go();
             }
         };
 
@@ -252,10 +557,6 @@ public class StartActivity extends AppCompatActivity {
 
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
         adb.setView(adbLayout);
-//        calculateButton1.setHeight(height/ 21);
-//        calculateButton2.setHeight(height/ 21);
-//        calculateButton3.setHeight(height/ 21);
-//        calculateButton4.setHeight(height/ 21);
         dialog = adb.show();
     }
 
